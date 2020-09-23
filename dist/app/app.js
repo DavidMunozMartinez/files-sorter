@@ -130,7 +130,7 @@ eval("\n\nvar isOldIE = function isOldIE() {\n  var memo;\n  return function mem
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\r\nconsole.log('test');\r\n\n\n//# sourceURL=webpack:///./src/render/app.ts?");
+eval("\r\nconsole.log('O');\r\n\n\n//# sourceURL=webpack:///./src/render/app.ts?");
 
 /***/ }),
 

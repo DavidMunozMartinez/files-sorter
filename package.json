@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "electron ./dist/main.js",
+    "watch": "webpack --watch --config ./webpack.config.js",
     "build": "webpack --config ./webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,13 +14,15 @@
   "devDependencies": {
     "css-loader": "^4.3.0",
     "electron": "^10.1.2",
+    "electron-reload": "^1.5.0",
     "sass": "^1.26.11",
     "sass-loader": "^10.0.2",
     "style-loader": "^1.2.1",
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
     "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "webpack-electron-reload": "^1.0.1"
   },
   "dependencies": {
     "npm": "^6.14.8"

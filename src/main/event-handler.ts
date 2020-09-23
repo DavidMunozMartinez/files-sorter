@@ -5,8 +5,6 @@ import * as fs from 'fs'
 // Default download path for windows
 let path = `\\users\\${os.userInfo().username}\\downloads`;
 
-console.log(os.userInfo())
-
 // Make sure to get this data from a config file later
 const categories: any = {
     'Images': ['png', 'jpg', 'gif'],
@@ -53,7 +51,6 @@ function added(origin: string) {
 
         fs.renameSync(origin, dest.path);
     }
-    console.log(origin);
 }
 
 /**

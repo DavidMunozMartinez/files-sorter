@@ -1,9 +1,15 @@
+const path = require('path');
+const ElectronReloadPlugin = require('webpack-electron-reload')({
+  path: path.join(__dirname, './dist/main.js'),
+});
+
 module.exports = [
   {
     target: 'electron-main',
     entry: ['./src/main/main.ts', './src/main/event-handler.ts'],
     externals: {
-      fsevents: "require('fsevents')"
+      fsevents: "require('fsevents')",
+      "electron-reload": "require('electron-reload')"
     },
     // mode: 'development',
     module: {
@@ -15,7 +21,10 @@ module.exports = [
     output: {
       path: __dirname + '/dist',
       filename: 'main.js'
-    }
+    },
+    plugins: [
+        ElectronReloadPlugin()
+    ]
   },
   {
     target: 'web',
