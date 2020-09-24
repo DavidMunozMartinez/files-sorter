@@ -34,6 +34,9 @@ module.exports = [
     entry: ['./src/render/app.ts', './src/render/styles.scss'],
     mode: 'development',
     devtool: 'source-map',
+    externals: {
+        'electron-titlebar': 'require("electron-titlebar")'
+    },
     module: {
       rules: [{
         test: /\.ts$/,

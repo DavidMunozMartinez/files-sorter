@@ -1,1 +1,6 @@
-console.log('Test 2')
+(function () {
+    require('electron-titlebar');
+
+    // import * as titlebar from 'electron-titlebar';
+})();
+

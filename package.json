@@ -25,6 +25,7 @@
     "webpack-electron-reload": "^1.0.1"
   },
   "dependencies": {
+    "electron-titlebar": "0.0.3",
     "npm": "^6.14.8"
   }
 }

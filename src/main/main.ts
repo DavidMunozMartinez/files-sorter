@@ -6,6 +6,15 @@ require('electron-reload')('dist/app');
 let isQuiting = false;
 let win: BrowserWindow;
 let tray: Tray;
+let trayMenu = [
+    {
+        label: 'Quit',
+        click: () => {
+            isQuiting = true;
+            app.quit();
+        }
+    }
+];
 
 function init() {
     win = createWindow();
@@ -15,43 +24,43 @@ function init() {
 function createWindow(): BrowserWindow {
     // Create the browser window.
     win = new BrowserWindow({
-        width: 800,
+        width: 400,
         height: 600,
+        frame: false,
+        maximizable: false,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            enableRemoteModule: true
         }
     });
 
     // Path to index on the dist folder   
     win.loadFile('app/index.html');
-    win.on('close', (event) => {
-        if (!isQuiting) {
-            event.preventDefault();
-            win.hide();
-            return false;
-        }
-    });
+    win.on('close', onWindowClose);
+    
     return win;
+}
+
+
+function onWindowClose(event: any) {
+    if (!isQuiting) {
+        event.preventDefault();
+        win.hide();
+        return false;
+    }
 }
 
 function createTray(): Tray { 
     let tray = new Tray('favicon.ico');
-    const contextMenu = Menu.buildFromTemplate([
-        {
-            label: 'Quit',
-            click: () => {
-                isQuiting = true;
-                app.quit();
-            }
-        },
-    ])
+    const contextMenu = Menu.buildFromTemplate(trayMenu);
     tray.setToolTip('Files sorter.');
     tray.setContextMenu(contextMenu);
-    tray.on('click', () => {
-        win.show();
-    })
-
+    tray.on('click', onTrayClick);
     return tray;
+}
+
+function onTrayClick() {
+    win.show();
 }
 
 app.on('ready', init);

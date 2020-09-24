@@ -1,5 +1,39 @@
-// $lightblue: lightblue;
+$primary-background: rgb(37, 37, 37);
+$secondary-background: rgb(63, 63, 63);
+$text: white;
+$primary: blue;
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 
-// body {
-//     background: $lightblue
-// }
+div#electron-titlebar {
+    height: 29px;
+    div {
+        height: 29px;
+    }
+    background-color: $secondary-background;
+    transition: all 0.2s;
+}
+
+html[electron-titlebar-platform=win32] #electron-titlebar > .button-close.hover {
+    background-color:  rgb(255, 88, 88) !important;
+    border-radius: 4px;
+    img {
+        transform: rotate(90deg);
+    }
+}
+
+body {
+    font-family: 'Ubuntu', sans-serif;
+    background: $primary-background;
+    margin: 0;
+}
+
+
+.main-content {
+    color: $text;
+    height: calc(100% - 29px);
+    width: 100%;
+    top: 29px;
+    position: absolute;
+    padding: 15px;
+    box-sizing: border-box;
+}
