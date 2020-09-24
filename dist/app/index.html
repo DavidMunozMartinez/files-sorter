@@ -5,11 +5,32 @@
     <title>File sorter</title>
 </head>
 <body>
-    <div id="electron-titlebar" class="drag">
-    </div>
+    <!-- Titlebar is prepended here on windows-->
     <div class="main-content">
-        Select a folder:
+        <div class="column left-column">
+            <div class="column-title">
+                <p>Folders</p>
+            </div>
+
+            <div class="column-content">
+                <div class="folder-selector">
+                    <div class="add-folder"></div>
+                    <div class="folder-path" spellcheck="false" contenteditable="true"></div>
+                </div>
+                
+                <div class="folder-list"></div>
+            </div>
+            
+        </div>
+        <div class="column right-column">
+            <div class="column-title">
+                <p>Extensions</p>
+            </div>
+        </div> 
+        <input id="folder-selector" type="file" webkitdirectory style="display: none;">
     </div>
+
+    <div class="footer">Thanks for using our app <3</div>
     <script src="app.js"></script>
 </body>
 </html>

@@ -29,7 +29,7 @@ module.exports = [
     ]
   },
   {
-    target: 'web',
+    target: 'electron-renderer',
     entry: ['./src/render/app.ts', './src/render/styles.scss'],
     mode: 'development',
     devtool: 'source-map',

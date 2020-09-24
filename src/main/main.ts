@@ -1,4 +1,5 @@
-import { app, BrowserWindow, Tray, Menu } from 'electron';
+import { app, BrowserWindow, Tray, Menu, nativeImage } from 'electron';
+import * as path from 'path';
 // Live reload for the render process
 require('electron-reload')('dist/app');
 
@@ -24,9 +25,9 @@ function init() {
 function createWindow(): BrowserWindow {
     // Create the browser window.
     win = new BrowserWindow({
-        width: 400,
-        height: 600,
-        frame: false,
+        width: 700,
+        height: 500,
+        frame: process.platform == 'darwin',
         maximizable: false,
         webPreferences: {
             nodeIntegration: true,
@@ -36,6 +37,7 @@ function createWindow(): BrowserWindow {
 
     // Path to index on the dist folder   
     win.loadFile('app/index.html');
+    win.webContents.toggleDevTools();
     win.on('close', onWindowClose);
     
     return win;
@@ -43,7 +45,8 @@ function createWindow(): BrowserWindow {
 
 
 function onWindowClose(event: any) {
-    if (!isQuiting) {
+    // For testing porpuses we allow the close for OSX
+    if (!isQuiting && process.platform != 'darwin') {
         event.preventDefault();
         win.hide();
         return false;
@@ -51,7 +54,8 @@ function onWindowClose(event: any) {
 }
 
 function createTray(): Tray { 
-    let tray = new Tray('favicon.ico');
+    let iconPath = path.join('favicon.ico')
+    let tray = new Tray(nativeImage.createFromPath(iconPath));
     const contextMenu = Menu.buildFromTemplate(trayMenu);
     tray.setToolTip('Files sorter.');
     tray.setContextMenu(contextMenu);

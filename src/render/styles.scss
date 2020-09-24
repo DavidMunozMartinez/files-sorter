@@ -1,7 +1,8 @@
 $primary-background: rgb(37, 37, 37);
 $secondary-background: rgb(63, 63, 63);
-$text: white;
-$primary: blue;
+$secondary-background-highlight: rgb(112, 112, 112);
+$text: rgb(214, 214, 214);
+$primary: rgb(68, 165, 128);
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 
 div#electron-titlebar {
@@ -13,27 +14,95 @@ div#electron-titlebar {
     transition: all 0.2s;
 }
 
-html[electron-titlebar-platform=win32] #electron-titlebar > .button-close.hover {
+#electron-titlebar > .button-close.hover {
     background-color:  rgb(255, 88, 88) !important;
     border-radius: 4px;
-    img {
-        transform: rotate(90deg);
-    }
 }
 
 body {
     font-family: 'Ubuntu', sans-serif;
     background: $primary-background;
+    color: $text;
     margin: 0;
 }
 
-
 .main-content {
-    color: $text;
-    height: calc(100% - 29px);
     width: 100%;
-    top: 29px;
+    height: 100%;
+    top: 0;
     position: absolute;
     padding: 15px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    div.left-column {
+        flex: 2;
+    }
+    div.right-column {
+        flex: 1
+    }
+
+    .column .column-title {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+div#electron-titlebar + .main-content {
+    height: calc(100% - 29px);
+    top: 29px;
+}
+
+.left-column {
+    box-sizing: border-box;
+    .folder-selector {
+        width: 100%;
+        height: 30px;
+        display: inline-block;
+        position: relative;
+        .add-folder,
+        .folder-path {
+            height: 30px;
+            display: inline-block;
+            border: 1px solid $secondary-background;
+            border-radius: 5px;
+            position: absolute;
+            top: 0;
+            box-sizing: border-box;
+        }
+        .add-folder {
+            width: 30px;
+            left: 0;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .add-folder:hover {
+            background: $primary;
+            border-radius: 10px;
+        }
+
+        .folder-path {
+            width: calc(100% - 50px);
+            right: 15px;
+            outline-color: unset;
+            padding: 5px;
+            outline: unset
+        }
+        .folder-path:focus {
+            border: 1px solid $secondary-background-highlight;
+        }
+    }
+}
+
+.right-column {
+    border-radius: 5px;
+    border: 1px solid $secondary-background;
+}
+
+.footer {
+    color: rgb(83, 83, 83);
+    position: fixed;
+    bottom: 5px;
+    left: 5px;
+    font-size: 11px;
 }
