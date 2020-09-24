@@ -1,5 +1,5 @@
 $primary-background: rgb(37, 37, 37);
-$secondary-background: rgb(105, 105, 105);
+$secondary-background: rgb(83, 83, 83);
 $secondary-background-highlight: rgb(112, 112, 112);
 $text: rgb(214, 214, 214);
 $primary: rgb(68, 165, 128);
@@ -37,7 +37,7 @@ body {
     display: flex;
     flex-direction: row;
     div.left-column {
-        flex: 2;
+        flex: 1;
     }
     div.right-column {
         flex: 1
@@ -103,8 +103,21 @@ div[style="position: relative;"] + .main-content {
 }
 
 .right-column {
-    border-radius: 5px;
-    border: 1px solid $secondary-background;
+    display: flex;
+    flex-direction: column;
+    .categories,
+    .extensions {
+        border-radius: 5px;
+        border: 1px solid $secondary-background;
+    }
+    .categories {
+        flex: 1;
+        margin-bottom: 15px;
+    }
+    .extensions {
+        flex: 1;
+    }
+
 }
 
 .footer {
