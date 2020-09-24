@@ -3,8 +3,12 @@ $secondary-background: rgb(83, 83, 83);
 $secondary-background-highlight: rgb(112, 112, 112);
 $text: rgb(214, 214, 214);
 $primary: rgb(68, 165, 128);
+$secondary: rgb(77, 126, 199);
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
-// @import 'material-icons/iconfont/material-icons.scss';
+@import '../../node_modules/material-icons-font/material-icons-font.css';
+
+@import 'left-column.scss';
+@import 'right-column.scss';
 
 div#electron-titlebar {
     height: 29px;
@@ -36,13 +40,11 @@ body {
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
-    div.left-column {
-        flex: 1;
-    }
+    div.left-column,
     div.right-column {
-        flex: 1
+        flex: 1;
+        position: relative;
     }
-
     .column .column-title {
         width: 100%;
         text-align: center;
@@ -55,69 +57,6 @@ body {
 div[style="position: relative;"] + .main-content {
     height: calc(100% - 29px);
     top: 29px;
-}
-
-.left-column {
-    box-sizing: border-box;
-    .folder-selector {
-        width: 100%;
-        height: 30px;
-        display: inline-block;
-        position: relative;
-        .add-folder,
-        .folder-path {
-            height: 30px;
-            display: inline-block;
-            border: 1px solid $secondary-background;
-            border-radius: 5px;
-            position: absolute;
-            top: 0;
-            box-sizing: border-box;
-        }
-        .add-folder {
-            width: 30px;
-            left: 0;
-            transition: all 0.2s;
-            cursor: pointer;
-            border-radius: 5px 0px 0px 5px;
-        }
-        .add-folder:hover {
-            background: $primary;
-        }
-        .add-folder:hover,
-        .add-folder:hover + .folder-path {
-            border-radius: 5px;
-
-        }
-        .folder-path {
-            width: calc(100% - 44px);
-            right: 15px;
-            outline-color: unset;
-            outline: unset;
-            border-radius: 0px 5px 5px 0px;
-        }
-        .folder-path:focus {
-            border: 1px solid $secondary-background-highlight;
-        }
-    }
-}
-
-.right-column {
-    display: flex;
-    flex-direction: column;
-    .categories,
-    .extensions {
-        border-radius: 5px;
-        border: 1px solid $secondary-background;
-    }
-    .categories {
-        flex: 1;
-        margin-bottom: 15px;
-    }
-    .extensions {
-        flex: 1;
-    }
-
 }
 
 .footer {

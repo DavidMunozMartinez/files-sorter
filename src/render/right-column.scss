@@ -1,0 +1,16 @@
+.right-column {
+    display: flex;
+    flex-direction: column;
+    .categories,
+    .extensions {
+        border-radius: 5px;
+        border: 1px solid $secondary-background;
+    }
+    .categories {
+        flex: 1;
+        margin-bottom: 15px;
+    }
+    .extensions {
+        flex: 1;
+    }
+}
