@@ -1,9 +1,10 @@
 import * as chokidar from 'chokidar';
 import * as os from 'os';
 import * as fs from 'fs'
+import * as path from 'path';
 
 // Default download path for windows
-let path = `\\users\\${os.userInfo().username}\\downloads`;
+let folder = normalize(`${os.userInfo().homedir}\\downloads`);
 
 // Make sure to get this data from a config file later
 const categories: any = {
@@ -13,11 +14,11 @@ const categories: any = {
 
 let mappedCategories: any = mapCategories();
 
-let watcher = chokidar.watch(path, {
+let watcher = chokidar.watch(folder, {
     persistent: true,
     depth: 2,
     awaitWriteFinish: {
-        stabilityThreshold: 0,
+        stabilityThreshold: 100,
         pollInterval: 100
     },
     ignoreInitial: false
@@ -30,7 +31,7 @@ watcher.on('add', added);
  * @param {string} origin Path of the new file, looks somthing like this: c:\users\user-name\downloads\filename.extension`
  */
 function added(origin: string) {
-    let name: any = origin.split('\\').pop();
+    let name: any = path.basename(origin)
     let extension = name.split('.').pop();
     let dest: any = {};
 
@@ -39,8 +40,8 @@ function added(origin: string) {
         return;
     }
 
-    dest.dir = `${path}\\${mappedCategories[extension]}`; 
-    dest.path = `${dest.dir}\\${name}`;
+    dest.dir = normalize(`${folder}\\${mappedCategories[extension]}`); 
+    dest.path = normalize(`${dest.dir}\\${name}`);
 
     // Moving the file triggers the 'add' event again, validate the paths to avoid executing logic twice
     if (dest.path && dest.path.toLowerCase() != origin.toLowerCase()) {
@@ -49,7 +50,7 @@ function added(origin: string) {
             fs.mkdirSync(dest.dir);
         }
 
-        fs.renameSync(origin, dest.path);
+        fs.renameSync(normalize(origin), normalize(dest.path));
     }
 }
 
@@ -60,11 +61,19 @@ function added(origin: string) {
 function mapCategories() {
     let paths = Object.keys(categories)
     let map: any = {};
-    paths.forEach((path) => {
-        let extensions = categories[path];
+    paths.forEach((location) => {
+        let extensions = categories[location];
         extensions.forEach((extension: string | number) => {
-            map[extension] = path;
+            map[extension] = location;
         });
     });
     return map;
+}
+
+function normalize (folder: string): string {
+    if (process.platform == 'darwin') {
+        folder = folder.replace('\\', '/');
+    }
+
+    return folder;
 }
