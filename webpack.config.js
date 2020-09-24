@@ -7,7 +7,6 @@ module.exports = [
   {
     target: 'electron-main',
     entry: ['./src/main/main.ts', './src/main/event-handler.ts'],
-    mode: 'development',
     externals: {
       fsevents: "require('fsevents')",
       "electron-reload": "require('electron-reload')"
