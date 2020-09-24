@@ -8,8 +8,8 @@ let folder = normalize(`${os.userInfo().homedir}\\downloads`);
 
 // Make sure to get this data from a config file later
 const categories: any = {
-    'Images': ['png', 'jpg', 'gif'],
-    'Executables/Installers': ['msi', 'exe']
+    // 'Images': ['png', 'jpg', 'gif'],
+    // 'Executables/Installers': ['msi', 'exe']
 }
 
 let mappedCategories: any = mapCategories();
