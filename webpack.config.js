@@ -3,8 +3,7 @@ const ElectronReloadPlugin = require('webpack-electron-reload')({
   path: path.join(__dirname, './dist/main.js'),
 });
 
-module.exports = [
-  {
+module.exports = [{
     target: 'electron-main',
     entry: ['./src/main/main.ts', './src/main/event-handler.ts'],
     externals: {
@@ -16,7 +15,9 @@ module.exports = [
     module: {
       rules: [{
         test: /\.ts$/,
-        use: [{ loader: 'ts-loader' }]
+        use: [{
+          loader: 'ts-loader'
+        }]
       }]
     },
     output: {
@@ -25,7 +26,7 @@ module.exports = [
       devtoolModuleFilenameTemplate: '[absolute-resource-path]'
     },
     plugins: [
-        ElectronReloadPlugin()
+      ElectronReloadPlugin()
     ]
   },
   {
@@ -34,24 +35,27 @@ module.exports = [
     mode: 'development',
     devtool: 'source-map',
     externals: {
-        'electron-titlebar': 'require("electron-titlebar")'
+      'electron-titlebar': 'require("electron-titlebar")'
     },
     module: {
       rules: [{
-        test: /\.ts$/,
-        use: [{ loader: 'ts-loader' }]
-      },
-      {
-        test: /\.s[ac]ss$/i,
-        use: [
-          // Creates `style` nodes from JS strings
-          'style-loader',
-          // Translates CSS into CommonJS
-          'css-loader',
-          // Compiles Sass to CSS
-          'sass-loader',
-        ]
-      }]
+          test: /\.ts$/,
+          use: [{
+            loader: 'ts-loader'
+          }]
+        },
+        {
+          test: /\.s[ac]ss$/i,
+          use: [
+            // Creates `style` nodes from JS strings
+            'style-loader',
+            // Translates CSS into CommonJS
+            'css-loader',
+            // Compiles Sass to CSS
+            'sass-loader',
+          ]
+        }
+      ]
     },
     output: {
       path: __dirname + '/dist/app',

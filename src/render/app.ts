@@ -1,13 +1,15 @@
 let platform = require('electron-platform');
-const {dialog} = require('electron').remote;
-// import { dialog } from 'electron'
+const { dialog } = require('electron').remote;
 
-// let dialog = remote.require('electron').dialog;
 
 if (!platform.isDarwin) {
-    let titlebar = document.createElement('div');
+    const titlebar = document.createElement('div');
+    const title = document.createElement('div');
     titlebar.id = 'electron-titlebar';
     titlebar.classList.add('drag');
+    title.innerHTML = 'File Sorter';
+    title.setAttribute('style', 'top: 5px; left: 5px; position: absolute');
+    titlebar.append(title);
     document.body.prepend(titlebar);
     require('electron-titlebar');
 }
@@ -21,7 +23,8 @@ folderButton.addEventListener('click', async () => {
         properties: ['openDirectory']
     });
 
-    folderInput.innerHTML = path.filePaths[0];
-    // console.log(path.filePaths);
+    if (path.filePaths.length > 0) {
+        folderInput.innerHTML = path.filePaths[0];
+    }
 });
 

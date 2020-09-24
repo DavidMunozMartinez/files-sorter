@@ -1,9 +1,10 @@
 $primary-background: rgb(37, 37, 37);
-$secondary-background: rgb(63, 63, 63);
+$secondary-background: rgb(105, 105, 105);
 $secondary-background-highlight: rgb(112, 112, 112);
 $text: rgb(214, 214, 214);
 $primary: rgb(68, 165, 128);
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
+// @import 'material-icons/iconfont/material-icons.scss';
 
 div#electron-titlebar {
     height: 29px;
@@ -11,7 +12,7 @@ div#electron-titlebar {
         height: 29px;
     }
     background-color: $secondary-background;
-    transition: all 0.2s;
+    transition: all 0.2s;    
 }
 
 #electron-titlebar > .button-close.hover {
@@ -48,7 +49,10 @@ body {
     }
 }
 
-div#electron-titlebar + .main-content {
+// This selector applies to the main content height and position, taking into account
+// that its brother exists in the DOM, the DOM only has this div before the main content
+// When its opened in windows, the MacOS uses its own frame
+div[style="position: relative;"] + .main-content {
     height: calc(100% - 29px);
     top: 29px;
 }
@@ -75,18 +79,22 @@ div#electron-titlebar + .main-content {
             left: 0;
             transition: all 0.2s;
             cursor: pointer;
+            border-radius: 5px 0px 0px 5px;
         }
         .add-folder:hover {
             background: $primary;
-            border-radius: 10px;
         }
+        .add-folder:hover,
+        .add-folder:hover + .folder-path {
+            border-radius: 5px;
 
+        }
         .folder-path {
-            width: calc(100% - 50px);
+            width: calc(100% - 44px);
             right: 15px;
             outline-color: unset;
-            padding: 5px;
-            outline: unset
+            outline: unset;
+            border-radius: 0px 5px 5px 0px;
         }
         .folder-path:focus {
             border: 1px solid $secondary-background-highlight;
