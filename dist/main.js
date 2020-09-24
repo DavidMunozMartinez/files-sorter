@@ -1,40 +1,6896 @@
-!function(t){var e={};function s(i){if(e[i])return e[i].exports;var r=e[i]={i:i,l:!1,exports:{}};return t[i].call(r.exports,r,r.exports,s),r.l=!0,r.exports}s.m=t,s.c=e,s.d=function(t,e,i){s.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:i})},s.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},s.t=function(t,e){if(1&e&&(t=s(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var i=Object.create(null);if(s.r(i),Object.defineProperty(i,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var r in t)s.d(i,r,function(e){return t[e]}.bind(null,r));return i},s.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return s.d(e,"a",e),e},s.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},s.p="",s(s.s=14)}([function(t,e){t.exports=require("path")},function(t,e){t.exports=require("fs")},function(t,e){t.exports=require("util")},function(t,e,s){"use strict";const i=s(0),r={DOT_LITERAL:"\\.",PLUS_LITERAL:"\\+",QMARK_LITERAL:"\\?",SLASH_LITERAL:"\\/",ONE_CHAR:"(?=.)",QMARK:"[^/]",END_ANCHOR:"(?:\\/|$)",DOTS_SLASH:"\\.{1,2}(?:\\/|$)",NO_DOT:"(?!\\.)",NO_DOTS:"(?!(?:^|\\/)\\.{1,2}(?:\\/|$))",NO_DOT_SLASH:"(?!\\.{0,1}(?:\\/|$))",NO_DOTS_SLASH:"(?!\\.{1,2}(?:\\/|$))",QMARK_NO_DOT:"[^.\\/]",STAR:"[^/]*?",START_ANCHOR:"(?:^|\\/)"},n={...r,SLASH_LITERAL:"[\\\\/]",QMARK:"[^\\\\/]",STAR:"[^\\\\/]*?",DOTS_SLASH:"\\.{1,2}(?:[\\\\/]|$)",NO_DOT:"(?!\\.)",NO_DOTS:"(?!(?:^|[\\\\/])\\.{1,2}(?:[\\\\/]|$))",NO_DOT_SLASH:"(?!\\.{0,1}(?:[\\\\/]|$))",NO_DOTS_SLASH:"(?!\\.{1,2}(?:[\\\\/]|$))",QMARK_NO_DOT:"[^.\\\\/]",START_ANCHOR:"(?:^|[\\\\/])",END_ANCHOR:"(?:[\\\\/]|$)"};t.exports={MAX_LENGTH:65536,POSIX_REGEX_SOURCE:{alnum:"a-zA-Z0-9",alpha:"a-zA-Z",ascii:"\\x00-\\x7F",blank:" \\t",cntrl:"\\x00-\\x1F\\x7F",digit:"0-9",graph:"\\x21-\\x7E",lower:"a-z",print:"\\x20-\\x7E ",punct:"\\-!\"#$%&'()\\*+,./:;<=>?@[\\]^_`{|}~",space:" \\t\\r\\n\\v\\f",upper:"A-Z",word:"A-Za-z0-9_",xdigit:"A-Fa-f0-9"},REGEX_BACKSLASH:/\\(?![*+?^${}(|)[\]])/g,REGEX_NON_SPECIAL_CHARS:/^[^@![\].,$*+?^{}()|\\/]+/,REGEX_SPECIAL_CHARS:/[-*+?.^${}(|)[\]]/,REGEX_SPECIAL_CHARS_BACKREF:/(\\?)((\W)(\3*))/g,REGEX_SPECIAL_CHARS_GLOBAL:/([-*+?.^${}(|)[\]])/g,REGEX_REMOVE_BACKSLASH:/(?:\[.*?[^\\]\]|\\(?=.))/g,REPLACEMENTS:{"***":"*","**/**":"**","**/**/**":"**"},CHAR_0:48,CHAR_9:57,CHAR_UPPERCASE_A:65,CHAR_LOWERCASE_A:97,CHAR_UPPERCASE_Z:90,CHAR_LOWERCASE_Z:122,CHAR_LEFT_PARENTHESES:40,CHAR_RIGHT_PARENTHESES:41,CHAR_ASTERISK:42,CHAR_AMPERSAND:38,CHAR_AT:64,CHAR_BACKWARD_SLASH:92,CHAR_CARRIAGE_RETURN:13,CHAR_CIRCUMFLEX_ACCENT:94,CHAR_COLON:58,CHAR_COMMA:44,CHAR_DOT:46,CHAR_DOUBLE_QUOTE:34,CHAR_EQUAL:61,CHAR_EXCLAMATION_MARK:33,CHAR_FORM_FEED:12,CHAR_FORWARD_SLASH:47,CHAR_GRAVE_ACCENT:96,CHAR_HASH:35,CHAR_HYPHEN_MINUS:45,CHAR_LEFT_ANGLE_BRACKET:60,CHAR_LEFT_CURLY_BRACE:123,CHAR_LEFT_SQUARE_BRACKET:91,CHAR_LINE_FEED:10,CHAR_NO_BREAK_SPACE:160,CHAR_PERCENT:37,CHAR_PLUS:43,CHAR_QUESTION_MARK:63,CHAR_RIGHT_ANGLE_BRACKET:62,CHAR_RIGHT_CURLY_BRACE:125,CHAR_RIGHT_SQUARE_BRACKET:93,CHAR_SEMICOLON:59,CHAR_SINGLE_QUOTE:39,CHAR_SPACE:32,CHAR_TAB:9,CHAR_UNDERSCORE:95,CHAR_VERTICAL_LINE:124,CHAR_ZERO_WIDTH_NOBREAK_SPACE:65279,SEP:i.sep,extglobChars:t=>({"!":{type:"negate",open:"(?:(?!(?:",close:`))${t.STAR})`},"?":{type:"qmark",open:"(?:",close:")?"},"+":{type:"plus",open:"(?:",close:")+"},"*":{type:"star",open:"(?:",close:")*"},"@":{type:"at",open:"(?:",close:")"}}),globChars:t=>!0===t?n:r}},function(t,e,s){"use strict";const i=s(0),r="win32"===process.platform,{REGEX_BACKSLASH:n,REGEX_REMOVE_BACKSLASH:o,REGEX_SPECIAL_CHARS:a,REGEX_SPECIAL_CHARS_GLOBAL:l}=s(3);e.isObject=t=>null!==t&&"object"==typeof t&&!Array.isArray(t),e.hasRegexChars=t=>a.test(t),e.isRegexChar=t=>1===t.length&&e.hasRegexChars(t),e.escapeRegex=t=>t.replace(l,"\\$1"),e.toPosixSlashes=t=>t.replace(n,"/"),e.removeBackslashes=t=>t.replace(o,t=>"\\"===t?"":t),e.supportsLookbehinds=()=>{const t=process.version.slice(1).split(".").map(Number);return 3===t.length&&t[0]>=9||8===t[0]&&t[1]>=10},e.isWindows=t=>t&&"boolean"==typeof t.windows?t.windows:!0===r||"\\"===i.sep,e.escapeLast=(t,s,i)=>{const r=t.lastIndexOf(s,i);return-1===r?t:"\\"===t[r-1]?e.escapeLast(t,s,r-1):`${t.slice(0,r)}\\${t.slice(r)}`},e.removePrefix=(t,e={})=>{let s=t;return s.startsWith("./")&&(s=s.slice(2),e.prefix="./"),s},e.wrapOutput=(t,e={},s={})=>{let i=`${s.contains?"":"^"}(?:${t})${s.contains?"":"$"}`;return!0===e.negated&&(i=`(?:^(?!${i}).*$)`),i}},function(t,e,s){"use strict";const i=s(6);t.exports=(t,e={})=>{let s=(t,r={})=>{let n=e.escapeInvalid&&i.isInvalidBrace(r),o=!0===t.invalid&&!0===e.escapeInvalid,a="";if(t.value)return(n||o)&&i.isOpenOrClose(t)?"\\"+t.value:t.value;if(t.value)return t.value;if(t.nodes)for(let e of t.nodes)a+=s(e);return a};return s(t)}},function(t,e,s){"use strict";e.isInteger=t=>"number"==typeof t?Number.isInteger(t):"string"==typeof t&&""!==t.trim()&&Number.isInteger(Number(t)),e.find=(t,e)=>t.nodes.find(t=>t.type===e),e.exceedsLimit=(t,s,i=1,r)=>!1!==r&&(!(!e.isInteger(t)||!e.isInteger(s))&&(Number(s)-Number(t))/Number(i)>=r),e.escapeNode=(t,e=0,s)=>{let i=t.nodes[e];i&&(s&&i.type===s||"open"===i.type||"close"===i.type)&&!0!==i.escaped&&(i.value="\\"+i.value,i.escaped=!0)},e.encloseBrace=t=>"brace"===t.type&&(t.commas>>0+t.ranges>>0==0&&(t.invalid=!0,!0)),e.isInvalidBrace=t=>"brace"===t.type&&(!(!0!==t.invalid&&!t.dollar)||(t.commas>>0+t.ranges>>0==0||!0!==t.open||!0!==t.close)&&(t.invalid=!0,!0)),e.isOpenOrClose=t=>"open"===t.type||"close"===t.type||(!0===t.open||!0===t.close),e.reduce=t=>t.reduce((t,e)=>("text"===e.type&&t.push(e.value),"range"===e.type&&(e.type="text"),t),[]),e.flatten=(...t)=>{const e=[],s=t=>{for(let i=0;i<t.length;i++){let r=t[i];Array.isArray(r)?s(r,e):void 0!==r&&e.push(r)}return e};return s(t),e}},function(t,e,s){"use strict";const{sep:i}=s(0),{platform:r}=process;e.EV_ALL="all",e.EV_READY="ready",e.EV_ADD="add",e.EV_CHANGE="change",e.EV_ADD_DIR="addDir",e.EV_UNLINK="unlink",e.EV_UNLINK_DIR="unlinkDir",e.EV_RAW="raw",e.EV_ERROR="error",e.STR_DATA="data",e.STR_END="end",e.STR_CLOSE="close",e.FSEVENT_CREATED="created",e.FSEVENT_MODIFIED="modified",e.FSEVENT_DELETED="deleted",e.FSEVENT_MOVED="moved",e.FSEVENT_CLONED="cloned",e.FSEVENT_UNKNOWN="unknown",e.FSEVENT_TYPE_FILE="file",e.FSEVENT_TYPE_DIRECTORY="directory",e.FSEVENT_TYPE_SYMLINK="symlink",e.KEY_LISTENERS="listeners",e.KEY_ERR="errHandlers",e.KEY_RAW="rawEmitters",e.HANDLER_KEYS=[e.KEY_LISTENERS,e.KEY_ERR,e.KEY_RAW],e.DOT_SLASH="."+i,e.BACK_SLASH_RE=/\\/g,e.DOUBLE_SLASH_RE=/\/\//,e.SLASH_OR_BACK_SLASH_RE=/[/\\]/,e.DOT_RE=/\..*\.(sw[px])$|~$|\.subl.*\.tmp/,e.REPLACER_RE=/^\.[/\\]/,e.SLASH="/",e.SLASH_SLASH="//",e.BRACE_START="{",e.BANG="!",e.ONE_DOT=".",e.TWO_DOTS="..",e.STAR="*",e.GLOBSTAR="**",e.ROOT_GLOBSTAR="/**/*",e.SLASH_GLOBSTAR="/**",e.DIR_SUFFIX="Dir",e.ANYMATCH_OPTS={dot:!0},e.STRING_TYPE="string",e.FUNCTION_TYPE="function",e.EMPTY_STR="",e.EMPTY_FN=()=>{},e.IDENTITY_FN=t=>t,e.isWindows="win32"===r,e.isMacos="darwin"===r,e.isLinux="linux"===r},function(t,e,s){"use strict";const{EventEmitter:i}=s(17),r=s(1),n=s(0),{promisify:o}=s(2),a=s(18),l=s(23).default,u=s(24),c=s(11),h=s(26),p=s(10),f=s(33),d=s(37),{EV_ALL:_,EV_READY:E,EV_ADD:g,EV_CHANGE:m,EV_UNLINK:y,EV_ADD_DIR:R,EV_UNLINK_DIR:A,EV_RAW:w,EV_ERROR:v,STR_CLOSE:b,STR_END:S,BACK_SLASH_RE:C,DOUBLE_SLASH_RE:x,SLASH_OR_BACK_SLASH_RE:T,DOT_RE:H,REPLACER_RE:O,SLASH:L,SLASH_SLASH:N,BRACE_START:P,BANG:I,ONE_DOT:D,TWO_DOTS:k,GLOBSTAR:F,SLASH_GLOBSTAR:$,ANYMATCH_OPTS:M,STRING_TYPE:W,FUNCTION_TYPE:G,EMPTY_STR:B,EMPTY_FN:U,isWindows:K,isMacos:j}=s(7),V=o(r.stat),Y=o(r.readdir),z=(t=[])=>Array.isArray(t)?t:[t],Q=(t,e=[])=>(t.forEach(t=>{Array.isArray(t)?Q(t,e):e.push(t)}),e),q=t=>{const e=Q(z(t));if(!e.every(t=>typeof t===W))throw new TypeError("Non-string provided as watch path: "+e);return e.map(Z)},X=t=>{let e=t.replace(C,L),s=!1;for(e.startsWith(N)&&(s=!0);e.match(x);)e=e.replace(x,L);return s&&(e=L+e),e},Z=t=>X(n.normalize(X(t))),J=(t=B)=>e=>typeof e!==W?e:Z(n.isAbsolute(e)?e:n.join(t,e)),tt=(t,e)=>void 0===t[e];class et{constructor(t,e){this.path=t,this._removeWatcher=e,this.items=new Set}add(t){const{items:e}=this;e&&t!==D&&t!==k&&e.add(t)}async remove(t){const{items:e}=this;if(!e)return;if(e.delete(t),e.size>0)return;const s=this.path;try{await Y(s)}catch(t){this._removeWatcher&&this._removeWatcher(n.dirname(s),n.basename(s))}}has(t){const{items:e}=this;if(e)return e.has(t)}getChildren(){const{items:t}=this;if(t)return[...t.values()]}dispose(){this.items.clear(),delete this.path,delete this._removeWatcher,delete this.items,Object.freeze(this)}}class st{constructor(t,e,s,i){this.fsw=i,this.path=t=t.replace(O,B),this.watchPath=e,this.fullWatchPath=n.resolve(e),this.hasGlob=e!==t,t===B&&(this.hasGlob=!1),this.globSymlink=!(!this.hasGlob||!s)&&void 0,this.globFilter=!!this.hasGlob&&l(t,void 0,M),this.dirParts=this.getDirParts(t),this.dirParts.forEach(t=>{t.length>1&&t.pop()}),this.followSymlinks=s,this.statMethod=s?"stat":"lstat"}checkGlobSymlink(t){return void 0===this.globSymlink&&(this.globSymlink=t.fullParentDir!==this.fullWatchPath&&{realPath:t.fullParentDir,linkPath:this.fullWatchPath}),this.globSymlink?t.fullPath.replace(this.globSymlink.realPath,this.globSymlink.linkPath):t.fullPath}entryPath(t){return n.join(this.watchPath,n.relative(this.watchPath,this.checkGlobSymlink(t)))}filterPath(t){const{stats:e}=t;if(e&&e.isSymbolicLink())return this.filterDir(t);const s=this.entryPath(t);return(!this.hasGlob||typeof this.globFilter!==G||this.globFilter(s))&&this.fsw._isntIgnored(s,e)&&this.fsw._hasReadPermissions(e)}getDirParts(t){if(!this.hasGlob)return[];const e=[];return(t.includes(P)?h.expand(t):[t]).forEach(t=>{e.push(n.relative(this.watchPath,t).split(T))}),e}filterDir(t){if(this.hasGlob){const e=this.getDirParts(this.checkGlobSymlink(t));let s=!1;this.unmatchedGlob=!this.dirParts.some(t=>t.every((t,i)=>(t===F&&(s=!0),s||!e[0][i]||l(t,e[0][i],M))))}return!this.unmatchedGlob&&this.fsw._isntIgnored(this.entryPath(t),t.stats)}}class it extends i{constructor(t){super();const e={};t&&Object.assign(e,t),this._watched=new Map,this._closers=new Map,this._ignoredPaths=new Set,this._throttled=new Map,this._symlinkPaths=new Map,this._streams=new Set,this.closed=!1,tt(e,"persistent")&&(e.persistent=!0),tt(e,"ignoreInitial")&&(e.ignoreInitial=!1),tt(e,"ignorePermissionErrors")&&(e.ignorePermissionErrors=!1),tt(e,"interval")&&(e.interval=100),tt(e,"binaryInterval")&&(e.binaryInterval=300),tt(e,"disableGlobbing")&&(e.disableGlobbing=!1),e.enableBinaryInterval=e.binaryInterval!==e.interval,tt(e,"useFsEvents")&&(e.useFsEvents=!e.usePolling);d.canUse()||(e.useFsEvents=!1),tt(e,"usePolling")&&!e.useFsEvents&&(e.usePolling=j);const s=process.env.CHOKIDAR_USEPOLLING;if(void 0!==s){const t=s.toLowerCase();e.usePolling="false"!==t&&"0"!==t&&("true"===t||"1"===t||!!t)}const i=process.env.CHOKIDAR_INTERVAL;i&&(e.interval=Number.parseInt(i,10)),tt(e,"atomic")&&(e.atomic=!e.usePolling&&!e.useFsEvents),e.atomic&&(this._pendingUnlinks=new Map),tt(e,"followSymlinks")&&(e.followSymlinks=!0),tt(e,"awaitWriteFinish")&&(e.awaitWriteFinish=!1),!0===e.awaitWriteFinish&&(e.awaitWriteFinish={});const r=e.awaitWriteFinish;r&&(r.stabilityThreshold||(r.stabilityThreshold=2e3),r.pollInterval||(r.pollInterval=100),this._pendingWrites=new Map),e.ignored&&(e.ignored=z(e.ignored));let n=0;this._emitReady=()=>{n++,n>=this._readyCount&&(this._emitReady=U,this._readyEmitted=!0,process.nextTick(()=>this.emit(E)))},this._emitRaw=(...t)=>this.emit(w,...t),this._readyEmitted=!1,this.options=e,e.useFsEvents?this._fsEventsHandler=new d(this):this._nodeFsHandler=new f(this),Object.freeze(e)}add(t,e,s){const{cwd:i,disableGlobbing:r}=this.options;this.closed=!1;let o=q(t);return i&&(o=o.map(t=>{const e=((t,e)=>n.isAbsolute(t)?t:t.startsWith(I)?I+n.join(e,t.slice(1)):n.join(e,t))(t,i);return r||!c(t)?e:p(e)})),o=o.filter(t=>t.startsWith(I)?(this._ignoredPaths.add(t.slice(1)),!1):(this._ignoredPaths.delete(t),this._ignoredPaths.delete(t+$),this._userIgnored=void 0,!0)),this.options.useFsEvents&&this._fsEventsHandler?(this._readyCount||(this._readyCount=o.length),this.options.persistent&&(this._readyCount*=2),o.forEach(t=>this._fsEventsHandler._addToFsEvents(t))):(this._readyCount||(this._readyCount=0),this._readyCount+=o.length,Promise.all(o.map(async t=>{const i=await this._nodeFsHandler._addToNodeFs(t,!s,0,0,e);return i&&this._emitReady(),i})).then(t=>{this.closed||t.filter(t=>t).forEach(t=>{this.add(n.dirname(t),n.basename(e||t))})})),this}unwatch(t){if(this.closed)return this;const e=q(t),{cwd:s}=this.options;return e.forEach(t=>{n.isAbsolute(t)||this._closers.has(t)||(s&&(t=n.join(s,t)),t=n.resolve(t)),this._closePath(t),this._ignoredPaths.add(t),this._watched.has(t)&&this._ignoredPaths.add(t+$),this._userIgnored=void 0}),this}close(){if(this.closed)return this._closePromise;this.closed=!0,this.removeAllListeners();const t=[];return this._closers.forEach(e=>e.forEach(e=>{const s=e();s instanceof Promise&&t.push(s)})),this._streams.forEach(t=>t.destroy()),this._userIgnored=void 0,this._readyCount=0,this._readyEmitted=!1,this._watched.forEach(t=>t.dispose()),["closers","watched","streams","symlinkPaths","throttled"].forEach(t=>{this["_"+t].clear()}),this._closePromise=t.length?Promise.all(t).then(()=>{}):Promise.resolve(),this._closePromise}getWatched(){const t={};return this._watched.forEach((e,s)=>{const i=this.options.cwd?n.relative(this.options.cwd,s):s;t[i||D]=e.getChildren().sort()}),t}emitWithAll(t,e){this.emit(...e),t!==v&&this.emit(_,...e)}async _emit(t,e,s,i,r){if(this.closed)return;const o=this.options;K&&(e=n.normalize(e)),o.cwd&&(e=n.relative(o.cwd,e));const a=[t,e];void 0!==r?a.push(s,i,r):void 0!==i?a.push(s,i):void 0!==s&&a.push(s);const l=o.awaitWriteFinish;let u;if(l&&(u=this._pendingWrites.get(e)))return u.lastChange=new Date,this;if(o.atomic){if(t===y)return this._pendingUnlinks.set(e,a),setTimeout(()=>{this._pendingUnlinks.forEach((t,e)=>{this.emit(...t),this.emit(_,...t),this._pendingUnlinks.delete(e)})},"number"==typeof o.atomic?o.atomic:100),this;t===g&&this._pendingUnlinks.has(e)&&(t=a[0]=m,this._pendingUnlinks.delete(e))}if(l&&(t===g||t===m)&&this._readyEmitted){const s=(e,s)=>{e?(t=a[0]=v,a[1]=e,this.emitWithAll(t,a)):s&&(a.length>2?a[2]=s:a.push(s),this.emitWithAll(t,a))};return this._awaitWriteFinish(e,l.stabilityThreshold,t,s),this}if(t===m){if(!this._throttle(m,e,50))return this}if(o.alwaysStat&&void 0===s&&(t===g||t===R||t===m)){const t=o.cwd?n.join(o.cwd,e):e;let s;try{s=await V(t)}catch(t){}if(!s||this.closed)return;a.push(s)}return this.emitWithAll(t,a),this}_handleError(t){const e=t&&t.code;return t&&"ENOENT"!==e&&"ENOTDIR"!==e&&(!this.options.ignorePermissionErrors||"EPERM"!==e&&"EACCES"!==e)&&this.emit(v,t),t||this.closed}_throttle(t,e,s){this._throttled.has(t)||this._throttled.set(t,new Map);const i=this._throttled.get(t),r=i.get(e);if(r)return r.count++,!1;let n;const o=()=>{const t=i.get(e),s=t?t.count:0;return i.delete(e),clearTimeout(n),t&&clearTimeout(t.timeoutObject),s};n=setTimeout(o,s);const a={timeoutObject:n,clear:o,count:0};return i.set(e,a),a}_incrReadyCount(){return this._readyCount++}_awaitWriteFinish(t,e,s,i){let o,a=t;this.options.cwd&&!n.isAbsolute(t)&&(a=n.join(this.options.cwd,t));const l=new Date,u=s=>{r.stat(a,(r,n)=>{if(r||!this._pendingWrites.has(t))return void(r&&"ENOENT"!==r.code&&i(r));const a=Number(new Date);s&&n.size!==s.size&&(this._pendingWrites.get(t).lastChange=a);a-this._pendingWrites.get(t).lastChange>=e?(this._pendingWrites.delete(t),i(void 0,n)):o=setTimeout(u,this.options.awaitWriteFinish.pollInterval,n)})};this._pendingWrites.has(t)||(this._pendingWrites.set(t,{lastChange:l,cancelWait:()=>(this._pendingWrites.delete(t),clearTimeout(o),s)}),o=setTimeout(u,this.options.awaitWriteFinish.pollInterval))}_getGlobIgnored(){return[...this._ignoredPaths.values()]}_isIgnored(t,e){if(this.options.atomic&&H.test(t))return!0;if(!this._userIgnored){const{cwd:t}=this.options,e=this.options.ignored,s=e&&e.map(J(t)),i=z(s).filter(t=>typeof t===W&&!c(t)).map(t=>t+$),r=this._getGlobIgnored().map(J(t)).concat(s,i);this._userIgnored=l(r,void 0,M)}return this._userIgnored([t,e])}_isntIgnored(t,e){return!this._isIgnored(t,e)}_getWatchHelpers(t,e){const s=e||this.options.disableGlobbing||!c(t)?t:u(t),i=this.options.followSymlinks;return new st(t,s,i,this)}_getWatchedDir(t){this._boundRemove||(this._boundRemove=this._remove.bind(this));const e=n.resolve(t);return this._watched.has(e)||this._watched.set(e,new et(e,this._boundRemove)),this._watched.get(e)}_hasReadPermissions(t){if(this.options.ignorePermissionErrors)return!0;const e=511&(t&&Number.parseInt(t.mode,10)),s=Number.parseInt(e.toString(8)[0],10);return Boolean(4&s)}_remove(t,e,s){const i=n.join(t,e),r=n.resolve(i);if(s=null!=s?s:this._watched.has(i)||this._watched.has(r),!this._throttle("remove",i,100))return;s||this.options.useFsEvents||1!==this._watched.size||this.add(t,e,!0);this._getWatchedDir(i).getChildren().forEach(t=>this._remove(i,t));const o=this._getWatchedDir(t),a=o.has(e);o.remove(e);let l=i;if(this.options.cwd&&(l=n.relative(this.options.cwd,i)),this.options.awaitWriteFinish&&this._pendingWrites.has(l)){if(this._pendingWrites.get(l).cancelWait()===g)return}this._watched.delete(i),this._watched.delete(r);const u=s?A:y;a&&!this._isIgnored(i)&&this._emit(u,i),this.options.useFsEvents||this._closePath(i)}_closePath(t){this._closeFile(t);const e=n.dirname(t);this._getWatchedDir(e).remove(n.basename(t))}_closeFile(t){const e=this._closers.get(t);e&&(e.forEach(t=>t()),this._closers.delete(t))}_addPathCloser(t,e){if(!e)return;let s=this._closers.get(t);s||(s=[],this._closers.set(t,s)),s.push(e)}_readdirp(t,e){if(this.closed)return;const s={type:_,alwaysStat:!0,lstat:!0,...e};let i=a(t,s);return this._streams.add(i),i.once(b,()=>{i=void 0}),i.once(S,()=>{i&&(this._streams.delete(i),i=void 0)}),i}}e.FSWatcher=it;e.watch=(t,e)=>{const s=new it(e);return s.add(t),s}},function(t,e,s){"use strict";t.exports=s(20)},function(t,e){
-/*!
- * normalize-path <https://github.com/jonschlinkert/normalize-path>
- *
- * Copyright (c) 2014-2018, Jon Schlinkert.
- * Released under the MIT License.
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./node_modules/anymatch/index.js":
+/*!****************************************!*\
+  !*** ./node_modules/anymatch/index.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+
+const picomatch = __webpack_require__(/*! picomatch */ "./node_modules/picomatch/index.js");
+const normalizePath = __webpack_require__(/*! normalize-path */ "./node_modules/normalize-path/index.js");
+
+/**
+ * @typedef {(testString: string) => boolean} AnymatchFn
+ * @typedef {string|RegExp|AnymatchFn} AnymatchPattern
+ * @typedef {AnymatchPattern|AnymatchPattern[]} AnymatchMatcher
  */
-t.exports=function(t,e){if("string"!=typeof t)throw new TypeError("expected path to be a string");if("\\"===t||"/"===t)return"/";var s=t.length;if(s<=1)return t;var i="";if(s>4&&"\\"===t[3]){var r=t[2];"?"!==r&&"."!==r||"\\\\"!==t.slice(0,2)||(t=t.slice(2),i="//")}var n=t.split(/[/\\]+/);return!1!==e&&""===n[n.length-1]&&n.pop(),i+n.join("/")}},function(t,e,s){
-/*!
- * is-glob <https://github.com/jonschlinkert/is-glob>
- *
- * Copyright (c) 2014-2017, Jon Schlinkert.
- * Released under the MIT License.
+const BANG = '!';
+const DEFAULT_OPTIONS = {returnIndex: false};
+const arrify = (item) => Array.isArray(item) ? item : [item];
+
+/**
+ * @param {AnymatchPattern} matcher
+ * @param {object} options
+ * @returns {AnymatchFn}
  */
-var i=s(25),r={"{":"}","(":")","[":"]"},n=/\\(.)|(^!|\*|[\].+)]\?|\[[^\\\]]+\]|\{[^\\}]+\}|\(\?[:!=][^\\)]+\)|\([^|]+\|[^\\)]+\))/,o=/\\(.)|(^!|[*?{}()[\]]|\(\?)/;t.exports=function(t,e){if("string"!=typeof t||""===t)return!1;if(i(t))return!0;var s,a=n;for(e&&!1===e.strict&&(a=o);s=a.exec(t);){if(s[2])return!0;var l=s.index+s[0].length,u=s[1],c=u?r[u]:null;if(u&&c){var h=t.indexOf(c,l);-1!==h&&(l=h+1)}t=t.slice(l)}return!1}},function(t,e){t.exports=require("os")},function(t,e,s){"use strict";
+const createPattern = (matcher, options) => {
+  if (typeof matcher === 'function') {
+    return matcher;
+  }
+  if (typeof matcher === 'string') {
+    const glob = picomatch(matcher, options);
+    return (string) => matcher === string || glob(string);
+  }
+  if (matcher instanceof RegExp) {
+    return (string) => matcher.test(string);
+  }
+  return (string) => false;
+};
+
+/**
+ * @param {Array<Function>} patterns
+ * @param {Array<Function>} negPatterns
+ * @param {String|Array} args
+ * @param {Boolean} returnIndex
+ * @returns {boolean|number}
+ */
+const matchPatterns = (patterns, negPatterns, args, returnIndex) => {
+  const isList = Array.isArray(args);
+  const _path = isList ? args[0] : args;
+  if (!isList && typeof _path !== 'string') {
+    throw new TypeError('anymatch: second argument must be a string: got ' +
+      Object.prototype.toString.call(_path))
+  }
+  const path = normalizePath(_path);
+
+  for (let index = 0; index < negPatterns.length; index++) {
+    const nglob = negPatterns[index];
+    if (nglob(path)) {
+      return returnIndex ? -1 : false;
+    }
+  }
+
+  const applied = isList && [path].concat(args.slice(1));
+  for (let index = 0; index < patterns.length; index++) {
+    const pattern = patterns[index];
+    if (isList ? pattern(...applied) : pattern(path)) {
+      return returnIndex ? index : true;
+    }
+  }
+
+  return returnIndex ? -1 : false;
+};
+
+/**
+ * @param {AnymatchMatcher} matchers
+ * @param {Array|string} testString
+ * @param {object} options
+ * @returns {boolean|number|Function}
+ */
+const anymatch = (matchers, testString, options = DEFAULT_OPTIONS) => {
+  if (matchers == null) {
+    throw new TypeError('anymatch: specify first argument');
+  }
+  const opts = typeof options === 'boolean' ? {returnIndex: options} : options;
+  const returnIndex = opts.returnIndex || false;
+
+  // Early cache for matchers.
+  const mtchers = arrify(matchers);
+  const negatedGlobs = mtchers
+    .filter(item => typeof item === 'string' && item.charAt(0) === BANG)
+    .map(item => item.slice(1))
+    .map(item => picomatch(item, opts));
+  const patterns = mtchers.map(matcher => createPattern(matcher, opts));
+
+  if (testString == null) {
+    return (testString, ri = false) => {
+      const returnIndex = typeof ri === 'boolean' ? ri : false;
+      return matchPatterns(patterns, negatedGlobs, testString, returnIndex);
+    }
+  }
+
+  return matchPatterns(patterns, negatedGlobs, testString, returnIndex);
+};
+
+anymatch.default = anymatch;
+module.exports = anymatch;
+
+
+/***/ }),
+
+/***/ "./node_modules/binary-extensions/binary-extensions.json":
+/*!***************************************************************!*\
+  !*** ./node_modules/binary-extensions/binary-extensions.json ***!
+  \***************************************************************/
+/*! exports provided: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("[\"3dm\",\"3ds\",\"3g2\",\"3gp\",\"7z\",\"a\",\"aac\",\"adp\",\"ai\",\"aif\",\"aiff\",\"alz\",\"ape\",\"apk\",\"appimage\",\"ar\",\"arj\",\"asf\",\"au\",\"avi\",\"bak\",\"baml\",\"bh\",\"bin\",\"bk\",\"bmp\",\"btif\",\"bz2\",\"bzip2\",\"cab\",\"caf\",\"cgm\",\"class\",\"cmx\",\"cpio\",\"cr2\",\"cur\",\"dat\",\"dcm\",\"deb\",\"dex\",\"djvu\",\"dll\",\"dmg\",\"dng\",\"doc\",\"docm\",\"docx\",\"dot\",\"dotm\",\"dra\",\"DS_Store\",\"dsk\",\"dts\",\"dtshd\",\"dvb\",\"dwg\",\"dxf\",\"ecelp4800\",\"ecelp7470\",\"ecelp9600\",\"egg\",\"eol\",\"eot\",\"epub\",\"exe\",\"f4v\",\"fbs\",\"fh\",\"fla\",\"flac\",\"flatpak\",\"fli\",\"flv\",\"fpx\",\"fst\",\"fvt\",\"g3\",\"gh\",\"gif\",\"graffle\",\"gz\",\"gzip\",\"h261\",\"h263\",\"h264\",\"icns\",\"ico\",\"ief\",\"img\",\"ipa\",\"iso\",\"jar\",\"jpeg\",\"jpg\",\"jpgv\",\"jpm\",\"jxr\",\"key\",\"ktx\",\"lha\",\"lib\",\"lvp\",\"lz\",\"lzh\",\"lzma\",\"lzo\",\"m3u\",\"m4a\",\"m4v\",\"mar\",\"mdi\",\"mht\",\"mid\",\"midi\",\"mj2\",\"mka\",\"mkv\",\"mmr\",\"mng\",\"mobi\",\"mov\",\"movie\",\"mp3\",\"mp4\",\"mp4a\",\"mpeg\",\"mpg\",\"mpga\",\"mxu\",\"nef\",\"npx\",\"numbers\",\"nupkg\",\"o\",\"oga\",\"ogg\",\"ogv\",\"otf\",\"pages\",\"pbm\",\"pcx\",\"pdb\",\"pdf\",\"pea\",\"pgm\",\"pic\",\"png\",\"pnm\",\"pot\",\"potm\",\"potx\",\"ppa\",\"ppam\",\"ppm\",\"pps\",\"ppsm\",\"ppsx\",\"ppt\",\"pptm\",\"pptx\",\"psd\",\"pya\",\"pyc\",\"pyo\",\"pyv\",\"qt\",\"rar\",\"ras\",\"raw\",\"resources\",\"rgb\",\"rip\",\"rlc\",\"rmf\",\"rmvb\",\"rpm\",\"rtf\",\"rz\",\"s3m\",\"s7z\",\"scpt\",\"sgi\",\"shar\",\"snap\",\"sil\",\"sketch\",\"slk\",\"smv\",\"snk\",\"so\",\"stl\",\"suo\",\"sub\",\"swf\",\"tar\",\"tbz\",\"tbz2\",\"tga\",\"tgz\",\"thmx\",\"tif\",\"tiff\",\"tlz\",\"ttc\",\"ttf\",\"txz\",\"udf\",\"uvh\",\"uvi\",\"uvm\",\"uvp\",\"uvs\",\"uvu\",\"viv\",\"vob\",\"war\",\"wav\",\"wax\",\"wbmp\",\"wdp\",\"weba\",\"webm\",\"webp\",\"whl\",\"wim\",\"wm\",\"wma\",\"wmv\",\"wmx\",\"woff\",\"woff2\",\"wrm\",\"wvx\",\"xbm\",\"xif\",\"xla\",\"xlam\",\"xls\",\"xlsb\",\"xlsm\",\"xlsx\",\"xlt\",\"xltm\",\"xltx\",\"xm\",\"xmind\",\"xpi\",\"xpm\",\"xwd\",\"xz\",\"z\",\"zip\",\"zipx\"]");
+
+/***/ }),
+
+/***/ "./node_modules/binary-extensions/index.js":
+/*!*************************************************!*\
+  !*** ./node_modules/binary-extensions/index.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! ./binary-extensions.json */ "./node_modules/binary-extensions/binary-extensions.json");
+
+
+/***/ }),
+
+/***/ "./node_modules/braces/index.js":
+/*!**************************************!*\
+  !*** ./node_modules/braces/index.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const stringify = __webpack_require__(/*! ./lib/stringify */ "./node_modules/braces/lib/stringify.js");
+const compile = __webpack_require__(/*! ./lib/compile */ "./node_modules/braces/lib/compile.js");
+const expand = __webpack_require__(/*! ./lib/expand */ "./node_modules/braces/lib/expand.js");
+const parse = __webpack_require__(/*! ./lib/parse */ "./node_modules/braces/lib/parse.js");
+
+/**
+ * Expand the given pattern or create a regex-compatible string.
+ *
+ * ```js
+ * const braces = require('braces');
+ * console.log(braces('{a,b,c}', { compile: true })); //=> ['(a|b|c)']
+ * console.log(braces('{a,b,c}')); //=> ['a', 'b', 'c']
+ * ```
+ * @param {String} `str`
+ * @param {Object} `options`
+ * @return {String}
+ * @api public
+ */
+
+const braces = (input, options = {}) => {
+  let output = [];
+
+  if (Array.isArray(input)) {
+    for (let pattern of input) {
+      let result = braces.create(pattern, options);
+      if (Array.isArray(result)) {
+        output.push(...result);
+      } else {
+        output.push(result);
+      }
+    }
+  } else {
+    output = [].concat(braces.create(input, options));
+  }
+
+  if (options && options.expand === true && options.nodupes === true) {
+    output = [...new Set(output)];
+  }
+  return output;
+};
+
+/**
+ * Parse the given `str` with the given `options`.
+ *
+ * ```js
+ * // braces.parse(pattern, [, options]);
+ * const ast = braces.parse('a/{b,c}/d');
+ * console.log(ast);
+ * ```
+ * @param {String} pattern Brace pattern to parse
+ * @param {Object} options
+ * @return {Object} Returns an AST
+ * @api public
+ */
+
+braces.parse = (input, options = {}) => parse(input, options);
+
+/**
+ * Creates a braces string from an AST, or an AST node.
+ *
+ * ```js
+ * const braces = require('braces');
+ * let ast = braces.parse('foo/{a,b}/bar');
+ * console.log(stringify(ast.nodes[2])); //=> '{a,b}'
+ * ```
+ * @param {String} `input` Brace pattern or AST.
+ * @param {Object} `options`
+ * @return {Array} Returns an array of expanded values.
+ * @api public
+ */
+
+braces.stringify = (input, options = {}) => {
+  if (typeof input === 'string') {
+    return stringify(braces.parse(input, options), options);
+  }
+  return stringify(input, options);
+};
+
+/**
+ * Compiles a brace pattern into a regex-compatible, optimized string.
+ * This method is called by the main [braces](#braces) function by default.
+ *
+ * ```js
+ * const braces = require('braces');
+ * console.log(braces.compile('a/{b,c}/d'));
+ * //=> ['a/(b|c)/d']
+ * ```
+ * @param {String} `input` Brace pattern or AST.
+ * @param {Object} `options`
+ * @return {Array} Returns an array of expanded values.
+ * @api public
+ */
+
+braces.compile = (input, options = {}) => {
+  if (typeof input === 'string') {
+    input = braces.parse(input, options);
+  }
+  return compile(input, options);
+};
+
+/**
+ * Expands a brace pattern into an array. This method is called by the
+ * main [braces](#braces) function when `options.expand` is true. Before
+ * using this method it's recommended that you read the [performance notes](#performance))
+ * and advantages of using [.compile](#compile) instead.
+ *
+ * ```js
+ * const braces = require('braces');
+ * console.log(braces.expand('a/{b,c}/d'));
+ * //=> ['a/b/d', 'a/c/d'];
+ * ```
+ * @param {String} `pattern` Brace pattern
+ * @param {Object} `options`
+ * @return {Array} Returns an array of expanded values.
+ * @api public
+ */
+
+braces.expand = (input, options = {}) => {
+  if (typeof input === 'string') {
+    input = braces.parse(input, options);
+  }
+
+  let result = expand(input, options);
+
+  // filter out empty strings if specified
+  if (options.noempty === true) {
+    result = result.filter(Boolean);
+  }
+
+  // filter out duplicates if specified
+  if (options.nodupes === true) {
+    result = [...new Set(result)];
+  }
+
+  return result;
+};
+
+/**
+ * Processes a brace pattern and returns either an expanded array
+ * (if `options.expand` is true), a highly optimized regex-compatible string.
+ * This method is called by the main [braces](#braces) function.
+ *
+ * ```js
+ * const braces = require('braces');
+ * console.log(braces.create('user-{200..300}/project-{a,b,c}-{1..10}'))
+ * //=> 'user-(20[0-9]|2[1-9][0-9]|300)/project-(a|b|c)-([1-9]|10)'
+ * ```
+ * @param {String} `pattern` Brace pattern
+ * @param {Object} `options`
+ * @return {Array} Returns an array of expanded values.
+ * @api public
+ */
+
+braces.create = (input, options = {}) => {
+  if (input === '' || input.length < 3) {
+    return [input];
+  }
+
+ return options.expand !== true
+    ? braces.compile(input, options)
+    : braces.expand(input, options);
+};
+
+/**
+ * Expose "braces"
+ */
+
+module.exports = braces;
+
+
+/***/ }),
+
+/***/ "./node_modules/braces/lib/compile.js":
+/*!********************************************!*\
+  !*** ./node_modules/braces/lib/compile.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const fill = __webpack_require__(/*! fill-range */ "./node_modules/fill-range/index.js");
+const utils = __webpack_require__(/*! ./utils */ "./node_modules/braces/lib/utils.js");
+
+const compile = (ast, options = {}) => {
+  let walk = (node, parent = {}) => {
+    let invalidBlock = utils.isInvalidBrace(parent);
+    let invalidNode = node.invalid === true && options.escapeInvalid === true;
+    let invalid = invalidBlock === true || invalidNode === true;
+    let prefix = options.escapeInvalid === true ? '\\' : '';
+    let output = '';
+
+    if (node.isOpen === true) {
+      return prefix + node.value;
+    }
+    if (node.isClose === true) {
+      return prefix + node.value;
+    }
+
+    if (node.type === 'open') {
+      return invalid ? (prefix + node.value) : '(';
+    }
+
+    if (node.type === 'close') {
+      return invalid ? (prefix + node.value) : ')';
+    }
+
+    if (node.type === 'comma') {
+      return node.prev.type === 'comma' ? '' : (invalid ? node.value : '|');
+    }
+
+    if (node.value) {
+      return node.value;
+    }
+
+    if (node.nodes && node.ranges > 0) {
+      let args = utils.reduce(node.nodes);
+      let range = fill(...args, { ...options, wrap: false, toRegex: true });
+
+      if (range.length !== 0) {
+        return args.length > 1 && range.length > 1 ? `(${range})` : range;
+      }
+    }
+
+    if (node.nodes) {
+      for (let child of node.nodes) {
+        output += walk(child, node);
+      }
+    }
+    return output;
+  };
+
+  return walk(ast);
+};
+
+module.exports = compile;
+
+
+/***/ }),
+
+/***/ "./node_modules/braces/lib/constants.js":
+/*!**********************************************!*\
+  !*** ./node_modules/braces/lib/constants.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+  MAX_LENGTH: 1024 * 64,
+
+  // Digits
+  CHAR_0: '0', /* 0 */
+  CHAR_9: '9', /* 9 */
+
+  // Alphabet chars.
+  CHAR_UPPERCASE_A: 'A', /* A */
+  CHAR_LOWERCASE_A: 'a', /* a */
+  CHAR_UPPERCASE_Z: 'Z', /* Z */
+  CHAR_LOWERCASE_Z: 'z', /* z */
+
+  CHAR_LEFT_PARENTHESES: '(', /* ( */
+  CHAR_RIGHT_PARENTHESES: ')', /* ) */
+
+  CHAR_ASTERISK: '*', /* * */
+
+  // Non-alphabetic chars.
+  CHAR_AMPERSAND: '&', /* & */
+  CHAR_AT: '@', /* @ */
+  CHAR_BACKSLASH: '\\', /* \ */
+  CHAR_BACKTICK: '`', /* ` */
+  CHAR_CARRIAGE_RETURN: '\r', /* \r */
+  CHAR_CIRCUMFLEX_ACCENT: '^', /* ^ */
+  CHAR_COLON: ':', /* : */
+  CHAR_COMMA: ',', /* , */
+  CHAR_DOLLAR: '$', /* . */
+  CHAR_DOT: '.', /* . */
+  CHAR_DOUBLE_QUOTE: '"', /* " */
+  CHAR_EQUAL: '=', /* = */
+  CHAR_EXCLAMATION_MARK: '!', /* ! */
+  CHAR_FORM_FEED: '\f', /* \f */
+  CHAR_FORWARD_SLASH: '/', /* / */
+  CHAR_HASH: '#', /* # */
+  CHAR_HYPHEN_MINUS: '-', /* - */
+  CHAR_LEFT_ANGLE_BRACKET: '<', /* < */
+  CHAR_LEFT_CURLY_BRACE: '{', /* { */
+  CHAR_LEFT_SQUARE_BRACKET: '[', /* [ */
+  CHAR_LINE_FEED: '\n', /* \n */
+  CHAR_NO_BREAK_SPACE: '\u00A0', /* \u00A0 */
+  CHAR_PERCENT: '%', /* % */
+  CHAR_PLUS: '+', /* + */
+  CHAR_QUESTION_MARK: '?', /* ? */
+  CHAR_RIGHT_ANGLE_BRACKET: '>', /* > */
+  CHAR_RIGHT_CURLY_BRACE: '}', /* } */
+  CHAR_RIGHT_SQUARE_BRACKET: ']', /* ] */
+  CHAR_SEMICOLON: ';', /* ; */
+  CHAR_SINGLE_QUOTE: '\'', /* ' */
+  CHAR_SPACE: ' ', /*   */
+  CHAR_TAB: '\t', /* \t */
+  CHAR_UNDERSCORE: '_', /* _ */
+  CHAR_VERTICAL_LINE: '|', /* | */
+  CHAR_ZERO_WIDTH_NOBREAK_SPACE: '\uFEFF' /* \uFEFF */
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/braces/lib/expand.js":
+/*!*******************************************!*\
+  !*** ./node_modules/braces/lib/expand.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const fill = __webpack_require__(/*! fill-range */ "./node_modules/fill-range/index.js");
+const stringify = __webpack_require__(/*! ./stringify */ "./node_modules/braces/lib/stringify.js");
+const utils = __webpack_require__(/*! ./utils */ "./node_modules/braces/lib/utils.js");
+
+const append = (queue = '', stash = '', enclose = false) => {
+  let result = [];
+
+  queue = [].concat(queue);
+  stash = [].concat(stash);
+
+  if (!stash.length) return queue;
+  if (!queue.length) {
+    return enclose ? utils.flatten(stash).map(ele => `{${ele}}`) : stash;
+  }
+
+  for (let item of queue) {
+    if (Array.isArray(item)) {
+      for (let value of item) {
+        result.push(append(value, stash, enclose));
+      }
+    } else {
+      for (let ele of stash) {
+        if (enclose === true && typeof ele === 'string') ele = `{${ele}}`;
+        result.push(Array.isArray(ele) ? append(item, ele, enclose) : (item + ele));
+      }
+    }
+  }
+  return utils.flatten(result);
+};
+
+const expand = (ast, options = {}) => {
+  let rangeLimit = options.rangeLimit === void 0 ? 1000 : options.rangeLimit;
+
+  let walk = (node, parent = {}) => {
+    node.queue = [];
+
+    let p = parent;
+    let q = parent.queue;
+
+    while (p.type !== 'brace' && p.type !== 'root' && p.parent) {
+      p = p.parent;
+      q = p.queue;
+    }
+
+    if (node.invalid || node.dollar) {
+      q.push(append(q.pop(), stringify(node, options)));
+      return;
+    }
+
+    if (node.type === 'brace' && node.invalid !== true && node.nodes.length === 2) {
+      q.push(append(q.pop(), ['{}']));
+      return;
+    }
+
+    if (node.nodes && node.ranges > 0) {
+      let args = utils.reduce(node.nodes);
+
+      if (utils.exceedsLimit(...args, options.step, rangeLimit)) {
+        throw new RangeError('expanded array length exceeds range limit. Use options.rangeLimit to increase or disable the limit.');
+      }
+
+      let range = fill(...args, options);
+      if (range.length === 0) {
+        range = stringify(node, options);
+      }
+
+      q.push(append(q.pop(), range));
+      node.nodes = [];
+      return;
+    }
+
+    let enclose = utils.encloseBrace(node);
+    let queue = node.queue;
+    let block = node;
+
+    while (block.type !== 'brace' && block.type !== 'root' && block.parent) {
+      block = block.parent;
+      queue = block.queue;
+    }
+
+    for (let i = 0; i < node.nodes.length; i++) {
+      let child = node.nodes[i];
+
+      if (child.type === 'comma' && node.type === 'brace') {
+        if (i === 1) queue.push('');
+        queue.push('');
+        continue;
+      }
+
+      if (child.type === 'close') {
+        q.push(append(q.pop(), queue, enclose));
+        continue;
+      }
+
+      if (child.value && child.type !== 'open') {
+        queue.push(append(queue.pop(), child.value));
+        continue;
+      }
+
+      if (child.nodes) {
+        walk(child, node);
+      }
+    }
+
+    return queue;
+  };
+
+  return utils.flatten(walk(ast));
+};
+
+module.exports = expand;
+
+
+/***/ }),
+
+/***/ "./node_modules/braces/lib/parse.js":
+/*!******************************************!*\
+  !*** ./node_modules/braces/lib/parse.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const stringify = __webpack_require__(/*! ./stringify */ "./node_modules/braces/lib/stringify.js");
+
+/**
+ * Constants
+ */
+
+const {
+  MAX_LENGTH,
+  CHAR_BACKSLASH, /* \ */
+  CHAR_BACKTICK, /* ` */
+  CHAR_COMMA, /* , */
+  CHAR_DOT, /* . */
+  CHAR_LEFT_PARENTHESES, /* ( */
+  CHAR_RIGHT_PARENTHESES, /* ) */
+  CHAR_LEFT_CURLY_BRACE, /* { */
+  CHAR_RIGHT_CURLY_BRACE, /* } */
+  CHAR_LEFT_SQUARE_BRACKET, /* [ */
+  CHAR_RIGHT_SQUARE_BRACKET, /* ] */
+  CHAR_DOUBLE_QUOTE, /* " */
+  CHAR_SINGLE_QUOTE, /* ' */
+  CHAR_NO_BREAK_SPACE,
+  CHAR_ZERO_WIDTH_NOBREAK_SPACE
+} = __webpack_require__(/*! ./constants */ "./node_modules/braces/lib/constants.js");
+
+/**
+ * parse
+ */
+
+const parse = (input, options = {}) => {
+  if (typeof input !== 'string') {
+    throw new TypeError('Expected a string');
+  }
+
+  let opts = options || {};
+  let max = typeof opts.maxLength === 'number' ? Math.min(MAX_LENGTH, opts.maxLength) : MAX_LENGTH;
+  if (input.length > max) {
+    throw new SyntaxError(`Input length (${input.length}), exceeds max characters (${max})`);
+  }
+
+  let ast = { type: 'root', input, nodes: [] };
+  let stack = [ast];
+  let block = ast;
+  let prev = ast;
+  let brackets = 0;
+  let length = input.length;
+  let index = 0;
+  let depth = 0;
+  let value;
+  let memo = {};
+
+  /**
+   * Helpers
+   */
+
+  const advance = () => input[index++];
+  const push = node => {
+    if (node.type === 'text' && prev.type === 'dot') {
+      prev.type = 'text';
+    }
+
+    if (prev && prev.type === 'text' && node.type === 'text') {
+      prev.value += node.value;
+      return;
+    }
+
+    block.nodes.push(node);
+    node.parent = block;
+    node.prev = prev;
+    prev = node;
+    return node;
+  };
+
+  push({ type: 'bos' });
+
+  while (index < length) {
+    block = stack[stack.length - 1];
+    value = advance();
+
+    /**
+     * Invalid chars
+     */
+
+    if (value === CHAR_ZERO_WIDTH_NOBREAK_SPACE || value === CHAR_NO_BREAK_SPACE) {
+      continue;
+    }
+
+    /**
+     * Escaped chars
+     */
+
+    if (value === CHAR_BACKSLASH) {
+      push({ type: 'text', value: (options.keepEscaping ? value : '') + advance() });
+      continue;
+    }
+
+    /**
+     * Right square bracket (literal): ']'
+     */
+
+    if (value === CHAR_RIGHT_SQUARE_BRACKET) {
+      push({ type: 'text', value: '\\' + value });
+      continue;
+    }
+
+    /**
+     * Left square bracket: '['
+     */
+
+    if (value === CHAR_LEFT_SQUARE_BRACKET) {
+      brackets++;
+
+      let closed = true;
+      let next;
+
+      while (index < length && (next = advance())) {
+        value += next;
+
+        if (next === CHAR_LEFT_SQUARE_BRACKET) {
+          brackets++;
+          continue;
+        }
+
+        if (next === CHAR_BACKSLASH) {
+          value += advance();
+          continue;
+        }
+
+        if (next === CHAR_RIGHT_SQUARE_BRACKET) {
+          brackets--;
+
+          if (brackets === 0) {
+            break;
+          }
+        }
+      }
+
+      push({ type: 'text', value });
+      continue;
+    }
+
+    /**
+     * Parentheses
+     */
+
+    if (value === CHAR_LEFT_PARENTHESES) {
+      block = push({ type: 'paren', nodes: [] });
+      stack.push(block);
+      push({ type: 'text', value });
+      continue;
+    }
+
+    if (value === CHAR_RIGHT_PARENTHESES) {
+      if (block.type !== 'paren') {
+        push({ type: 'text', value });
+        continue;
+      }
+      block = stack.pop();
+      push({ type: 'text', value });
+      block = stack[stack.length - 1];
+      continue;
+    }
+
+    /**
+     * Quotes: '|"|`
+     */
+
+    if (value === CHAR_DOUBLE_QUOTE || value === CHAR_SINGLE_QUOTE || value === CHAR_BACKTICK) {
+      let open = value;
+      let next;
+
+      if (options.keepQuotes !== true) {
+        value = '';
+      }
+
+      while (index < length && (next = advance())) {
+        if (next === CHAR_BACKSLASH) {
+          value += next + advance();
+          continue;
+        }
+
+        if (next === open) {
+          if (options.keepQuotes === true) value += next;
+          break;
+        }
+
+        value += next;
+      }
+
+      push({ type: 'text', value });
+      continue;
+    }
+
+    /**
+     * Left curly brace: '{'
+     */
+
+    if (value === CHAR_LEFT_CURLY_BRACE) {
+      depth++;
+
+      let dollar = prev.value && prev.value.slice(-1) === '$' || block.dollar === true;
+      let brace = {
+        type: 'brace',
+        open: true,
+        close: false,
+        dollar,
+        depth,
+        commas: 0,
+        ranges: 0,
+        nodes: []
+      };
+
+      block = push(brace);
+      stack.push(block);
+      push({ type: 'open', value });
+      continue;
+    }
+
+    /**
+     * Right curly brace: '}'
+     */
+
+    if (value === CHAR_RIGHT_CURLY_BRACE) {
+      if (block.type !== 'brace') {
+        push({ type: 'text', value });
+        continue;
+      }
+
+      let type = 'close';
+      block = stack.pop();
+      block.close = true;
+
+      push({ type, value });
+      depth--;
+
+      block = stack[stack.length - 1];
+      continue;
+    }
+
+    /**
+     * Comma: ','
+     */
+
+    if (value === CHAR_COMMA && depth > 0) {
+      if (block.ranges > 0) {
+        block.ranges = 0;
+        let open = block.nodes.shift();
+        block.nodes = [open, { type: 'text', value: stringify(block) }];
+      }
+
+      push({ type: 'comma', value });
+      block.commas++;
+      continue;
+    }
+
+    /**
+     * Dot: '.'
+     */
+
+    if (value === CHAR_DOT && depth > 0 && block.commas === 0) {
+      let siblings = block.nodes;
+
+      if (depth === 0 || siblings.length === 0) {
+        push({ type: 'text', value });
+        continue;
+      }
+
+      if (prev.type === 'dot') {
+        block.range = [];
+        prev.value += value;
+        prev.type = 'range';
+
+        if (block.nodes.length !== 3 && block.nodes.length !== 5) {
+          block.invalid = true;
+          block.ranges = 0;
+          prev.type = 'text';
+          continue;
+        }
+
+        block.ranges++;
+        block.args = [];
+        continue;
+      }
+
+      if (prev.type === 'range') {
+        siblings.pop();
+
+        let before = siblings[siblings.length - 1];
+        before.value += prev.value + value;
+        prev = before;
+        block.ranges--;
+        continue;
+      }
+
+      push({ type: 'dot', value });
+      continue;
+    }
+
+    /**
+     * Text
+     */
+
+    push({ type: 'text', value });
+  }
+
+  // Mark imbalanced braces and brackets as invalid
+  do {
+    block = stack.pop();
+
+    if (block.type !== 'root') {
+      block.nodes.forEach(node => {
+        if (!node.nodes) {
+          if (node.type === 'open') node.isOpen = true;
+          if (node.type === 'close') node.isClose = true;
+          if (!node.nodes) node.type = 'text';
+          node.invalid = true;
+        }
+      });
+
+      // get the location of the block on parent.nodes (block's siblings)
+      let parent = stack[stack.length - 1];
+      let index = parent.nodes.indexOf(block);
+      // replace the (invalid) block with it's nodes
+      parent.nodes.splice(index, 1, ...block.nodes);
+    }
+  } while (stack.length > 0);
+
+  push({ type: 'eos' });
+  return ast;
+};
+
+module.exports = parse;
+
+
+/***/ }),
+
+/***/ "./node_modules/braces/lib/stringify.js":
+/*!**********************************************!*\
+  !*** ./node_modules/braces/lib/stringify.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const utils = __webpack_require__(/*! ./utils */ "./node_modules/braces/lib/utils.js");
+
+module.exports = (ast, options = {}) => {
+  let stringify = (node, parent = {}) => {
+    let invalidBlock = options.escapeInvalid && utils.isInvalidBrace(parent);
+    let invalidNode = node.invalid === true && options.escapeInvalid === true;
+    let output = '';
+
+    if (node.value) {
+      if ((invalidBlock || invalidNode) && utils.isOpenOrClose(node)) {
+        return '\\' + node.value;
+      }
+      return node.value;
+    }
+
+    if (node.value) {
+      return node.value;
+    }
+
+    if (node.nodes) {
+      for (let child of node.nodes) {
+        output += stringify(child);
+      }
+    }
+    return output;
+  };
+
+  return stringify(ast);
+};
+
+
+
+/***/ }),
+
+/***/ "./node_modules/braces/lib/utils.js":
+/*!******************************************!*\
+  !*** ./node_modules/braces/lib/utils.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.isInteger = num => {
+  if (typeof num === 'number') {
+    return Number.isInteger(num);
+  }
+  if (typeof num === 'string' && num.trim() !== '') {
+    return Number.isInteger(Number(num));
+  }
+  return false;
+};
+
+/**
+ * Find a node of the given type
+ */
+
+exports.find = (node, type) => node.nodes.find(node => node.type === type);
+
+/**
+ * Find a node of the given type
+ */
+
+exports.exceedsLimit = (min, max, step = 1, limit) => {
+  if (limit === false) return false;
+  if (!exports.isInteger(min) || !exports.isInteger(max)) return false;
+  return ((Number(max) - Number(min)) / Number(step)) >= limit;
+};
+
+/**
+ * Escape the given node with '\\' before node.value
+ */
+
+exports.escapeNode = (block, n = 0, type) => {
+  let node = block.nodes[n];
+  if (!node) return;
+
+  if ((type && node.type === type) || node.type === 'open' || node.type === 'close') {
+    if (node.escaped !== true) {
+      node.value = '\\' + node.value;
+      node.escaped = true;
+    }
+  }
+};
+
+/**
+ * Returns true if the given brace node should be enclosed in literal braces
+ */
+
+exports.encloseBrace = node => {
+  if (node.type !== 'brace') return false;
+  if ((node.commas >> 0 + node.ranges >> 0) === 0) {
+    node.invalid = true;
+    return true;
+  }
+  return false;
+};
+
+/**
+ * Returns true if a brace node is invalid.
+ */
+
+exports.isInvalidBrace = block => {
+  if (block.type !== 'brace') return false;
+  if (block.invalid === true || block.dollar) return true;
+  if ((block.commas >> 0 + block.ranges >> 0) === 0) {
+    block.invalid = true;
+    return true;
+  }
+  if (block.open !== true || block.close !== true) {
+    block.invalid = true;
+    return true;
+  }
+  return false;
+};
+
+/**
+ * Returns true if a node is an open or close node
+ */
+
+exports.isOpenOrClose = node => {
+  if (node.type === 'open' || node.type === 'close') {
+    return true;
+  }
+  return node.open === true || node.close === true;
+};
+
+/**
+ * Reduce an array of text nodes.
+ */
+
+exports.reduce = nodes => nodes.reduce((acc, node) => {
+  if (node.type === 'text') acc.push(node.value);
+  if (node.type === 'range') node.type = 'text';
+  return acc;
+}, []);
+
+/**
+ * Flatten an array
+ */
+
+exports.flatten = (...args) => {
+  const result = [];
+  const flat = arr => {
+    for (let i = 0; i < arr.length; i++) {
+      let ele = arr[i];
+      Array.isArray(ele) ? flat(ele, result) : ele !== void 0 && result.push(ele);
+    }
+    return result;
+  };
+  flat(args);
+  return result;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/chokidar/index.js":
+/*!****************************************!*\
+  !*** ./node_modules/chokidar/index.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const { EventEmitter } = __webpack_require__(/*! events */ "events");
+const fs = __webpack_require__(/*! fs */ "fs");
+const sysPath = __webpack_require__(/*! path */ "path");
+const { promisify } = __webpack_require__(/*! util */ "util");
+const readdirp = __webpack_require__(/*! readdirp */ "./node_modules/readdirp/index.js");
+const anymatch = __webpack_require__(/*! anymatch */ "./node_modules/anymatch/index.js").default;
+const globParent = __webpack_require__(/*! glob-parent */ "./node_modules/glob-parent/index.js");
+const isGlob = __webpack_require__(/*! is-glob */ "./node_modules/is-glob/index.js");
+const braces = __webpack_require__(/*! braces */ "./node_modules/braces/index.js");
+const normalizePath = __webpack_require__(/*! normalize-path */ "./node_modules/normalize-path/index.js");
+
+const NodeFsHandler = __webpack_require__(/*! ./lib/nodefs-handler */ "./node_modules/chokidar/lib/nodefs-handler.js");
+const FsEventsHandler = __webpack_require__(/*! ./lib/fsevents-handler */ "./node_modules/chokidar/lib/fsevents-handler.js");
+const {
+  EV_ALL,
+  EV_READY,
+  EV_ADD,
+  EV_CHANGE,
+  EV_UNLINK,
+  EV_ADD_DIR,
+  EV_UNLINK_DIR,
+  EV_RAW,
+  EV_ERROR,
+
+  STR_CLOSE,
+  STR_END,
+
+  BACK_SLASH_RE,
+  DOUBLE_SLASH_RE,
+  SLASH_OR_BACK_SLASH_RE,
+  DOT_RE,
+  REPLACER_RE,
+
+  SLASH,
+  SLASH_SLASH,
+  BRACE_START,
+  BANG,
+  ONE_DOT,
+  TWO_DOTS,
+  GLOBSTAR,
+  SLASH_GLOBSTAR,
+  ANYMATCH_OPTS,
+  STRING_TYPE,
+  FUNCTION_TYPE,
+  EMPTY_STR,
+  EMPTY_FN,
+
+  isWindows,
+  isMacos
+} = __webpack_require__(/*! ./lib/constants */ "./node_modules/chokidar/lib/constants.js");
+
+const stat = promisify(fs.stat);
+const readdir = promisify(fs.readdir);
+
+/**
+ * @typedef {String} Path
+ * @typedef {'all'|'add'|'addDir'|'change'|'unlink'|'unlinkDir'|'raw'|'error'|'ready'} EventName
+ * @typedef {'readdir'|'watch'|'add'|'remove'|'change'} ThrottleType
+ */
+
+/**
+ *
+ * @typedef {Object} WatchHelpers
+ * @property {Boolean} followSymlinks
+ * @property {'stat'|'lstat'} statMethod
+ * @property {Path} path
+ * @property {Path} watchPath
+ * @property {Function} entryPath
+ * @property {Boolean} hasGlob
+ * @property {Object} globFilter
+ * @property {Function} filterPath
+ * @property {Function} filterDir
+ */
+
+const arrify = (value = []) => Array.isArray(value) ? value : [value];
+const flatten = (list, result = []) => {
+  list.forEach(item => {
+    if (Array.isArray(item)) {
+      flatten(item, result);
+    } else {
+      result.push(item);
+    }
+  });
+  return result;
+};
+
+const unifyPaths = (paths_) => {
+  /**
+   * @type {Array<String>}
+   */
+  const paths = flatten(arrify(paths_));
+  if (!paths.every(p => typeof p === STRING_TYPE)) {
+    throw new TypeError(`Non-string provided as watch path: ${paths}`);
+  }
+  return paths.map(normalizePathToUnix);
+};
+
+// If SLASH_SLASH occurs at the beginning of path, it is not replaced
+//     because "//StoragePC/DrivePool/Movies" is a valid network path
+const toUnix = (string) => {
+  let str = string.replace(BACK_SLASH_RE, SLASH);
+  let prepend = false;
+  if (str.startsWith(SLASH_SLASH)) {
+    prepend = true;
+  }
+  while (str.match(DOUBLE_SLASH_RE)) {
+    str = str.replace(DOUBLE_SLASH_RE, SLASH);
+  }
+  if (prepend) {
+    str = SLASH + str;
+  }
+  return str;
+};
+
+// Our version of upath.normalize
+// TODO: this is not equal to path-normalize module - investigate why
+const normalizePathToUnix = (path) => toUnix(sysPath.normalize(toUnix(path)));
+
+const normalizeIgnored = (cwd = EMPTY_STR) => (path) => {
+  if (typeof path !== STRING_TYPE) return path;
+  return normalizePathToUnix(sysPath.isAbsolute(path) ? path : sysPath.join(cwd, path));
+};
+
+const getAbsolutePath = (path, cwd) => {
+  if (sysPath.isAbsolute(path)) {
+    return path;
+  }
+  if (path.startsWith(BANG)) {
+    return BANG + sysPath.join(cwd, path.slice(1));
+  }
+  return sysPath.join(cwd, path);
+};
+
+const undef = (opts, key) => opts[key] === undefined;
+
+/**
+ * Directory entry.
+ * @property {Path} path
+ * @property {Set<Path>} items
+ */
+class DirEntry {
+  /**
+   * @param {Path} dir
+   * @param {Function} removeWatcher
+   */
+  constructor(dir, removeWatcher) {
+    this.path = dir;
+    this._removeWatcher = removeWatcher;
+    /** @type {Set<Path>} */
+    this.items = new Set();
+  }
+
+  add(item) {
+    const {items} = this;
+    if (!items) return;
+    if (item !== ONE_DOT && item !== TWO_DOTS) items.add(item);
+  }
+
+  async remove(item) {
+    const {items} = this;
+    if (!items) return;
+    items.delete(item);
+    if (items.size > 0) return;
+
+    const dir = this.path;
+    try {
+      await readdir(dir);
+    } catch (err) {
+      if (this._removeWatcher) {
+        this._removeWatcher(sysPath.dirname(dir), sysPath.basename(dir));
+      }
+    }
+  }
+
+  has(item) {
+    const {items} = this;
+    if (!items) return;
+    return items.has(item);
+  }
+
+  /**
+   * @returns {Array<String>}
+   */
+  getChildren() {
+    const {items} = this;
+    if (!items) return;
+    return [...items.values()];
+  }
+
+  dispose() {
+    this.items.clear();
+    delete this.path;
+    delete this._removeWatcher;
+    delete this.items;
+    Object.freeze(this);
+  }
+}
+
+const STAT_METHOD_F = 'stat';
+const STAT_METHOD_L = 'lstat';
+class WatchHelper {
+  constructor(path, watchPath, follow, fsw) {
+    this.fsw = fsw;
+    this.path = path = path.replace(REPLACER_RE, EMPTY_STR);
+    this.watchPath = watchPath;
+    this.fullWatchPath = sysPath.resolve(watchPath);
+    this.hasGlob = watchPath !== path;
+    /** @type {object|boolean} */
+    if (path === EMPTY_STR) this.hasGlob = false;
+    this.globSymlink = this.hasGlob && follow ? undefined : false;
+    this.globFilter = this.hasGlob ? anymatch(path, undefined, ANYMATCH_OPTS) : false;
+    this.dirParts = this.getDirParts(path);
+    this.dirParts.forEach((parts) => {
+      if (parts.length > 1) parts.pop();
+    });
+    this.followSymlinks = follow;
+    this.statMethod = follow ? STAT_METHOD_F : STAT_METHOD_L;
+  }
+
+  checkGlobSymlink(entry) {
+    // only need to resolve once
+    // first entry should always have entry.parentDir === EMPTY_STR
+    if (this.globSymlink === undefined) {
+      this.globSymlink = entry.fullParentDir === this.fullWatchPath ?
+        false : {realPath: entry.fullParentDir, linkPath: this.fullWatchPath};
+    }
+
+    if (this.globSymlink) {
+      return entry.fullPath.replace(this.globSymlink.realPath, this.globSymlink.linkPath);
+    }
+
+    return entry.fullPath;
+  }
+
+  entryPath(entry) {
+    return sysPath.join(this.watchPath,
+      sysPath.relative(this.watchPath, this.checkGlobSymlink(entry))
+    );
+  }
+
+  filterPath(entry) {
+    const {stats} = entry;
+    if (stats && stats.isSymbolicLink()) return this.filterDir(entry);
+    const resolvedPath = this.entryPath(entry);
+    const matchesGlob = this.hasGlob && typeof this.globFilter === FUNCTION_TYPE ?
+      this.globFilter(resolvedPath) : true;
+    return matchesGlob &&
+      this.fsw._isntIgnored(resolvedPath, stats) &&
+      this.fsw._hasReadPermissions(stats);
+  }
+
+  getDirParts(path) {
+    if (!this.hasGlob) return [];
+    const parts = [];
+    const expandedPath = path.includes(BRACE_START) ? braces.expand(path) : [path];
+    expandedPath.forEach((path) => {
+      parts.push(sysPath.relative(this.watchPath, path).split(SLASH_OR_BACK_SLASH_RE));
+    });
+    return parts;
+  }
+
+  filterDir(entry) {
+    if (this.hasGlob) {
+      const entryParts = this.getDirParts(this.checkGlobSymlink(entry));
+      let globstar = false;
+      this.unmatchedGlob = !this.dirParts.some((parts) => {
+        return parts.every((part, i) => {
+          if (part === GLOBSTAR) globstar = true;
+          return globstar || !entryParts[0][i] || anymatch(part, entryParts[0][i], ANYMATCH_OPTS);
+        });
+      });
+    }
+    return !this.unmatchedGlob && this.fsw._isntIgnored(this.entryPath(entry), entry.stats);
+  }
+}
+
+/**
+ * Watches files & directories for changes. Emitted events:
+ * `add`, `addDir`, `change`, `unlink`, `unlinkDir`, `all`, `error`
+ *
+ *     new FSWatcher()
+ *       .add(directories)
+ *       .on('add', path => log('File', path, 'was added'))
+ */
+class FSWatcher extends EventEmitter {
+// Not indenting methods for history sake; for now.
+constructor(_opts) {
+  super();
+
+  const opts = {};
+  if (_opts) Object.assign(opts, _opts); // for frozen objects
+
+  /** @type {Map<String, DirEntry>} */
+  this._watched = new Map();
+  /** @type {Map<String, Array>} */
+  this._closers = new Map();
+  /** @type {Set<String>} */
+  this._ignoredPaths = new Set();
+
+  /** @type {Map<ThrottleType, Map>} */
+  this._throttled = new Map();
+
+  /** @type {Map<Path, String|Boolean>} */
+  this._symlinkPaths = new Map();
+
+  this._streams = new Set();
+  this.closed = false;
+
+  // Set up default options.
+  if (undef(opts, 'persistent')) opts.persistent = true;
+  if (undef(opts, 'ignoreInitial')) opts.ignoreInitial = false;
+  if (undef(opts, 'ignorePermissionErrors')) opts.ignorePermissionErrors = false;
+  if (undef(opts, 'interval')) opts.interval = 100;
+  if (undef(opts, 'binaryInterval')) opts.binaryInterval = 300;
+  if (undef(opts, 'disableGlobbing')) opts.disableGlobbing = false;
+  opts.enableBinaryInterval = opts.binaryInterval !== opts.interval;
+
+  // Enable fsevents on OS X when polling isn't explicitly enabled.
+  if (undef(opts, 'useFsEvents')) opts.useFsEvents = !opts.usePolling;
+
+  // If we can't use fsevents, ensure the options reflect it's disabled.
+  const canUseFsEvents = FsEventsHandler.canUse();
+  if (!canUseFsEvents) opts.useFsEvents = false;
+
+  // Use polling on Mac if not using fsevents.
+  // Other platforms use non-polling fs_watch.
+  if (undef(opts, 'usePolling') && !opts.useFsEvents) {
+    opts.usePolling = isMacos;
+  }
+
+  // Global override (useful for end-developers that need to force polling for all
+  // instances of chokidar, regardless of usage/dependency depth)
+  const envPoll = process.env.CHOKIDAR_USEPOLLING;
+  if (envPoll !== undefined) {
+    const envLower = envPoll.toLowerCase();
+
+    if (envLower === 'false' || envLower === '0') {
+      opts.usePolling = false;
+    } else if (envLower === 'true' || envLower === '1') {
+      opts.usePolling = true;
+    } else {
+      opts.usePolling = !!envLower;
+    }
+  }
+  const envInterval = process.env.CHOKIDAR_INTERVAL;
+  if (envInterval) {
+    opts.interval = Number.parseInt(envInterval, 10);
+  }
+
+  // Editor atomic write normalization enabled by default with fs.watch
+  if (undef(opts, 'atomic')) opts.atomic = !opts.usePolling && !opts.useFsEvents;
+  if (opts.atomic) this._pendingUnlinks = new Map();
+
+  if (undef(opts, 'followSymlinks')) opts.followSymlinks = true;
+
+  if (undef(opts, 'awaitWriteFinish')) opts.awaitWriteFinish = false;
+  if (opts.awaitWriteFinish === true) opts.awaitWriteFinish = {};
+  const awf = opts.awaitWriteFinish;
+  if (awf) {
+    if (!awf.stabilityThreshold) awf.stabilityThreshold = 2000;
+    if (!awf.pollInterval) awf.pollInterval = 100;
+    this._pendingWrites = new Map();
+  }
+  if (opts.ignored) opts.ignored = arrify(opts.ignored);
+
+  let readyCalls = 0;
+  this._emitReady = () => {
+    readyCalls++;
+    if (readyCalls >= this._readyCount) {
+      this._emitReady = EMPTY_FN;
+      this._readyEmitted = true;
+      // use process.nextTick to allow time for listener to be bound
+      process.nextTick(() => this.emit(EV_READY));
+    }
+  };
+  this._emitRaw = (...args) => this.emit(EV_RAW, ...args);
+  this._readyEmitted = false;
+  this.options = opts;
+
+  // Initialize with proper watcher.
+  if (opts.useFsEvents) {
+    this._fsEventsHandler = new FsEventsHandler(this);
+  } else {
+    this._nodeFsHandler = new NodeFsHandler(this);
+  }
+
+  // You’re frozen when your heart’s not open.
+  Object.freeze(opts);
+}
+
+// Public methods
+
+/**
+ * Adds paths to be watched on an existing FSWatcher instance
+ * @param {Path|Array<Path>} paths_
+ * @param {String=} _origAdd private; for handling non-existent paths to be watched
+ * @param {Boolean=} _internal private; indicates a non-user add
+ * @returns {FSWatcher} for chaining
+ */
+add(paths_, _origAdd, _internal) {
+  const {cwd, disableGlobbing} = this.options;
+  this.closed = false;
+  let paths = unifyPaths(paths_);
+  if (cwd) {
+    paths = paths.map((path) => {
+      const absPath = getAbsolutePath(path, cwd);
+
+      // Check `path` instead of `absPath` because the cwd portion can't be a glob
+      if (disableGlobbing || !isGlob(path)) {
+        return absPath;
+      }
+      return normalizePath(absPath);
+    });
+  }
+
+  // set aside negated glob strings
+  paths = paths.filter((path) => {
+    if (path.startsWith(BANG)) {
+      this._ignoredPaths.add(path.slice(1));
+      return false;
+    }
+
+    // if a path is being added that was previously ignored, stop ignoring it
+    this._ignoredPaths.delete(path);
+    this._ignoredPaths.delete(path + SLASH_GLOBSTAR);
+
+    // reset the cached userIgnored anymatch fn
+    // to make ignoredPaths changes effective
+    this._userIgnored = undefined;
+
+    return true;
+  });
+
+  if (this.options.useFsEvents && this._fsEventsHandler) {
+    if (!this._readyCount) this._readyCount = paths.length;
+    if (this.options.persistent) this._readyCount *= 2;
+    paths.forEach((path) => this._fsEventsHandler._addToFsEvents(path));
+  } else {
+    if (!this._readyCount) this._readyCount = 0;
+    this._readyCount += paths.length;
+    Promise.all(
+      paths.map(async path => {
+        const res = await this._nodeFsHandler._addToNodeFs(path, !_internal, 0, 0, _origAdd);
+        if (res) this._emitReady();
+        return res;
+      })
+    ).then(results => {
+      if (this.closed) return;
+      results.filter(item => item).forEach(item => {
+        this.add(sysPath.dirname(item), sysPath.basename(_origAdd || item));
+      });
+    });
+  }
+
+  return this;
+}
+
+/**
+ * Close watchers or start ignoring events from specified paths.
+ * @param {Path|Array<Path>} paths_ - string or array of strings, file/directory paths and/or globs
+ * @returns {FSWatcher} for chaining
+*/
+unwatch(paths_) {
+  if (this.closed) return this;
+  const paths = unifyPaths(paths_);
+  const {cwd} = this.options;
+
+  paths.forEach((path) => {
+    // convert to absolute path unless relative path already matches
+    if (!sysPath.isAbsolute(path) && !this._closers.has(path)) {
+      if (cwd) path = sysPath.join(cwd, path);
+      path = sysPath.resolve(path);
+    }
+
+    this._closePath(path);
+
+    this._ignoredPaths.add(path);
+    if (this._watched.has(path)) {
+      this._ignoredPaths.add(path + SLASH_GLOBSTAR);
+    }
+
+    // reset the cached userIgnored anymatch fn
+    // to make ignoredPaths changes effective
+    this._userIgnored = undefined;
+  });
+
+  return this;
+}
+
+/**
+ * Close watchers and remove all listeners from watched paths.
+ * @returns {Promise<void>}.
+*/
+close() {
+  if (this.closed) return this._closePromise;
+  this.closed = true;
+
+  // Memory management.
+  this.removeAllListeners();
+  const closers = [];
+  this._closers.forEach(closerList => closerList.forEach(closer => {
+    const promise = closer();
+    if (promise instanceof Promise) closers.push(promise);
+  }));
+  this._streams.forEach(stream => stream.destroy());
+  this._userIgnored = undefined;
+  this._readyCount = 0;
+  this._readyEmitted = false;
+  this._watched.forEach(dirent => dirent.dispose());
+  ['closers', 'watched', 'streams', 'symlinkPaths', 'throttled'].forEach(key => {
+    this[`_${key}`].clear();
+  });
+
+  this._closePromise = closers.length ? Promise.all(closers).then(() => undefined) : Promise.resolve();
+  return this._closePromise;
+}
+
+/**
+ * Expose list of watched paths
+ * @returns {Object} for chaining
+*/
+getWatched() {
+  const watchList = {};
+  this._watched.forEach((entry, dir) => {
+    const key = this.options.cwd ? sysPath.relative(this.options.cwd, dir) : dir;
+    watchList[key || ONE_DOT] = entry.getChildren().sort();
+  });
+  return watchList;
+}
+
+emitWithAll(event, args) {
+  this.emit(...args);
+  if (event !== EV_ERROR) this.emit(EV_ALL, ...args);
+}
+
+// Common helpers
+// --------------
+
+/**
+ * Normalize and emit events.
+ * Calling _emit DOES NOT MEAN emit() would be called!
+ * @param {EventName} event Type of event
+ * @param {Path} path File or directory path
+ * @param {*=} val1 arguments to be passed with event
+ * @param {*=} val2
+ * @param {*=} val3
+ * @returns the error if defined, otherwise the value of the FSWatcher instance's `closed` flag
+ */
+async _emit(event, path, val1, val2, val3) {
+  if (this.closed) return;
+
+  const opts = this.options;
+  if (isWindows) path = sysPath.normalize(path);
+  if (opts.cwd) path = sysPath.relative(opts.cwd, path);
+  /** @type Array<any> */
+  const args = [event, path];
+  if (val3 !== undefined) args.push(val1, val2, val3);
+  else if (val2 !== undefined) args.push(val1, val2);
+  else if (val1 !== undefined) args.push(val1);
+
+  const awf = opts.awaitWriteFinish;
+  let pw;
+  if (awf && (pw = this._pendingWrites.get(path))) {
+    pw.lastChange = new Date();
+    return this;
+  }
+
+  if (opts.atomic) {
+    if (event === EV_UNLINK) {
+      this._pendingUnlinks.set(path, args);
+      setTimeout(() => {
+        this._pendingUnlinks.forEach((entry, path) => {
+          this.emit(...entry);
+          this.emit(EV_ALL, ...entry);
+          this._pendingUnlinks.delete(path);
+        });
+      }, typeof opts.atomic === 'number' ? opts.atomic : 100);
+      return this;
+    }
+    if (event === EV_ADD && this._pendingUnlinks.has(path)) {
+      event = args[0] = EV_CHANGE;
+      this._pendingUnlinks.delete(path);
+    }
+  }
+
+  if (awf && (event === EV_ADD || event === EV_CHANGE) && this._readyEmitted) {
+    const awfEmit = (err, stats) => {
+      if (err) {
+        event = args[0] = EV_ERROR;
+        args[1] = err;
+        this.emitWithAll(event, args);
+      } else if (stats) {
+        // if stats doesn't exist the file must have been deleted
+        if (args.length > 2) {
+          args[2] = stats;
+        } else {
+          args.push(stats);
+        }
+        this.emitWithAll(event, args);
+      }
+    };
+
+    this._awaitWriteFinish(path, awf.stabilityThreshold, event, awfEmit);
+    return this;
+  }
+
+  if (event === EV_CHANGE) {
+    const isThrottled = !this._throttle(EV_CHANGE, path, 50);
+    if (isThrottled) return this;
+  }
+
+  if (opts.alwaysStat && val1 === undefined &&
+    (event === EV_ADD || event === EV_ADD_DIR || event === EV_CHANGE)
+  ) {
+    const fullPath = opts.cwd ? sysPath.join(opts.cwd, path) : path;
+    let stats;
+    try {
+      stats = await stat(fullPath);
+    } catch (err) {}
+    // Suppress event when fs_stat fails, to avoid sending undefined 'stat'
+    if (!stats || this.closed) return;
+    args.push(stats);
+  }
+  this.emitWithAll(event, args);
+
+  return this;
+}
+
+/**
+ * Common handler for errors
+ * @param {Error} error
+ * @returns {Error|Boolean} The error if defined, otherwise the value of the FSWatcher instance's `closed` flag
+ */
+_handleError(error) {
+  const code = error && error.code;
+  if (error && code !== 'ENOENT' && code !== 'ENOTDIR' &&
+    (!this.options.ignorePermissionErrors || (code !== 'EPERM' && code !== 'EACCES'))
+  ) {
+    this.emit(EV_ERROR, error);
+  }
+  return error || this.closed;
+}
+
+/**
+ * Helper utility for throttling
+ * @param {ThrottleType} actionType type being throttled
+ * @param {Path} path being acted upon
+ * @param {Number} timeout duration of time to suppress duplicate actions
+ * @returns {Object|false} tracking object or false if action should be suppressed
+ */
+_throttle(actionType, path, timeout) {
+  if (!this._throttled.has(actionType)) {
+    this._throttled.set(actionType, new Map());
+  }
+
+  /** @type {Map<Path, Object>} */
+  const action = this._throttled.get(actionType);
+  /** @type {Object} */
+  const actionPath = action.get(path);
+
+  if (actionPath) {
+    actionPath.count++;
+    return false;
+  }
+
+  let timeoutObject;
+  const clear = () => {
+    const item = action.get(path);
+    const count = item ? item.count : 0;
+    action.delete(path);
+    clearTimeout(timeoutObject);
+    if (item) clearTimeout(item.timeoutObject);
+    return count;
+  };
+  timeoutObject = setTimeout(clear, timeout);
+  const thr = {timeoutObject, clear, count: 0};
+  action.set(path, thr);
+  return thr;
+}
+
+_incrReadyCount() {
+  return this._readyCount++;
+}
+
+/**
+ * Awaits write operation to finish.
+ * Polls a newly created file for size variations. When files size does not change for 'threshold' milliseconds calls callback.
+ * @param {Path} path being acted upon
+ * @param {Number} threshold Time in milliseconds a file size must be fixed before acknowledging write OP is finished
+ * @param {EventName} event
+ * @param {Function} awfEmit Callback to be called when ready for event to be emitted.
+ */
+_awaitWriteFinish(path, threshold, event, awfEmit) {
+  let timeoutHandler;
+
+  let fullPath = path;
+  if (this.options.cwd && !sysPath.isAbsolute(path)) {
+    fullPath = sysPath.join(this.options.cwd, path);
+  }
+
+  const now = new Date();
+
+  const awaitWriteFinish = (prevStat) => {
+    fs.stat(fullPath, (err, curStat) => {
+      if (err || !this._pendingWrites.has(path)) {
+        if (err && err.code !== 'ENOENT') awfEmit(err);
+        return;
+      }
+
+      const now = Number(new Date());
+
+      if (prevStat && curStat.size !== prevStat.size) {
+        this._pendingWrites.get(path).lastChange = now;
+      }
+      const pw = this._pendingWrites.get(path);
+      const df = now - pw.lastChange;
+
+      if (df >= threshold) {
+        this._pendingWrites.delete(path);
+        awfEmit(undefined, curStat);
+      } else {
+        timeoutHandler = setTimeout(
+          awaitWriteFinish,
+          this.options.awaitWriteFinish.pollInterval,
+          curStat
+        );
+      }
+    });
+  };
+
+  if (!this._pendingWrites.has(path)) {
+    this._pendingWrites.set(path, {
+      lastChange: now,
+      cancelWait: () => {
+        this._pendingWrites.delete(path);
+        clearTimeout(timeoutHandler);
+        return event;
+      }
+    });
+    timeoutHandler = setTimeout(
+      awaitWriteFinish,
+      this.options.awaitWriteFinish.pollInterval
+    );
+  }
+}
+
+_getGlobIgnored() {
+  return [...this._ignoredPaths.values()];
+}
+
+/**
+ * Determines whether user has asked to ignore this path.
+ * @param {Path} path filepath or dir
+ * @param {fs.Stats=} stats result of fs.stat
+ * @returns {Boolean}
+ */
+_isIgnored(path, stats) {
+  if (this.options.atomic && DOT_RE.test(path)) return true;
+  if (!this._userIgnored) {
+    const {cwd} = this.options;
+    const ign = this.options.ignored;
+
+    const ignored = ign && ign.map(normalizeIgnored(cwd));
+    const paths = arrify(ignored)
+      .filter((path) => typeof path === STRING_TYPE && !isGlob(path))
+      .map((path) => path + SLASH_GLOBSTAR);
+    const list = this._getGlobIgnored().map(normalizeIgnored(cwd)).concat(ignored, paths);
+    this._userIgnored = anymatch(list, undefined, ANYMATCH_OPTS);
+  }
+
+  return this._userIgnored([path, stats]);
+}
+
+_isntIgnored(path, stat) {
+  return !this._isIgnored(path, stat);
+}
+
+/**
+ * Provides a set of common helpers and properties relating to symlink and glob handling.
+ * @param {Path} path file, directory, or glob pattern being watched
+ * @param {Number=} depth at any depth > 0, this isn't a glob
+ * @returns {WatchHelper} object containing helpers for this path
+ */
+_getWatchHelpers(path, depth) {
+  const watchPath = depth || this.options.disableGlobbing || !isGlob(path) ? path : globParent(path);
+  const follow = this.options.followSymlinks;
+
+  return new WatchHelper(path, watchPath, follow, this);
+}
+
+// Directory helpers
+// -----------------
+
+/**
+ * Provides directory tracking objects
+ * @param {String} directory path of the directory
+ * @returns {DirEntry} the directory's tracking object
+ */
+_getWatchedDir(directory) {
+  if (!this._boundRemove) this._boundRemove = this._remove.bind(this);
+  const dir = sysPath.resolve(directory);
+  if (!this._watched.has(dir)) this._watched.set(dir, new DirEntry(dir, this._boundRemove));
+  return this._watched.get(dir);
+}
+
+// File helpers
+// ------------
+
+/**
+ * Check for read permissions.
+ * Based on this answer on SO: https://stackoverflow.com/a/11781404/1358405
+ * @param {fs.Stats} stats - object, result of fs_stat
+ * @returns {Boolean} indicates whether the file can be read
+*/
+_hasReadPermissions(stats) {
+  if (this.options.ignorePermissionErrors) return true;
+
+  // stats.mode may be bigint
+  const md = stats && Number.parseInt(stats.mode, 10);
+  const st = md & 0o777;
+  const it = Number.parseInt(st.toString(8)[0], 10);
+  return Boolean(4 & it);
+}
+
+/**
+ * Handles emitting unlink events for
+ * files and directories, and via recursion, for
+ * files and directories within directories that are unlinked
+ * @param {String} directory within which the following item is located
+ * @param {String} item      base path of item/directory
+ * @returns {void}
+*/
+_remove(directory, item, isDirectory) {
+  // if what is being deleted is a directory, get that directory's paths
+  // for recursive deleting and cleaning of watched object
+  // if it is not a directory, nestedDirectoryChildren will be empty array
+  const path = sysPath.join(directory, item);
+  const fullPath = sysPath.resolve(path);
+  isDirectory = isDirectory != null
+    ? isDirectory
+    : this._watched.has(path) || this._watched.has(fullPath);
+
+  // prevent duplicate handling in case of arriving here nearly simultaneously
+  // via multiple paths (such as _handleFile and _handleDir)
+  if (!this._throttle('remove', path, 100)) return;
+
+  // if the only watched file is removed, watch for its return
+  if (!isDirectory && !this.options.useFsEvents && this._watched.size === 1) {
+    this.add(directory, item, true);
+  }
+
+  // This will create a new entry in the watched object in either case
+  // so we got to do the directory check beforehand
+  const wp = this._getWatchedDir(path);
+  const nestedDirectoryChildren = wp.getChildren();
+
+  // Recursively remove children directories / files.
+  nestedDirectoryChildren.forEach(nested => this._remove(path, nested));
+
+  // Check if item was on the watched list and remove it
+  const parent = this._getWatchedDir(directory);
+  const wasTracked = parent.has(item);
+  parent.remove(item);
+
+  // If we wait for this file to be fully written, cancel the wait.
+  let relPath = path;
+  if (this.options.cwd) relPath = sysPath.relative(this.options.cwd, path);
+  if (this.options.awaitWriteFinish && this._pendingWrites.has(relPath)) {
+    const event = this._pendingWrites.get(relPath).cancelWait();
+    if (event === EV_ADD) return;
+  }
+
+  // The Entry will either be a directory that just got removed
+  // or a bogus entry to a file, in either case we have to remove it
+  this._watched.delete(path);
+  this._watched.delete(fullPath);
+  const eventName = isDirectory ? EV_UNLINK_DIR : EV_UNLINK;
+  if (wasTracked && !this._isIgnored(path)) this._emit(eventName, path);
+
+  // Avoid conflicts if we later create another file with the same name
+  if (!this.options.useFsEvents) {
+    this._closePath(path);
+  }
+}
+
+/**
+ * Closes all watchers for a path
+ * @param {Path} path
+ */
+_closePath(path) {
+  this._closeFile(path)
+  const dir = sysPath.dirname(path);
+  this._getWatchedDir(dir).remove(sysPath.basename(path));
+}
+
+/**
+ * Closes only file-specific watchers
+ * @param {Path} path
+ */
+_closeFile(path) {
+  const closers = this._closers.get(path);
+  if (!closers) return;
+  closers.forEach(closer => closer());
+  this._closers.delete(path);
+}
+
+/**
+ *
+ * @param {Path} path
+ * @param {Function} closer
+ */
+_addPathCloser(path, closer) {
+  if (!closer) return;
+  let list = this._closers.get(path);
+  if (!list) {
+    list = [];
+    this._closers.set(path, list);
+  }
+  list.push(closer);
+}
+
+_readdirp(root, opts) {
+  if (this.closed) return;
+  const options = {type: EV_ALL, alwaysStat: true, lstat: true, ...opts};
+  let stream = readdirp(root, options);
+  this._streams.add(stream);
+  stream.once(STR_CLOSE, () => {
+    stream = undefined;
+  });
+  stream.once(STR_END, () => {
+    if (stream) {
+      this._streams.delete(stream);
+      stream = undefined;
+    }
+  });
+  return stream;
+}
+
+}
+
+// Export FSWatcher class
+exports.FSWatcher = FSWatcher;
+
+/**
+ * Instantiates watcher with paths to be tracked.
+ * @param {String|Array<String>} paths file/directory paths and/or globs
+ * @param {Object=} options chokidar opts
+ * @returns an instance of FSWatcher for chaining.
+ */
+const watch = (paths, options) => {
+  const watcher = new FSWatcher(options);
+  watcher.add(paths);
+  return watcher;
+};
+
+exports.watch = watch;
+
+
+/***/ }),
+
+/***/ "./node_modules/chokidar/lib/constants.js":
+/*!************************************************!*\
+  !*** ./node_modules/chokidar/lib/constants.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const {sep} = __webpack_require__(/*! path */ "path");
+const {platform} = process;
+
+exports.EV_ALL = 'all';
+exports.EV_READY = 'ready';
+exports.EV_ADD = 'add';
+exports.EV_CHANGE = 'change';
+exports.EV_ADD_DIR = 'addDir';
+exports.EV_UNLINK = 'unlink';
+exports.EV_UNLINK_DIR = 'unlinkDir';
+exports.EV_RAW = 'raw';
+exports.EV_ERROR = 'error';
+
+exports.STR_DATA = 'data';
+exports.STR_END = 'end';
+exports.STR_CLOSE = 'close';
+
+exports.FSEVENT_CREATED = 'created';
+exports.FSEVENT_MODIFIED = 'modified';
+exports.FSEVENT_DELETED = 'deleted';
+exports.FSEVENT_MOVED = 'moved';
+exports.FSEVENT_CLONED = 'cloned';
+exports.FSEVENT_UNKNOWN = 'unknown';
+exports.FSEVENT_TYPE_FILE = 'file';
+exports.FSEVENT_TYPE_DIRECTORY = 'directory';
+exports.FSEVENT_TYPE_SYMLINK = 'symlink';
+
+exports.KEY_LISTENERS = 'listeners';
+exports.KEY_ERR = 'errHandlers';
+exports.KEY_RAW = 'rawEmitters';
+exports.HANDLER_KEYS = [exports.KEY_LISTENERS, exports.KEY_ERR, exports.KEY_RAW];
+
+exports.DOT_SLASH = `.${sep}`;
+
+exports.BACK_SLASH_RE = /\\/g;
+exports.DOUBLE_SLASH_RE = /\/\//;
+exports.SLASH_OR_BACK_SLASH_RE = /[/\\]/;
+exports.DOT_RE = /\..*\.(sw[px])$|~$|\.subl.*\.tmp/;
+exports.REPLACER_RE = /^\.[/\\]/;
+
+exports.SLASH = '/';
+exports.SLASH_SLASH = '//';
+exports.BRACE_START = '{';
+exports.BANG = '!';
+exports.ONE_DOT = '.';
+exports.TWO_DOTS = '..';
+exports.STAR = '*';
+exports.GLOBSTAR = '**';
+exports.ROOT_GLOBSTAR = '/**/*';
+exports.SLASH_GLOBSTAR = '/**';
+exports.DIR_SUFFIX = 'Dir';
+exports.ANYMATCH_OPTS = {dot: true};
+exports.STRING_TYPE = 'string';
+exports.FUNCTION_TYPE = 'function';
+exports.EMPTY_STR = '';
+exports.EMPTY_FN = () => {};
+exports.IDENTITY_FN = val => val;
+
+exports.isWindows = platform === 'win32';
+exports.isMacos = platform === 'darwin';
+exports.isLinux = platform === 'linux';
+
+
+/***/ }),
+
+/***/ "./node_modules/chokidar/lib/fsevents-handler.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/chokidar/lib/fsevents-handler.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const fs = __webpack_require__(/*! fs */ "fs");
+const sysPath = __webpack_require__(/*! path */ "path");
+const { promisify } = __webpack_require__(/*! util */ "util");
+
+let fsevents;
+try {
+  fsevents = __webpack_require__(/*! fsevents */ "fsevents");
+} catch (error) {
+  if (process.env.CHOKIDAR_PRINT_FSEVENTS_REQUIRE_ERROR) console.error(error);
+}
+
+if (fsevents) {
+  // TODO: real check
+  const mtch = process.version.match(/v(\d+)\.(\d+)/);
+  if (mtch && mtch[1] && mtch[2]) {
+    const maj = Number.parseInt(mtch[1], 10);
+    const min = Number.parseInt(mtch[2], 10);
+    if (maj === 8 && min < 16) {
+      fsevents = undefined;
+    }
+  }
+}
+
+const {
+  EV_ADD,
+  EV_CHANGE,
+  EV_ADD_DIR,
+  EV_UNLINK,
+  EV_ERROR,
+  STR_DATA,
+  STR_END,
+  FSEVENT_CREATED,
+  FSEVENT_MODIFIED,
+  FSEVENT_DELETED,
+  FSEVENT_MOVED,
+  // FSEVENT_CLONED,
+  FSEVENT_UNKNOWN,
+  FSEVENT_TYPE_FILE,
+  FSEVENT_TYPE_DIRECTORY,
+  FSEVENT_TYPE_SYMLINK,
+
+  ROOT_GLOBSTAR,
+  DIR_SUFFIX,
+  DOT_SLASH,
+  FUNCTION_TYPE,
+  EMPTY_FN,
+  IDENTITY_FN
+} = __webpack_require__(/*! ./constants */ "./node_modules/chokidar/lib/constants.js");
+
+const Depth = (value) => isNaN(value) ? {} : {depth: value};
+
+const stat = promisify(fs.stat);
+const lstat = promisify(fs.lstat);
+const realpath = promisify(fs.realpath);
+
+const statMethods = { stat, lstat };
+
+/**
+ * @typedef {String} Path
+ */
+
+/**
+ * @typedef {Object} FsEventsWatchContainer
+ * @property {Set<Function>} listeners
+ * @property {Function} rawEmitter
+ * @property {{stop: Function}} watcher
+ */
+
+// fsevents instance helper functions
+/**
+ * Object to hold per-process fsevents instances (may be shared across chokidar FSWatcher instances)
+ * @type {Map<Path,FsEventsWatchContainer>}
+ */
+const FSEventsWatchers = new Map();
+
+// Threshold of duplicate path prefixes at which to start
+// consolidating going forward
+const consolidateThreshhold = 10;
+
+const wrongEventFlags = new Set([
+  69888, 70400, 71424, 72704, 73472, 131328, 131840, 262912
+]);
+
+/**
+ * Instantiates the fsevents interface
+ * @param {Path} path path to be watched
+ * @param {Function} callback called when fsevents is bound and ready
+ * @returns {{stop: Function}} new fsevents instance
+ */
+const createFSEventsInstance = (path, callback) => {
+  const stop = fsevents.watch(path, callback);
+  return {stop};
+};
+
+/**
+ * Instantiates the fsevents interface or binds listeners to an existing one covering
+ * the same file tree.
+ * @param {Path} path           - to be watched
+ * @param {Path} realPath       - real path for symlinks
+ * @param {Function} listener   - called when fsevents emits events
+ * @param {Function} rawEmitter - passes data to listeners of the 'raw' event
+ * @returns {Function} closer
+ */
+function setFSEventsListener(path, realPath, listener, rawEmitter) {
+  let watchPath = sysPath.extname(path) ? sysPath.dirname(path) : path;
+  const parentPath = sysPath.dirname(watchPath);
+  let cont = FSEventsWatchers.get(watchPath);
+
+  // If we've accumulated a substantial number of paths that
+  // could have been consolidated by watching one directory
+  // above the current one, create a watcher on the parent
+  // path instead, so that we do consolidate going forward.
+  if (couldConsolidate(parentPath)) {
+    watchPath = parentPath;
+  }
+
+  const resolvedPath = sysPath.resolve(path);
+  const hasSymlink = resolvedPath !== realPath;
+
+  const filteredListener = (fullPath, flags, info) => {
+    if (hasSymlink) fullPath = fullPath.replace(realPath, resolvedPath);
+    if (
+      fullPath === resolvedPath ||
+      !fullPath.indexOf(resolvedPath + sysPath.sep)
+    ) listener(fullPath, flags, info);
+  };
+
+  // check if there is already a watcher on a parent path
+  // modifies `watchPath` to the parent path when it finds a match
+  let watchedParent = false;
+  for (const watchedPath of FSEventsWatchers.keys()) {
+    if (realPath.indexOf(sysPath.resolve(watchedPath) + sysPath.sep) === 0) {
+      watchPath = watchedPath;
+      cont = FSEventsWatchers.get(watchPath);
+      watchedParent = true;
+      break;
+    }
+  }
+
+  if (cont || watchedParent) {
+    cont.listeners.add(filteredListener);
+  } else {
+    cont = {
+      listeners: new Set([filteredListener]),
+      rawEmitter,
+      watcher: createFSEventsInstance(watchPath, (fullPath, flags) => {
+        if (!cont.listeners.size) return;
+        const info = fsevents.getInfo(fullPath, flags);
+        cont.listeners.forEach(list => {
+          list(fullPath, flags, info);
+        });
+
+        cont.rawEmitter(info.event, fullPath, info);
+      })
+    };
+    FSEventsWatchers.set(watchPath, cont);
+  }
+
+  // removes this instance's listeners and closes the underlying fsevents
+  // instance if there are no more listeners left
+  return () => {
+    const lst = cont.listeners;
+
+    lst.delete(filteredListener);
+    if (!lst.size) {
+      FSEventsWatchers.delete(watchPath);
+      if (cont.watcher) return cont.watcher.stop().then(() => {
+        cont.rawEmitter = cont.watcher = undefined;
+        Object.freeze(cont);
+      });
+    }
+  };
+}
+
+// Decide whether or not we should start a new higher-level
+// parent watcher
+const couldConsolidate = (path) => {
+  let count = 0;
+  for (const watchPath of FSEventsWatchers.keys()) {
+    if (watchPath.indexOf(path) === 0) {
+      count++;
+      if (count >= consolidateThreshhold) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
+// returns boolean indicating whether fsevents can be used
+const canUse = () => fsevents && FSEventsWatchers.size < 128;
+
+// determines subdirectory traversal levels from root to path
+const calcDepth = (path, root) => {
+  let i = 0;
+  while (!path.indexOf(root) && (path = sysPath.dirname(path)) !== root) i++;
+  return i;
+};
+
+// returns boolean indicating whether the fsevents' event info has the same type
+// as the one returned by fs.stat
+const sameTypes = (info, stats) => (
+  info.type === FSEVENT_TYPE_DIRECTORY && stats.isDirectory() ||
+  info.type === FSEVENT_TYPE_SYMLINK && stats.isSymbolicLink() ||
+  info.type === FSEVENT_TYPE_FILE && stats.isFile()
+)
+
+/**
+ * @mixin
+ */
+class FsEventsHandler {
+
+/**
+ * @param {import('../index').FSWatcher} fsw
+ */
+constructor(fsw) {
+  this.fsw = fsw;
+}
+checkIgnored(path, stats) {
+  const ipaths = this.fsw._ignoredPaths;
+  if (this.fsw._isIgnored(path, stats)) {
+    ipaths.add(path);
+    if (stats && stats.isDirectory()) {
+      ipaths.add(path + ROOT_GLOBSTAR);
+    }
+    return true;
+  }
+
+  ipaths.delete(path);
+  ipaths.delete(path + ROOT_GLOBSTAR);
+}
+
+addOrChange(path, fullPath, realPath, parent, watchedDir, item, info, opts) {
+  const event = watchedDir.has(item) ? EV_CHANGE : EV_ADD;
+  this.handleEvent(event, path, fullPath, realPath, parent, watchedDir, item, info, opts);
+}
+
+async checkExists(path, fullPath, realPath, parent, watchedDir, item, info, opts) {
+  try {
+    const stats = await stat(path)
+    if (this.fsw.closed) return;
+    if (sameTypes(info, stats)) {
+      this.addOrChange(path, fullPath, realPath, parent, watchedDir, item, info, opts);
+    } else {
+      this.handleEvent(EV_UNLINK, path, fullPath, realPath, parent, watchedDir, item, info, opts);
+    }
+  } catch (error) {
+    if (error.code === 'EACCES') {
+      this.addOrChange(path, fullPath, realPath, parent, watchedDir, item, info, opts);
+    } else {
+      this.handleEvent(EV_UNLINK, path, fullPath, realPath, parent, watchedDir, item, info, opts);
+    }
+  }
+}
+
+handleEvent(event, path, fullPath, realPath, parent, watchedDir, item, info, opts) {
+  if (this.fsw.closed || this.checkIgnored(path)) return;
+
+  if (event === EV_UNLINK) {
+    const isDirectory = info.type === FSEVENT_TYPE_DIRECTORY
+    // suppress unlink events on never before seen files
+    if (isDirectory || watchedDir.has(item)) {
+      this.fsw._remove(parent, item, isDirectory);
+    }
+  } else {
+    if (event === EV_ADD) {
+      // track new directories
+      if (info.type === FSEVENT_TYPE_DIRECTORY) this.fsw._getWatchedDir(path);
+
+      if (info.type === FSEVENT_TYPE_SYMLINK && opts.followSymlinks) {
+        // push symlinks back to the top of the stack to get handled
+        const curDepth = opts.depth === undefined ?
+          undefined : calcDepth(fullPath, realPath) + 1;
+        return this._addToFsEvents(path, false, true, curDepth);
+      }
+
+      // track new paths
+      // (other than symlinks being followed, which will be tracked soon)
+      this.fsw._getWatchedDir(parent).add(item);
+    }
+    /**
+     * @type {'add'|'addDir'|'unlink'|'unlinkDir'}
+     */
+    const eventName = info.type === FSEVENT_TYPE_DIRECTORY ? event + DIR_SUFFIX : event;
+    this.fsw._emit(eventName, path);
+    if (eventName === EV_ADD_DIR) this._addToFsEvents(path, false, true);
+  }
+}
+
+/**
+ * Handle symlinks encountered during directory scan
+ * @param {String} watchPath  - file/dir path to be watched with fsevents
+ * @param {String} realPath   - real path (in case of symlinks)
+ * @param {Function} transform  - path transformer
+ * @param {Function} globFilter - path filter in case a glob pattern was provided
+ * @returns {Function} closer for the watcher instance
+*/
+_watchWithFsEvents(watchPath, realPath, transform, globFilter) {
+  if (this.fsw.closed) return;
+  if (this.fsw._isIgnored(watchPath)) return;
+  const opts = this.fsw.options;
+  const watchCallback = async (fullPath, flags, info) => {
+    if (this.fsw.closed) return;
+    if (
+      opts.depth !== undefined &&
+      calcDepth(fullPath, realPath) > opts.depth
+    ) return;
+    const path = transform(sysPath.join(
+      watchPath, sysPath.relative(watchPath, fullPath)
+    ));
+    if (globFilter && !globFilter(path)) return;
+    // ensure directories are tracked
+    const parent = sysPath.dirname(path);
+    const item = sysPath.basename(path);
+    const watchedDir = this.fsw._getWatchedDir(
+      info.type === FSEVENT_TYPE_DIRECTORY ? path : parent
+    );
+
+    // correct for wrong events emitted
+    if (wrongEventFlags.has(flags) || info.event === FSEVENT_UNKNOWN) {
+      if (typeof opts.ignored === FUNCTION_TYPE) {
+        let stats;
+        try {
+          stats = await stat(path);
+        } catch (error) {}
+        if (this.fsw.closed) return;
+        if (this.checkIgnored(path, stats)) return;
+        if (sameTypes(info, stats)) {
+          this.addOrChange(path, fullPath, realPath, parent, watchedDir, item, info, opts);
+        } else {
+          this.handleEvent(EV_UNLINK, path, fullPath, realPath, parent, watchedDir, item, info, opts);
+        }
+      } else {
+        this.checkExists(path, fullPath, realPath, parent, watchedDir, item, info, opts);
+      }
+    } else {
+      switch (info.event) {
+      case FSEVENT_CREATED:
+      case FSEVENT_MODIFIED:
+        return this.addOrChange(path, fullPath, realPath, parent, watchedDir, item, info, opts);
+      case FSEVENT_DELETED:
+      case FSEVENT_MOVED:
+        return this.checkExists(path, fullPath, realPath, parent, watchedDir, item, info, opts);
+      }
+    }
+  };
+
+  const closer = setFSEventsListener(
+    watchPath,
+    realPath,
+    watchCallback,
+    this.fsw._emitRaw
+  );
+
+  this.fsw._emitReady();
+  return closer;
+}
+
+/**
+ * Handle symlinks encountered during directory scan
+ * @param {String} linkPath path to symlink
+ * @param {String} fullPath absolute path to the symlink
+ * @param {Function} transform pre-existing path transformer
+ * @param {Number} curDepth level of subdirectories traversed to where symlink is
+ * @returns {Promise<void>}
+ */
+async _handleFsEventsSymlink(linkPath, fullPath, transform, curDepth) {
+  // don't follow the same symlink more than once
+  if (this.fsw.closed || this.fsw._symlinkPaths.has(fullPath)) return;
+
+  this.fsw._symlinkPaths.set(fullPath, true);
+  this.fsw._incrReadyCount();
+
+  try {
+    const linkTarget = await realpath(linkPath);
+    if (this.fsw.closed) return;
+    if (this.fsw._isIgnored(linkTarget)) {
+      return this.fsw._emitReady();
+    }
+
+    this.fsw._incrReadyCount();
+
+    // add the linkTarget for watching with a wrapper for transform
+    // that causes emitted paths to incorporate the link's path
+    this._addToFsEvents(linkTarget || linkPath, (path) => {
+      let aliasedPath = linkPath;
+      if (linkTarget && linkTarget !== DOT_SLASH) {
+        aliasedPath = path.replace(linkTarget, linkPath);
+      } else if (path !== DOT_SLASH) {
+        aliasedPath = sysPath.join(linkPath, path);
+      }
+      return transform(aliasedPath);
+    }, false, curDepth);
+  } catch(error) {
+    if (this.fsw._handleError(error)) {
+      return this.fsw._emitReady();
+    }
+  }
+}
+
+/**
+ *
+ * @param {Path} newPath
+ * @param {fs.Stats} stats
+ */
+emitAdd(newPath, stats, processPath, opts, forceAdd) {
+  const pp = processPath(newPath);
+  const isDir = stats.isDirectory();
+  const dirObj = this.fsw._getWatchedDir(sysPath.dirname(pp));
+  const base = sysPath.basename(pp);
+
+  // ensure empty dirs get tracked
+  if (isDir) this.fsw._getWatchedDir(pp);
+  if (dirObj.has(base)) return;
+  dirObj.add(base);
+
+  if (!opts.ignoreInitial || forceAdd === true) {
+    this.fsw._emit(isDir ? EV_ADD_DIR : EV_ADD, pp, stats);
+  }
+}
+
+initWatch(realPath, path, wh, processPath) {
+  if (this.fsw.closed) return;
+  const closer = this._watchWithFsEvents(
+    wh.watchPath,
+    sysPath.resolve(realPath || wh.watchPath),
+    processPath,
+    wh.globFilter
+  );
+  this.fsw._addPathCloser(path, closer);
+}
+
+/**
+ * Handle added path with fsevents
+ * @param {String} path file/dir path or glob pattern
+ * @param {Function|Boolean=} transform converts working path to what the user expects
+ * @param {Boolean=} forceAdd ensure add is emitted
+ * @param {Number=} priorDepth Level of subdirectories already traversed.
+ * @returns {Promise<void>}
+ */
+async _addToFsEvents(path, transform, forceAdd, priorDepth) {
+  if (this.fsw.closed) {
+    return;
+  }
+  const opts = this.fsw.options;
+  const processPath = typeof transform === FUNCTION_TYPE ? transform : IDENTITY_FN;
+
+  const wh = this.fsw._getWatchHelpers(path);
+
+  // evaluate what is at the path we're being asked to watch
+  try {
+    const stats = await statMethods[wh.statMethod](wh.watchPath);
+    if (this.fsw.closed) return;
+    if (this.fsw._isIgnored(wh.watchPath, stats)) {
+      throw null;
+    }
+    if (stats.isDirectory()) {
+      // emit addDir unless this is a glob parent
+      if (!wh.globFilter) this.emitAdd(processPath(path), stats, processPath, opts, forceAdd);
+
+      // don't recurse further if it would exceed depth setting
+      if (priorDepth && priorDepth > opts.depth) return;
+
+      // scan the contents of the dir
+      this.fsw._readdirp(wh.watchPath, {
+        fileFilter: entry => wh.filterPath(entry),
+        directoryFilter: entry => wh.filterDir(entry),
+        ...Depth(opts.depth - (priorDepth || 0))
+      }).on(STR_DATA, (entry) => {
+        // need to check filterPath on dirs b/c filterDir is less restrictive
+        if (this.fsw.closed) {
+          return;
+        }
+        if (entry.stats.isDirectory() && !wh.filterPath(entry)) return;
+
+        const joinedPath = sysPath.join(wh.watchPath, entry.path);
+        const {fullPath} = entry;
+
+        if (wh.followSymlinks && entry.stats.isSymbolicLink()) {
+          // preserve the current depth here since it can't be derived from
+          // real paths past the symlink
+          const curDepth = opts.depth === undefined ?
+            undefined : calcDepth(joinedPath, sysPath.resolve(wh.watchPath)) + 1;
+
+          this._handleFsEventsSymlink(joinedPath, fullPath, processPath, curDepth);
+        } else {
+          this.emitAdd(joinedPath, entry.stats, processPath, opts, forceAdd);
+        }
+      }).on(EV_ERROR, EMPTY_FN).on(STR_END, () => {
+        this.fsw._emitReady();
+      });
+    } else {
+      this.emitAdd(wh.watchPath, stats, processPath, opts, forceAdd);
+      this.fsw._emitReady();
+    }
+  } catch (error) {
+    if (!error || this.fsw._handleError(error)) {
+      // TODO: Strange thing: "should not choke on an ignored watch path" will be failed without 2 ready calls -__-
+      this.fsw._emitReady();
+      this.fsw._emitReady();
+    }
+  }
+
+  if (opts.persistent && forceAdd !== true) {
+    if (typeof transform === FUNCTION_TYPE) {
+      // realpath has already been resolved
+      this.initWatch(undefined, path, wh, processPath);
+    } else {
+      let realPath;
+      try {
+        realPath = await realpath(wh.watchPath);
+      } catch (e) {}
+      this.initWatch(realPath, path, wh, processPath);
+    }
+  }
+}
+
+}
+
+module.exports = FsEventsHandler;
+module.exports.canUse = canUse;
+
+
+/***/ }),
+
+/***/ "./node_modules/chokidar/lib/nodefs-handler.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/chokidar/lib/nodefs-handler.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const fs = __webpack_require__(/*! fs */ "fs");
+const sysPath = __webpack_require__(/*! path */ "path");
+const { promisify } = __webpack_require__(/*! util */ "util");
+const isBinaryPath = __webpack_require__(/*! is-binary-path */ "./node_modules/is-binary-path/index.js");
+const {
+  isWindows,
+  isLinux,
+  EMPTY_FN,
+  EMPTY_STR,
+  KEY_LISTENERS,
+  KEY_ERR,
+  KEY_RAW,
+  HANDLER_KEYS,
+  EV_CHANGE,
+  EV_ADD,
+  EV_ADD_DIR,
+  EV_ERROR,
+  STR_DATA,
+  STR_END,
+  BRACE_START,
+  STAR
+} = __webpack_require__(/*! ./constants */ "./node_modules/chokidar/lib/constants.js");
+
+const THROTTLE_MODE_WATCH = 'watch';
+
+const open = promisify(fs.open);
+const stat = promisify(fs.stat);
+const lstat = promisify(fs.lstat);
+const close = promisify(fs.close);
+const fsrealpath = promisify(fs.realpath);
+
+const statMethods = { lstat, stat };
+
+// TODO: emit errors properly. Example: EMFILE on Macos.
+const foreach = (val, fn) => {
+  if (val instanceof Set) {
+    val.forEach(fn);
+  } else {
+    fn(val);
+  }
+};
+
+const addAndConvert = (main, prop, item) => {
+  let container = main[prop];
+  if (!(container instanceof Set)) {
+    main[prop] = container = new Set([container]);
+  }
+  container.add(item);
+};
+
+const clearItem = cont => key => {
+  const set = cont[key];
+  if (set instanceof Set) {
+    set.clear();
+  } else {
+    delete cont[key];
+  }
+};
+
+const delFromSet = (main, prop, item) => {
+  const container = main[prop];
+  if (container instanceof Set) {
+    container.delete(item);
+  } else if (container === item) {
+    delete main[prop];
+  }
+};
+
+const isEmptySet = (val) => val instanceof Set ? val.size === 0 : !val;
+
+/**
+ * @typedef {String} Path
+ */
+
+// fs_watch helpers
+
+// object to hold per-process fs_watch instances
+// (may be shared across chokidar FSWatcher instances)
+
+/**
+ * @typedef {Object} FsWatchContainer
+ * @property {Set} listeners
+ * @property {Set} errHandlers
+ * @property {Set} rawEmitters
+ * @property {fs.FSWatcher=} watcher
+ * @property {Boolean=} watcherUnusable
+ */
+
+/**
+ * @type {Map<String,FsWatchContainer>}
+ */
+const FsWatchInstances = new Map();
+
+/**
+ * Instantiates the fs_watch interface
+ * @param {String} path to be watched
+ * @param {Object} options to be passed to fs_watch
+ * @param {Function} listener main event handler
+ * @param {Function} errHandler emits info about errors
+ * @param {Function} emitRaw emits raw event data
+ * @returns {fs.FSWatcher} new fsevents instance
+ */
+function createFsWatchInstance(path, options, listener, errHandler, emitRaw) {
+  const handleEvent = (rawEvent, evPath) => {
+    listener(path);
+    emitRaw(rawEvent, evPath, {watchedPath: path});
+
+    // emit based on events occurring for files from a directory's watcher in
+    // case the file's watcher misses it (and rely on throttling to de-dupe)
+    if (evPath && path !== evPath) {
+      fsWatchBroadcast(
+        sysPath.resolve(path, evPath), KEY_LISTENERS, sysPath.join(path, evPath)
+      );
+    }
+  };
+  try {
+    return fs.watch(path, options, handleEvent);
+  } catch (error) {
+    errHandler(error);
+  }
+}
+
+/**
+ * Helper for passing fs_watch event data to a collection of listeners
+ * @param {Path} fullPath absolute path bound to fs_watch instance
+ * @param {String} type listener type
+ * @param {*=} val1 arguments to be passed to listeners
+ * @param {*=} val2
+ * @param {*=} val3
+ */
+const fsWatchBroadcast = (fullPath, type, val1, val2, val3) => {
+  const cont = FsWatchInstances.get(fullPath);
+  if (!cont) return;
+  foreach(cont[type], (listener) => {
+    listener(val1, val2, val3);
+  });
+};
+
+/**
+ * Instantiates the fs_watch interface or binds listeners
+ * to an existing one covering the same file system entry
+ * @param {String} path
+ * @param {String} fullPath absolute path
+ * @param {Object} options to be passed to fs_watch
+ * @param {Object} handlers container for event listener functions
+ */
+const setFsWatchListener = (path, fullPath, options, handlers) => {
+  const {listener, errHandler, rawEmitter} = handlers;
+  let cont = FsWatchInstances.get(fullPath);
+
+  /** @type {fs.FSWatcher=} */
+  let watcher;
+  if (!options.persistent) {
+    watcher = createFsWatchInstance(
+      path, options, listener, errHandler, rawEmitter
+    );
+    return watcher.close.bind(watcher);
+  }
+  if (cont) {
+    addAndConvert(cont, KEY_LISTENERS, listener);
+    addAndConvert(cont, KEY_ERR, errHandler);
+    addAndConvert(cont, KEY_RAW, rawEmitter);
+  } else {
+    watcher = createFsWatchInstance(
+      path,
+      options,
+      fsWatchBroadcast.bind(null, fullPath, KEY_LISTENERS),
+      errHandler, // no need to use broadcast here
+      fsWatchBroadcast.bind(null, fullPath, KEY_RAW)
+    );
+    if (!watcher) return;
+    watcher.on(EV_ERROR, async (error) => {
+      const broadcastErr = fsWatchBroadcast.bind(null, fullPath, KEY_ERR);
+      cont.watcherUnusable = true; // documented since Node 10.4.1
+      // Workaround for https://github.com/joyent/node/issues/4337
+      if (isWindows && error.code === 'EPERM') {
+        try {
+          const fd = await open(path, 'r');
+          await close(fd);
+          broadcastErr(error);
+        } catch (err) {}
+      } else {
+        broadcastErr(error);
+      }
+    });
+    cont = {
+      listeners: listener,
+      errHandlers: errHandler,
+      rawEmitters: rawEmitter,
+      watcher
+    };
+    FsWatchInstances.set(fullPath, cont);
+  }
+  // const index = cont.listeners.indexOf(listener);
+
+  // removes this instance's listeners and closes the underlying fs_watch
+  // instance if there are no more listeners left
+  return () => {
+    delFromSet(cont, KEY_LISTENERS, listener);
+    delFromSet(cont, KEY_ERR, errHandler);
+    delFromSet(cont, KEY_RAW, rawEmitter);
+    if (isEmptySet(cont.listeners)) {
+      // Check to protect against issue gh-730.
+      // if (cont.watcherUnusable) {
+      cont.watcher.close();
+      // }
+      FsWatchInstances.delete(fullPath);
+      HANDLER_KEYS.forEach(clearItem(cont));
+      cont.watcher = undefined;
+      Object.freeze(cont);
+    }
+  };
+};
+
+// fs_watchFile helpers
+
+// object to hold per-process fs_watchFile instances
+// (may be shared across chokidar FSWatcher instances)
+const FsWatchFileInstances = new Map();
+
+/**
+ * Instantiates the fs_watchFile interface or binds listeners
+ * to an existing one covering the same file system entry
+ * @param {String} path to be watched
+ * @param {String} fullPath absolute path
+ * @param {Object} options options to be passed to fs_watchFile
+ * @param {Object} handlers container for event listener functions
+ * @returns {Function} closer
+ */
+const setFsWatchFileListener = (path, fullPath, options, handlers) => {
+  const {listener, rawEmitter} = handlers;
+  let cont = FsWatchFileInstances.get(fullPath);
+
+  /* eslint-disable no-unused-vars, prefer-destructuring */
+  let listeners = new Set();
+  let rawEmitters = new Set();
+
+  const copts = cont && cont.options;
+  if (copts && (copts.persistent < options.persistent || copts.interval > options.interval)) {
+    // "Upgrade" the watcher to persistence or a quicker interval.
+    // This creates some unlikely edge case issues if the user mixes
+    // settings in a very weird way, but solving for those cases
+    // doesn't seem worthwhile for the added complexity.
+    listeners = cont.listeners;
+    rawEmitters = cont.rawEmitters;
+    fs.unwatchFile(fullPath);
+    cont = undefined;
+  }
+
+  /* eslint-enable no-unused-vars, prefer-destructuring */
+
+  if (cont) {
+    addAndConvert(cont, KEY_LISTENERS, listener);
+    addAndConvert(cont, KEY_RAW, rawEmitter);
+  } else {
+    // TODO
+    // listeners.add(listener);
+    // rawEmitters.add(rawEmitter);
+    cont = {
+      listeners: listener,
+      rawEmitters: rawEmitter,
+      options,
+      watcher: fs.watchFile(fullPath, options, (curr, prev) => {
+        foreach(cont.rawEmitters, (rawEmitter) => {
+          rawEmitter(EV_CHANGE, fullPath, {curr, prev});
+        });
+        const currmtime = curr.mtimeMs;
+        if (curr.size !== prev.size || currmtime > prev.mtimeMs || currmtime === 0) {
+          foreach(cont.listeners, (listener) => listener(path, curr));
+        }
+      })
+    };
+    FsWatchFileInstances.set(fullPath, cont);
+  }
+  // const index = cont.listeners.indexOf(listener);
+
+  // Removes this instance's listeners and closes the underlying fs_watchFile
+  // instance if there are no more listeners left.
+  return () => {
+    delFromSet(cont, KEY_LISTENERS, listener);
+    delFromSet(cont, KEY_RAW, rawEmitter);
+    if (isEmptySet(cont.listeners)) {
+      FsWatchFileInstances.delete(fullPath);
+      fs.unwatchFile(fullPath);
+      cont.options = cont.watcher = undefined;
+      Object.freeze(cont);
+    }
+  };
+};
+
+/**
+ * @mixin
+ */
+class NodeFsHandler {
+
+/**
+ * @param {import("../index").FSWatcher} fsW
+ */
+constructor(fsW) {
+  this.fsw = fsW;
+  this._boundHandleError = (error) => fsW._handleError(error);
+}
+
+/**
+ * Watch file for changes with fs_watchFile or fs_watch.
+ * @param {String} path to file or dir
+ * @param {Function} listener on fs change
+ * @returns {Function} closer for the watcher instance
+ */
+_watchWithNodeFs(path, listener) {
+  const opts = this.fsw.options;
+  const directory = sysPath.dirname(path);
+  const basename = sysPath.basename(path);
+  const parent = this.fsw._getWatchedDir(directory);
+  parent.add(basename);
+  const absolutePath = sysPath.resolve(path);
+  const options = {persistent: opts.persistent};
+  if (!listener) listener = EMPTY_FN;
+
+  let closer;
+  if (opts.usePolling) {
+    options.interval = opts.enableBinaryInterval && isBinaryPath(basename) ?
+      opts.binaryInterval : opts.interval;
+    closer = setFsWatchFileListener(path, absolutePath, options, {
+      listener,
+      rawEmitter: this.fsw._emitRaw
+    });
+  } else {
+    closer = setFsWatchListener(path, absolutePath, options, {
+      listener,
+      errHandler: this._boundHandleError,
+      rawEmitter: this.fsw._emitRaw
+    });
+  }
+  return closer;
+}
+
+/**
+ * Watch a file and emit add event if warranted.
+ * @param {Path} file Path
+ * @param {fs.Stats} stats result of fs_stat
+ * @param {Boolean} initialAdd was the file added at watch instantiation?
+ * @returns {Function} closer for the watcher instance
+ */
+_handleFile(file, stats, initialAdd) {
+  if (this.fsw.closed) {
+    return;
+  }
+  const dirname = sysPath.dirname(file);
+  const basename = sysPath.basename(file);
+  const parent = this.fsw._getWatchedDir(dirname);
+  // stats is always present
+  let prevStats = stats;
+
+  // if the file is already being watched, do nothing
+  if (parent.has(basename)) return;
+
+  const listener = async (path, newStats) => {
+    if (!this.fsw._throttle(THROTTLE_MODE_WATCH, file, 5)) return;
+    if (!newStats || newStats.mtimeMs === 0) {
+      try {
+        const newStats = await stat(file);
+        if (this.fsw.closed) return;
+        // Check that change event was not fired because of changed only accessTime.
+        const at = newStats.atimeMs;
+        const mt = newStats.mtimeMs;
+        if (!at || at <= mt || mt !== prevStats.mtimeMs) {
+          this.fsw._emit(EV_CHANGE, file, newStats);
+        }
+        if (isLinux && prevStats.ino !== newStats.ino) {
+          this.fsw._closeFile(path)
+          prevStats = newStats;
+          this.fsw._addPathCloser(path, this._watchWithNodeFs(file, listener));
+        } else {
+          prevStats = newStats;
+        }
+      } catch (error) {
+        // Fix issues where mtime is null but file is still present
+        this.fsw._remove(dirname, basename);
+      }
+      // add is about to be emitted if file not already tracked in parent
+    } else if (parent.has(basename)) {
+      // Check that change event was not fired because of changed only accessTime.
+      const at = newStats.atimeMs;
+      const mt = newStats.mtimeMs;
+      if (!at || at <= mt || mt !== prevStats.mtimeMs) {
+        this.fsw._emit(EV_CHANGE, file, newStats);
+      }
+      prevStats = newStats;
+    }
+  }
+  // kick off the watcher
+  const closer = this._watchWithNodeFs(file, listener);
+
+  // emit an add event if we're supposed to
+  if (!(initialAdd && this.fsw.options.ignoreInitial) && this.fsw._isntIgnored(file)) {
+    if (!this.fsw._throttle(EV_ADD, file, 0)) return;
+    this.fsw._emit(EV_ADD, file, stats);
+  }
+
+  return closer;
+}
+
+/**
+ * Handle symlinks encountered while reading a dir.
+ * @param {Object} entry returned by readdirp
+ * @param {String} directory path of dir being read
+ * @param {String} path of this item
+ * @param {String} item basename of this item
+ * @returns {Promise<Boolean>} true if no more processing is needed for this entry.
+ */
+async _handleSymlink(entry, directory, path, item) {
+  if (this.fsw.closed) {
+    return;
+  }
+  const full = entry.fullPath;
+  const dir = this.fsw._getWatchedDir(directory);
+
+  if (!this.fsw.options.followSymlinks) {
+    // watch symlink directly (don't follow) and detect changes
+    this.fsw._incrReadyCount();
+    const linkPath = await fsrealpath(path);
+    if (this.fsw.closed) return;
+    if (dir.has(item)) {
+      if (this.fsw._symlinkPaths.get(full) !== linkPath) {
+        this.fsw._symlinkPaths.set(full, linkPath);
+        this.fsw._emit(EV_CHANGE, path, entry.stats);
+      }
+    } else {
+      dir.add(item);
+      this.fsw._symlinkPaths.set(full, linkPath);
+      this.fsw._emit(EV_ADD, path, entry.stats);
+    }
+    this.fsw._emitReady();
+    return true;
+  }
+
+  // don't follow the same symlink more than once
+  if (this.fsw._symlinkPaths.has(full)) {
+    return true;
+  }
+
+  this.fsw._symlinkPaths.set(full, true);
+}
+
+_handleRead(directory, initialAdd, wh, target, dir, depth, throttler) {
+  // Normalize the directory name on Windows
+  directory = sysPath.join(directory, EMPTY_STR);
+
+  if (!wh.hasGlob) {
+    throttler = this.fsw._throttle('readdir', directory, 1000);
+    if (!throttler) return;
+  }
+
+  const previous = this.fsw._getWatchedDir(wh.path);
+  const current = new Set();
+
+  let stream = this.fsw._readdirp(directory, {
+    fileFilter: entry => wh.filterPath(entry),
+    directoryFilter: entry => wh.filterDir(entry),
+    depth: 0
+  }).on(STR_DATA, async (entry) => {
+    if (this.fsw.closed) {
+      stream = undefined;
+      return;
+    }
+    const item = entry.path;
+    let path = sysPath.join(directory, item);
+    current.add(item);
+
+    if (entry.stats.isSymbolicLink() && await this._handleSymlink(entry, directory, path, item)) {
+      return;
+    }
+
+    if (this.fsw.closed) {
+      stream = undefined;
+      return;
+    }
+    // Files that present in current directory snapshot
+    // but absent in previous are added to watch list and
+    // emit `add` event.
+    if (item === target || !target && !previous.has(item)) {
+      this.fsw._incrReadyCount();
+
+      // ensure relativeness of path is preserved in case of watcher reuse
+      path = sysPath.join(dir, sysPath.relative(dir, path));
+
+      this._addToNodeFs(path, initialAdd, wh, depth + 1);
+    }
+  }).on(EV_ERROR, this._boundHandleError);
+
+  return new Promise(resolve =>
+    stream.once(STR_END, () => {
+      if (this.fsw.closed) {
+        stream = undefined;
+        return;
+      }
+      const wasThrottled = throttler ? throttler.clear() : false;
+
+      resolve();
+
+      // Files that absent in current directory snapshot
+      // but present in previous emit `remove` event
+      // and are removed from @watched[directory].
+      previous.getChildren().filter((item) => {
+        return item !== directory &&
+          !current.has(item) &&
+          // in case of intersecting globs;
+          // a path may have been filtered out of this readdir, but
+          // shouldn't be removed because it matches a different glob
+          (!wh.hasGlob || wh.filterPath({
+            fullPath: sysPath.resolve(directory, item)
+          }));
+      }).forEach((item) => {
+        this.fsw._remove(directory, item);
+      });
+
+      stream = undefined;
+
+      // one more time for any missed in case changes came in extremely quickly
+      if (wasThrottled) this._handleRead(directory, false, wh, target, dir, depth, throttler);
+    })
+  );
+}
+
+/**
+ * Read directory to add / remove files from `@watched` list and re-read it on change.
+ * @param {String} dir fs path
+ * @param {fs.Stats} stats
+ * @param {Boolean} initialAdd
+ * @param {Number} depth relative to user-supplied path
+ * @param {String} target child path targeted for watch
+ * @param {Object} wh Common watch helpers for this path
+ * @param {String} realpath
+ * @returns {Promise<Function>} closer for the watcher instance.
+ */
+async _handleDir(dir, stats, initialAdd, depth, target, wh, realpath) {
+  const parentDir = this.fsw._getWatchedDir(sysPath.dirname(dir));
+  const tracked = parentDir.has(sysPath.basename(dir));
+  if (!(initialAdd && this.fsw.options.ignoreInitial) && !target && !tracked) {
+    if (!wh.hasGlob || wh.globFilter(dir)) this.fsw._emit(EV_ADD_DIR, dir, stats);
+  }
+
+  // ensure dir is tracked (harmless if redundant)
+  parentDir.add(sysPath.basename(dir));
+  this.fsw._getWatchedDir(dir);
+  let throttler;
+  let closer;
+
+  const oDepth = this.fsw.options.depth;
+  if ((oDepth == null || depth <= oDepth) && !this.fsw._symlinkPaths.has(realpath)) {
+    if (!target) {
+      await this._handleRead(dir, initialAdd, wh, target, dir, depth, throttler);
+      if (this.fsw.closed) return;
+    }
+
+    closer = this._watchWithNodeFs(dir, (dirPath, stats) => {
+      // if current directory is removed, do nothing
+      if (stats && stats.mtimeMs === 0) return;
+
+      this._handleRead(dirPath, false, wh, target, dir, depth, throttler);
+    });
+  }
+  return closer;
+}
+
+/**
+ * Handle added file, directory, or glob pattern.
+ * Delegates call to _handleFile / _handleDir after checks.
+ * @param {String} path to file or ir
+ * @param {Boolean} initialAdd was the file added at watch instantiation?
+ * @param {Object} priorWh depth relative to user-supplied path
+ * @param {Number} depth Child path actually targeted for watch
+ * @param {String=} target Child path actually targeted for watch
+ * @returns {Promise}
+ */
+async _addToNodeFs(path, initialAdd, priorWh, depth, target) {
+  const ready = this.fsw._emitReady;
+  if (this.fsw._isIgnored(path) || this.fsw.closed) {
+    ready();
+    return false;
+  }
+
+  const wh = this.fsw._getWatchHelpers(path, depth);
+  if (!wh.hasGlob && priorWh) {
+    wh.hasGlob = priorWh.hasGlob;
+    wh.globFilter = priorWh.globFilter;
+    wh.filterPath = entry => priorWh.filterPath(entry);
+    wh.filterDir = entry => priorWh.filterDir(entry);
+  }
+
+  // evaluate what is at the path we're being asked to watch
+  try {
+    const stats = await statMethods[wh.statMethod](wh.watchPath);
+    if (this.fsw.closed) return;
+    if (this.fsw._isIgnored(wh.watchPath, stats)) {
+      ready();
+      return false;
+    }
+
+    const follow = this.fsw.options.followSymlinks && !path.includes(STAR) && !path.includes(BRACE_START);
+    let closer;
+    if (stats.isDirectory()) {
+      const targetPath = follow ? await fsrealpath(path) : path;
+      if (this.fsw.closed) return;
+      closer = await this._handleDir(wh.watchPath, stats, initialAdd, depth, target, wh, targetPath);
+      if (this.fsw.closed) return;
+      // preserve this symlink's target path
+      if (path !== targetPath && targetPath !== undefined) {
+        this.fsw._symlinkPaths.set(targetPath, true);
+      }
+    } else if (stats.isSymbolicLink()) {
+      const targetPath = follow ? await fsrealpath(path) : path;
+      if (this.fsw.closed) return;
+      const parent = sysPath.dirname(wh.watchPath);
+      this.fsw._getWatchedDir(parent).add(wh.watchPath);
+      this.fsw._emit(EV_ADD, wh.watchPath, stats);
+      closer = await this._handleDir(parent, stats, initialAdd, depth, path, wh, targetPath);
+      if (this.fsw.closed) return;
+
+      // preserve this symlink's target path
+      if (targetPath !== undefined) {
+        this.fsw._symlinkPaths.set(sysPath.resolve(path), targetPath);
+      }
+    } else {
+      closer = this._handleFile(wh.watchPath, stats, initialAdd);
+    }
+    ready();
+
+    this.fsw._addPathCloser(path, closer);
+    return false;
+
+  } catch (error) {
+    if (this.fsw._handleError(error)) {
+      ready();
+      return path;
+    }
+  }
+}
+
+}
+
+module.exports = NodeFsHandler;
+
+
+/***/ }),
+
+/***/ "./node_modules/fill-range/index.js":
+/*!******************************************!*\
+  !*** ./node_modules/fill-range/index.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /*!
  * fill-range <https://github.com/jonschlinkert/fill-range>
  *
  * Copyright (c) 2014-present, Jon Schlinkert.
  * Licensed under the MIT License.
- */const i=s(2),r=s(28),n=t=>null!==t&&"object"==typeof t&&!Array.isArray(t),o=t=>"number"==typeof t||"string"==typeof t&&""!==t,a=t=>Number.isInteger(+t),l=t=>{let e=""+t,s=-1;if("-"===e[0]&&(e=e.slice(1)),"0"===e)return!1;for(;"0"===e[++s];);return s>0},u=(t,e,s)=>{if(e>0){let s="-"===t[0]?"-":"";s&&(t=t.slice(1)),t=s+t.padStart(s?e-1:e,"0")}return!1===s?String(t):t},c=(t,e)=>{let s="-"===t[0]?"-":"";for(s&&(t=t.slice(1),e--);t.length<e;)t="0"+t;return s?"-"+t:t},h=(t,e,s,i)=>{if(s)return r(t,e,{wrap:!1,...i});let n=String.fromCharCode(t);return t===e?n:`[${n}-${String.fromCharCode(e)}]`},p=(t,e,s)=>{if(Array.isArray(t)){let e=!0===s.wrap,i=s.capture?"":"?:";return e?`(${i}${t.join("|")})`:t.join("|")}return r(t,e,s)},f=(...t)=>new RangeError("Invalid range arguments: "+i.inspect(...t)),d=(t,e,s)=>{if(!0===s.strictRanges)throw f([t,e]);return[]},_=(t,e,s=1,i={})=>{let r=Number(t),n=Number(e);if(!Number.isInteger(r)||!Number.isInteger(n)){if(!0===i.strictRanges)throw f([t,e]);return[]}0===r&&(r=0),0===n&&(n=0);let o=r>n,a=String(t),d=String(e),_=String(s);s=Math.max(Math.abs(s),1);let E=l(a)||l(d)||l(_),g=E?Math.max(a.length,d.length,_.length):0,m=!1===E&&!1===((t,e,s)=>"string"==typeof t||"string"==typeof e||!0===s.stringify)(t,e,i),y=i.transform||(t=>e=>!0===t?Number(e):String(e))(m);if(i.toRegex&&1===s)return h(c(t,g),c(e,g),!0,i);let R={negatives:[],positives:[]},A=[],w=0;for(;o?r>=n:r<=n;)!0===i.toRegex&&s>1?R[(v=r)<0?"negatives":"positives"].push(Math.abs(v)):A.push(u(y(r,w),g,m)),r=o?r-s:r+s,w++;var v;return!0===i.toRegex?s>1?((t,e)=>{t.negatives.sort((t,e)=>t<e?-1:t>e?1:0),t.positives.sort((t,e)=>t<e?-1:t>e?1:0);let s,i=e.capture?"":"?:",r="",n="";return t.positives.length&&(r=t.positives.join("|")),t.negatives.length&&(n=`-(${i}${t.negatives.join("|")})`),s=r&&n?`${r}|${n}`:r||n,e.wrap?`(${i}${s})`:s})(R,i):p(A,null,{wrap:!1,...i}):A},E=(t,e,s,i={})=>{if(null==e&&o(t))return[t];if(!o(t)||!o(e))return d(t,e,i);if("function"==typeof s)return E(t,e,1,{transform:s});if(n(s))return E(t,e,0,s);let r={...i};return!0===r.capture&&(r.wrap=!0),s=s||r.step||1,a(s)?a(t)&&a(e)?_(t,e,s,r):((t,e,s=1,i={})=>{if(!a(t)&&t.length>1||!a(e)&&e.length>1)return d(t,e,i);let r=i.transform||(t=>String.fromCharCode(t)),n=(""+t).charCodeAt(0),o=(""+e).charCodeAt(0),l=n>o,u=Math.min(n,o),c=Math.max(n,o);if(i.toRegex&&1===s)return h(u,c,!1,i);let f=[],_=0;for(;l?n>=o:n<=o;)f.push(r(n,_)),n=l?n-s:n+s,_++;return!0===i.toRegex?p(f,null,{wrap:!1,options:i}):f})(t,e,Math.max(Math.abs(s),1),r):null==s||n(s)?E(t,e,1,s):((t,e)=>{if(!0===e.strictRanges)throw new TypeError(`Expected step "${t}" to be a number`);return[]})(s,r)};t.exports=E},function(t,e,s){s(15),t.exports=s(39)},function(t,e,s){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var i=s(16);s(40)("dist/app"),i.app.on("ready",(function(){new i.BrowserWindow({width:800,height:600,webPreferences:{nodeIntegration:!0}}).loadFile("app/index.html")}))},function(t,e){t.exports=require("electron")},function(t,e){t.exports=require("events")},function(t,e,s){"use strict";const i=s(1),{Readable:r}=s(19),n=s(0),{promisify:o}=s(2),a=s(9),l=o(i.readdir),u=o(i.stat),c=o(i.lstat),h=o(i.realpath),p=new Set(["ENOENT","EPERM","EACCES","ELOOP"]),f="files",d="directories",_="files_directories",E="all",g=[f,d,_,E],m=t=>{if(void 0!==t){if("function"==typeof t)return t;if("string"==typeof t){const e=a(t.trim());return t=>e(t.basename)}if(Array.isArray(t)){const e=[],s=[];for(const i of t){const t=i.trim();"!"===t.charAt(0)?s.push(a(t.slice(1))):e.push(a(t))}return s.length>0?e.length>0?t=>e.some(e=>e(t.basename))&&!s.some(e=>e(t.basename)):t=>!s.some(e=>e(t.basename)):t=>e.some(e=>e(t.basename))}}};class y extends r{static get defaultOptions(){return{root:".",fileFilter:t=>!0,directoryFilter:t=>!0,type:f,lstat:!1,depth:2147483648,alwaysStat:!1}}constructor(t={}){super({objectMode:!0,autoDestroy:!0,highWaterMark:t.highWaterMark||4096});const e={...y.defaultOptions,...t},{root:s,type:r}=e;this._fileFilter=m(e.fileFilter),this._directoryFilter=m(e.directoryFilter);const o=e.lstat?c:u;"win32"===process.platform&&3===u.length?this._stat=t=>o(t,{bigint:!0}):this._stat=o,this._maxDepth=e.depth,this._wantsDir=[d,_,E].includes(r),this._wantsFile=[f,_,E].includes(r),this._wantsEverything=r===E,this._root=n.resolve(s),this._isDirent="Dirent"in i&&!e.alwaysStat,this._statsProp=this._isDirent?"dirent":"stats",this._rdOptions={encoding:"utf8",withFileTypes:this._isDirent},this.parents=[this._exploreDir(s,1)],this.reading=!1,this.parent=void 0}async _read(t){if(!this.reading){this.reading=!0;try{for(;!this.destroyed&&t>0;){const{path:e,depth:s,files:i=[]}=this.parent||{};if(i.length>0){const r=i.splice(0,t).map(t=>this._formatEntry(t,e));for(const e of await Promise.all(r)){if(this.destroyed)return;const i=await this._getEntryType(e);"directory"===i&&this._directoryFilter(e)?(s<=this._maxDepth&&this.parents.push(this._exploreDir(e.fullPath,s+1)),this._wantsDir&&(this.push(e),t--)):("file"===i||this._includeAsFile(e))&&this._fileFilter(e)&&this._wantsFile&&(this.push(e),t--)}}else{const t=this.parents.pop();if(!t){this.push(null);break}if(this.parent=await t,this.destroyed)return}}}catch(t){this.destroy(t)}finally{this.reading=!1}}}async _exploreDir(t,e){let s;try{s=await l(t,this._rdOptions)}catch(t){this._onError(t)}return{files:s,depth:e,path:t}}async _formatEntry(t,e){let s;try{const i=this._isDirent?t.name:t,r=n.resolve(n.join(e,i));s={path:n.relative(this._root,r),fullPath:r,basename:i},s[this._statsProp]=this._isDirent?t:await this._stat(r)}catch(t){this._onError(t)}return s}_onError(t){var e;e=t,p.has(e.code)&&!this.destroyed?this.emit("warn",t):this.destroy(t)}async _getEntryType(t){const e=t&&t[this._statsProp];if(e){if(e.isFile())return"file";if(e.isDirectory())return"directory";if(e&&e.isSymbolicLink())try{const e=await h(t.fullPath),s=await c(e);if(s.isFile())return"file";if(s.isDirectory())return"directory"}catch(t){this._onError(t)}}}_includeAsFile(t){const e=t&&t[this._statsProp];return e&&this._wantsEverything&&!e.isDirectory()}}const R=(t,e={})=>{let s=e.entryType||e.type;if("both"===s&&(s=_),s&&(e.type=s),!t)throw new Error("readdirp: root argument is required. Usage: readdirp(root, options)");if("string"!=typeof t)throw new TypeError("readdirp: root argument must be a string. Usage: readdirp(root, options)");if(s&&!g.includes(s))throw new Error("readdirp: Invalid type passed. Use one of "+g.join(", "));return e.root=t,new y(e)};R.promise=(t,e={})=>new Promise((s,i)=>{const r=[];R(t,e).on("data",t=>r.push(t)).on("end",()=>s(r)).on("error",t=>i(t))}),R.ReaddirpStream=y,R.default=R,t.exports=R},function(t,e){t.exports=require("stream")},function(t,e,s){"use strict";const i=s(0),r=s(21),n=s(22),o=s(4),a=s(3),l=(t,e,s=!1)=>{if(Array.isArray(t)){const i=t.map(t=>l(t,e,s));return t=>{for(const e of i){const s=e(t);if(s)return s}return!1}}const i=(r=t)&&"object"==typeof r&&!Array.isArray(r)&&t.tokens&&t.input;var r;if(""===t||"string"!=typeof t&&!i)throw new TypeError("Expected pattern to be a non-empty string");const n=e||{},a=o.isWindows(e),u=i?l.compileRe(t,e):l.makeRe(t,e,!1,!0),c=u.state;delete u.state;let h=()=>!1;if(n.ignore){const t={...e,ignore:null,onMatch:null,onResult:null};h=l(n.ignore,t,s)}const p=(s,i=!1)=>{const{isMatch:r,match:o,output:p}=l.test(s,u,e,{glob:t,posix:a}),f={glob:t,state:c,regex:u,posix:a,input:s,output:p,match:o,isMatch:r};return"function"==typeof n.onResult&&n.onResult(f),!1===r?(f.isMatch=!1,!!i&&f):h(s)?("function"==typeof n.onIgnore&&n.onIgnore(f),f.isMatch=!1,!!i&&f):("function"==typeof n.onMatch&&n.onMatch(f),!i||f)};return s&&(p.state=c),p};l.test=(t,e,s,{glob:i,posix:r}={})=>{if("string"!=typeof t)throw new TypeError("Expected input to be a string");if(""===t)return{isMatch:!1,output:""};const n=s||{},a=n.format||(r?o.toPosixSlashes:null);let u=t===i,c=u&&a?a(t):t;return!1===u&&(c=a?a(t):t,u=c===i),!1!==u&&!0!==n.capture||(u=!0===n.matchBase||!0===n.basename?l.matchBase(t,e,s,r):e.exec(c)),{isMatch:Boolean(u),match:u,output:c}},l.matchBase=(t,e,s,r=o.isWindows(s))=>(e instanceof RegExp?e:l.makeRe(e,s)).test(i.basename(t)),l.isMatch=(t,e,s)=>l(e,s)(t),l.parse=(t,e)=>Array.isArray(t)?t.map(t=>l.parse(t,e)):n(t,{...e,fastpaths:!1}),l.scan=(t,e)=>r(t,e),l.compileRe=(t,e,s=!1,i=!1)=>{if(!0===s)return t.output;const r=e||{},n=r.contains?"":"^",o=r.contains?"":"$";let a=`${n}(?:${t.output})${o}`;t&&!0===t.negated&&(a=`^(?!${a}).*$`);const u=l.toRegex(a,e);return!0===i&&(u.state=t),u},l.makeRe=(t,e,s=!1,i=!1)=>{if(!t||"string"!=typeof t)throw new TypeError("Expected a non-empty string");const r=e||{};let o,a={negated:!1,fastpaths:!0},u="";return t.startsWith("./")&&(t=t.slice(2),u=a.prefix="./"),!1===r.fastpaths||"."!==t[0]&&"*"!==t[0]||(o=n.fastpaths(t,e)),void 0===o?(a=n(t,e),a.prefix=u+(a.prefix||"")):a.output=o,l.compileRe(a,e,s,i)},l.toRegex=(t,e)=>{try{const s=e||{};return new RegExp(t,s.flags||(s.nocase?"i":""))}catch(t){if(e&&!0===e.debug)throw t;return/$^/}},l.constants=a,t.exports=l},function(t,e,s){"use strict";const i=s(4),{CHAR_ASTERISK:r,CHAR_AT:n,CHAR_BACKWARD_SLASH:o,CHAR_COMMA:a,CHAR_DOT:l,CHAR_EXCLAMATION_MARK:u,CHAR_FORWARD_SLASH:c,CHAR_LEFT_CURLY_BRACE:h,CHAR_LEFT_PARENTHESES:p,CHAR_LEFT_SQUARE_BRACKET:f,CHAR_PLUS:d,CHAR_QUESTION_MARK:_,CHAR_RIGHT_CURLY_BRACE:E,CHAR_RIGHT_PARENTHESES:g,CHAR_RIGHT_SQUARE_BRACKET:m}=s(3),y=t=>t===c||t===o,R=t=>{!0!==t.isPrefix&&(t.depth=t.isGlobstar?1/0:1)};t.exports=(t,e)=>{const s=e||{},A=t.length-1,w=!0===s.parts||!0===s.scanToEnd,v=[],b=[],S=[];let C,x,T=t,H=-1,O=0,L=0,N=!1,P=!1,I=!1,D=!1,k=!1,F=!1,$=!1,M=!1,W=!1,G=0,B={value:"",depth:0,isGlob:!1};const U=()=>H>=A,K=()=>(C=x,T.charCodeAt(++H));for(;H<A;){let t;if(x=K(),x!==o){if(!0===F||x===h){for(G++;!0!==U()&&(x=K());)if(x!==o)if(x!==h){if(!0!==F&&x===l&&(x=K())===l){if(N=B.isBrace=!0,I=B.isGlob=!0,W=!0,!0===w)continue;break}if(!0!==F&&x===a){if(N=B.isBrace=!0,I=B.isGlob=!0,W=!0,!0===w)continue;break}if(x===E&&(G--,0===G)){F=!1,N=B.isBrace=!0,W=!0;break}}else G++;else $=B.backslashes=!0,K();if(!0===w)continue;break}if(x!==c){if(!0!==s.noext){if(!0===(x===d||x===n||x===r||x===_||x===u)&&T.charCodeAt(H+1)===p){if(I=B.isGlob=!0,D=B.isExtglob=!0,W=!0,!0===w){for(;!0!==U()&&(x=K());)if(x!==o){if(x===g){I=B.isGlob=!0,W=!0;break}}else $=B.backslashes=!0,x=K();continue}break}}if(x===r){if(C===r&&(k=B.isGlobstar=!0),I=B.isGlob=!0,W=!0,!0===w)continue;break}if(x===_){if(I=B.isGlob=!0,W=!0,!0===w)continue;break}if(x===f)for(;!0!==U()&&(t=K());)if(t!==o){if(t===m){if(P=B.isBracket=!0,I=B.isGlob=!0,W=!0,!0===w)continue;break}}else $=B.backslashes=!0,K();if(!0===s.nonegate||x!==u||H!==O){if(!0!==s.noparen&&x===p){if(I=B.isGlob=!0,!0===w){for(;!0!==U()&&(x=K());)if(x!==p){if(x===g){W=!0;break}}else $=B.backslashes=!0,x=K();continue}break}if(!0===I){if(W=!0,!0===w)continue;break}}else M=B.negated=!0,O++}else{if(v.push(H),b.push(B),B={value:"",depth:0,isGlob:!1},!0===W)continue;if(C===l&&H===O+1){O+=2;continue}L=H+1}}else $=B.backslashes=!0,x=K(),x===h&&(F=!0)}!0===s.noext&&(D=!1,I=!1);let j=T,V="",Y="";O>0&&(V=T.slice(0,O),T=T.slice(O),L-=O),j&&!0===I&&L>0?(j=T.slice(0,L),Y=T.slice(L)):!0===I?(j="",Y=T):j=T,j&&""!==j&&"/"!==j&&j!==T&&y(j.charCodeAt(j.length-1))&&(j=j.slice(0,-1)),!0===s.unescape&&(Y&&(Y=i.removeBackslashes(Y)),j&&!0===$&&(j=i.removeBackslashes(j)));const z={prefix:V,input:t,start:O,base:j,glob:Y,isBrace:N,isBracket:P,isGlob:I,isExtglob:D,isGlobstar:k,negated:M};if(!0===s.tokens&&(z.maxDepth=0,y(x)||b.push(B),z.tokens=b),!0===s.parts||!0===s.tokens){let e;for(let i=0;i<v.length;i++){const r=e?e+1:O,n=v[i],o=t.slice(r,n);s.tokens&&(0===i&&0!==O?(b[i].isPrefix=!0,b[i].value=V):b[i].value=o,R(b[i]),z.maxDepth+=b[i].depth),0===i&&""===o||S.push(o),e=n}if(e&&e+1<t.length){const i=t.slice(e+1);S.push(i),s.tokens&&(b[b.length-1].value=i,R(b[b.length-1]),z.maxDepth+=b[b.length-1].depth)}z.slashes=v,z.parts=S}return z}},function(t,e,s){"use strict";const i=s(3),r=s(4),{MAX_LENGTH:n,POSIX_REGEX_SOURCE:o,REGEX_NON_SPECIAL_CHARS:a,REGEX_SPECIAL_CHARS_BACKREF:l,REPLACEMENTS:u}=i,c=(t,e)=>{if("function"==typeof e.expandRange)return e.expandRange(...t,e);t.sort();const s=`[${t.join("-")}]`;try{new RegExp(s)}catch(e){return t.map(t=>r.escapeRegex(t)).join("..")}return s},h=(t,e)=>`Missing ${t}: "${e}" - use "\\\\${e}" to match literal characters`,p=(t,e)=>{if("string"!=typeof t)throw new TypeError("Expected a string");t=u[t]||t;const s={...e},p="number"==typeof s.maxLength?Math.min(n,s.maxLength):n;let f=t.length;if(f>p)throw new SyntaxError(`Input length: ${f}, exceeds maximum allowed length: ${p}`);const d={type:"bos",value:"",output:s.prepend||""},_=[d],E=s.capture?"":"?:",g=r.isWindows(e),m=i.globChars(g),y=i.extglobChars(m),{DOT_LITERAL:R,PLUS_LITERAL:A,SLASH_LITERAL:w,ONE_CHAR:v,DOTS_SLASH:b,NO_DOT:S,NO_DOT_SLASH:C,NO_DOTS_SLASH:x,QMARK:T,QMARK_NO_DOT:H,STAR:O,START_ANCHOR:L}=m,N=t=>`(${E}(?:(?!${L}${t.dot?b:R}).)*?)`,P=s.dot?"":S,I=s.dot?T:H;let D=!0===s.bash?N(s):O;s.capture&&(D=`(${D})`),"boolean"==typeof s.noext&&(s.noextglob=s.noext);const k={input:t,index:-1,start:0,dot:!0===s.dot,consumed:"",output:"",prefix:"",backtrack:!1,negated:!1,brackets:0,braces:0,parens:0,quotes:0,globstar:!1,tokens:_};t=r.removePrefix(t,k),f=t.length;const F=[],$=[],M=[];let W,G=d;const B=()=>k.index===f-1,U=k.peek=(e=1)=>t[k.index+e],K=k.advance=()=>t[++k.index],j=()=>t.slice(k.index+1),V=(t="",e=0)=>{k.consumed+=t,k.index+=e},Y=t=>{k.output+=null!=t.output?t.output:t.value,V(t.value)},z=()=>{let t=1;for(;"!"===U()&&("("!==U(2)||"?"===U(3));)K(),k.start++,t++;return t%2!=0&&(k.negated=!0,k.start++,!0)},Q=t=>{k[t]++,M.push(t)},q=t=>{k[t]--,M.pop()},X=t=>{if("globstar"===G.type){const e=k.braces>0&&("comma"===t.type||"brace"===t.type),s=!0===t.extglob||F.length&&("pipe"===t.type||"paren"===t.type);"slash"===t.type||"paren"===t.type||e||s||(k.output=k.output.slice(0,-G.output.length),G.type="star",G.value="*",G.output=D,k.output+=G.output)}if(F.length&&"paren"!==t.type&&!y[t.value]&&(F[F.length-1].inner+=t.value),(t.value||t.output)&&Y(t),G&&"text"===G.type&&"text"===t.type)return G.value+=t.value,void(G.output=(G.output||"")+t.value);t.prev=G,_.push(t),G=t},Z=(t,e)=>{const i={...y[e],conditions:1,inner:""};i.prev=G,i.parens=k.parens,i.output=k.output;const r=(s.capture?"(":"")+i.open;Q("parens"),X({type:t,value:e,output:k.output?"":v}),X({type:"paren",extglob:!0,value:K(),output:r}),F.push(i)},J=t=>{let e=t.close+(s.capture?")":"");if("negate"===t.type){let i=D;t.inner&&t.inner.length>1&&t.inner.includes("/")&&(i=N(s)),(i!==D||B()||/^\)+$/.test(j()))&&(e=t.close=")$))"+i),"bos"===t.prev.type&&B()&&(k.negatedExtglob=!0)}X({type:"paren",extglob:!0,value:W,output:e}),q("parens")};if(!1!==s.fastpaths&&!/(^[*!]|[/()[\]{}"])/.test(t)){let i=!1,n=t.replace(l,(t,e,s,r,n,o)=>"\\"===r?(i=!0,t):"?"===r?e?e+r+(n?T.repeat(n.length):""):0===o?I+(n?T.repeat(n.length):""):T.repeat(s.length):"."===r?R.repeat(s.length):"*"===r?e?e+r+(n?D:""):D:e?t:"\\"+t);return!0===i&&(n=!0===s.unescape?n.replace(/\\/g,""):n.replace(/\\+/g,t=>t.length%2==0?"\\\\":t?"\\":"")),n===t&&!0===s.contains?(k.output=t,k):(k.output=r.wrapOutput(n,k,e),k)}for(;!B();){if(W=K(),"\0"===W)continue;if("\\"===W){const t=U();if("/"===t&&!0!==s.bash)continue;if("."===t||";"===t)continue;if(!t){W+="\\",X({type:"text",value:W});continue}const e=/^\\+/.exec(j());let i=0;if(e&&e[0].length>2&&(i=e[0].length,k.index+=i,i%2!=0&&(W+="\\")),!0===s.unescape?W=K()||"":W+=K()||"",0===k.brackets){X({type:"text",value:W});continue}}if(k.brackets>0&&("]"!==W||"["===G.value||"[^"===G.value)){if(!1!==s.posix&&":"===W){const t=G.value.slice(1);if(t.includes("[")&&(G.posix=!0,t.includes(":"))){const t=G.value.lastIndexOf("["),e=G.value.slice(0,t),s=G.value.slice(t+2),i=o[s];if(i){G.value=e+i,k.backtrack=!0,K(),d.output||1!==_.indexOf(G)||(d.output=v);continue}}}("["===W&&":"!==U()||"-"===W&&"]"===U())&&(W="\\"+W),"]"!==W||"["!==G.value&&"[^"!==G.value||(W="\\"+W),!0===s.posix&&"!"===W&&"["===G.value&&(W="^"),G.value+=W,Y({value:W});continue}if(1===k.quotes&&'"'!==W){W=r.escapeRegex(W),G.value+=W,Y({value:W});continue}if('"'===W){k.quotes=1===k.quotes?0:1,!0===s.keepQuotes&&X({type:"text",value:W});continue}if("("===W){Q("parens"),X({type:"paren",value:W});continue}if(")"===W){if(0===k.parens&&!0===s.strictBrackets)throw new SyntaxError(h("opening","("));const t=F[F.length-1];if(t&&k.parens===t.parens+1){J(F.pop());continue}X({type:"paren",value:W,output:k.parens?")":"\\)"}),q("parens");continue}if("["===W){if(!0!==s.nobracket&&j().includes("]"))Q("brackets");else{if(!0!==s.nobracket&&!0===s.strictBrackets)throw new SyntaxError(h("closing","]"));W="\\"+W}X({type:"bracket",value:W});continue}if("]"===W){if(!0===s.nobracket||G&&"bracket"===G.type&&1===G.value.length){X({type:"text",value:W,output:"\\"+W});continue}if(0===k.brackets){if(!0===s.strictBrackets)throw new SyntaxError(h("opening","["));X({type:"text",value:W,output:"\\"+W});continue}q("brackets");const t=G.value.slice(1);if(!0===G.posix||"^"!==t[0]||t.includes("/")||(W="/"+W),G.value+=W,Y({value:W}),!1===s.literalBrackets||r.hasRegexChars(t))continue;const e=r.escapeRegex(G.value);if(k.output=k.output.slice(0,-G.value.length),!0===s.literalBrackets){k.output+=e,G.value=e;continue}G.value=`(${E}${e}|${G.value})`,k.output+=G.value;continue}if("{"===W&&!0!==s.nobrace){Q("braces");const t={type:"brace",value:W,output:"(",outputIndex:k.output.length,tokensIndex:k.tokens.length};$.push(t),X(t);continue}if("}"===W){const t=$[$.length-1];if(!0===s.nobrace||!t){X({type:"text",value:W,output:W});continue}let e=")";if(!0===t.dots){const t=_.slice(),i=[];for(let e=t.length-1;e>=0&&(_.pop(),"brace"!==t[e].type);e--)"dots"!==t[e].type&&i.unshift(t[e].value);e=c(i,s),k.backtrack=!0}if(!0!==t.comma&&!0!==t.dots){const s=k.output.slice(0,t.outputIndex),i=k.tokens.slice(t.tokensIndex);t.value=t.output="\\{",W=e="\\}",k.output=s;for(const t of i)k.output+=t.output||t.value}X({type:"brace",value:W,output:e}),q("braces"),$.pop();continue}if("|"===W){F.length>0&&F[F.length-1].conditions++,X({type:"text",value:W});continue}if(","===W){let t=W;const e=$[$.length-1];e&&"braces"===M[M.length-1]&&(e.comma=!0,t="|"),X({type:"comma",value:W,output:t});continue}if("/"===W){if("dot"===G.type&&k.index===k.start+1){k.start=k.index+1,k.consumed="",k.output="",_.pop(),G=d;continue}X({type:"slash",value:W,output:w});continue}if("."===W){if(k.braces>0&&"dot"===G.type){"."===G.value&&(G.output=R);const t=$[$.length-1];G.type="dots",G.output+=W,G.value+=W,t.dots=!0;continue}if(k.braces+k.parens===0&&"bos"!==G.type&&"slash"!==G.type){X({type:"text",value:W,output:R});continue}X({type:"dot",value:W,output:R});continue}if("?"===W){if(!(G&&"("===G.value)&&!0!==s.noextglob&&"("===U()&&"?"!==U(2)){Z("qmark",W);continue}if(G&&"paren"===G.type){const t=U();let e=W;if("<"===t&&!r.supportsLookbehinds())throw new Error("Node.js v10 or higher is required for regex lookbehinds");("("===G.value&&!/[!=<:]/.test(t)||"<"===t&&!/<([!=]|\w+>)/.test(j()))&&(e="\\"+W),X({type:"text",value:W,output:e});continue}if(!0!==s.dot&&("slash"===G.type||"bos"===G.type)){X({type:"qmark",value:W,output:H});continue}X({type:"qmark",value:W,output:T});continue}if("!"===W){if(!0!==s.noextglob&&"("===U()&&("?"!==U(2)||!/[!=<:]/.test(U(3)))){Z("negate",W);continue}if(!0!==s.nonegate&&0===k.index){z();continue}}if("+"===W){if(!0!==s.noextglob&&"("===U()&&"?"!==U(2)){Z("plus",W);continue}if(G&&"("===G.value||!1===s.regex){X({type:"plus",value:W,output:A});continue}if(G&&("bracket"===G.type||"paren"===G.type||"brace"===G.type)||k.parens>0){X({type:"plus",value:W});continue}X({type:"plus",value:A});continue}if("@"===W){if(!0!==s.noextglob&&"("===U()&&"?"!==U(2)){X({type:"at",extglob:!0,value:W,output:""});continue}X({type:"text",value:W});continue}if("*"!==W){"$"!==W&&"^"!==W||(W="\\"+W);const t=a.exec(j());t&&(W+=t[0],k.index+=t[0].length),X({type:"text",value:W});continue}if(G&&("globstar"===G.type||!0===G.star)){G.type="star",G.star=!0,G.value+=W,G.output=D,k.backtrack=!0,k.globstar=!0,V(W);continue}let e=j();if(!0!==s.noextglob&&/^\([^?]/.test(e)){Z("star",W);continue}if("star"===G.type){if(!0===s.noglobstar){V(W);continue}const i=G.prev,r=i.prev,n="slash"===i.type||"bos"===i.type,o=r&&("star"===r.type||"globstar"===r.type);if(!0===s.bash&&(!n||e[0]&&"/"!==e[0])){X({type:"star",value:W,output:""});continue}const a=k.braces>0&&("comma"===i.type||"brace"===i.type),l=F.length&&("pipe"===i.type||"paren"===i.type);if(!n&&"paren"!==i.type&&!a&&!l){X({type:"star",value:W,output:""});continue}for(;"/**"===e.slice(0,3);){const s=t[k.index+4];if(s&&"/"!==s)break;e=e.slice(3),V("/**",3)}if("bos"===i.type&&B()){G.type="globstar",G.value+=W,G.output=N(s),k.output=G.output,k.globstar=!0,V(W);continue}if("slash"===i.type&&"bos"!==i.prev.type&&!o&&B()){k.output=k.output.slice(0,-(i.output+G.output).length),i.output="(?:"+i.output,G.type="globstar",G.output=N(s)+(s.strictSlashes?")":"|$)"),G.value+=W,k.globstar=!0,k.output+=i.output+G.output,V(W);continue}if("slash"===i.type&&"bos"!==i.prev.type&&"/"===e[0]){const t=void 0!==e[1]?"|$":"";k.output=k.output.slice(0,-(i.output+G.output).length),i.output="(?:"+i.output,G.type="globstar",G.output=`${N(s)}${w}|${w}${t})`,G.value+=W,k.output+=i.output+G.output,k.globstar=!0,V(W+K()),X({type:"slash",value:"/",output:""});continue}if("bos"===i.type&&"/"===e[0]){G.type="globstar",G.value+=W,G.output=`(?:^|${w}|${N(s)}${w})`,k.output=G.output,k.globstar=!0,V(W+K()),X({type:"slash",value:"/",output:""});continue}k.output=k.output.slice(0,-G.output.length),G.type="globstar",G.output=N(s),G.value+=W,k.output+=G.output,k.globstar=!0,V(W);continue}const i={type:"star",value:W,output:D};!0!==s.bash?!G||"bracket"!==G.type&&"paren"!==G.type||!0!==s.regex?(k.index!==k.start&&"slash"!==G.type&&"dot"!==G.type||("dot"===G.type?(k.output+=C,G.output+=C):!0===s.dot?(k.output+=x,G.output+=x):(k.output+=P,G.output+=P),"*"!==U()&&(k.output+=v,G.output+=v)),X(i)):(i.output=W,X(i)):(i.output=".*?","bos"!==G.type&&"slash"!==G.type||(i.output=P+i.output),X(i))}for(;k.brackets>0;){if(!0===s.strictBrackets)throw new SyntaxError(h("closing","]"));k.output=r.escapeLast(k.output,"["),q("brackets")}for(;k.parens>0;){if(!0===s.strictBrackets)throw new SyntaxError(h("closing",")"));k.output=r.escapeLast(k.output,"("),q("parens")}for(;k.braces>0;){if(!0===s.strictBrackets)throw new SyntaxError(h("closing","}"));k.output=r.escapeLast(k.output,"{"),q("braces")}if(!0===s.strictSlashes||"star"!==G.type&&"bracket"!==G.type||X({type:"maybe_slash",value:"",output:w+"?"}),!0===k.backtrack){k.output="";for(const t of k.tokens)k.output+=null!=t.output?t.output:t.value,t.suffix&&(k.output+=t.suffix)}return k};p.fastpaths=(t,e)=>{const s={...e},o="number"==typeof s.maxLength?Math.min(n,s.maxLength):n,a=t.length;if(a>o)throw new SyntaxError(`Input length: ${a}, exceeds maximum allowed length: ${o}`);t=u[t]||t;const l=r.isWindows(e),{DOT_LITERAL:c,SLASH_LITERAL:h,ONE_CHAR:p,DOTS_SLASH:f,NO_DOT:d,NO_DOTS:_,NO_DOTS_SLASH:E,STAR:g,START_ANCHOR:m}=i.globChars(l),y=s.dot?_:d,R=s.dot?E:d,A=s.capture?"":"?:";let w=!0===s.bash?".*?":g;s.capture&&(w=`(${w})`);const v=t=>!0===t.noglobstar?w:`(${A}(?:(?!${m}${t.dot?f:c}).)*?)`,b=t=>{switch(t){case"*":return`${y}${p}${w}`;case".*":return`${c}${p}${w}`;case"*.*":return`${y}${w}${c}${p}${w}`;case"*/*":return`${y}${w}${h}${p}${R}${w}`;case"**":return y+v(s);case"**/*":return`(?:${y}${v(s)}${h})?${R}${p}${w}`;case"**/*.*":return`(?:${y}${v(s)}${h})?${R}${w}${c}${p}${w}`;case"**/.*":return`(?:${y}${v(s)}${h})?${c}${p}${w}`;default:{const e=/^(.*?)\.(\w+)$/.exec(t);if(!e)return;const s=b(e[1]);if(!s)return;return s+c+e[2]}}},S=r.removePrefix(t,{negated:!1,prefix:""});let C=b(S);return C&&!0!==s.strictSlashes&&(C+=h+"?"),C},t.exports=p},function(t,e,s){"use strict";Object.defineProperty(e,"__esModule",{value:!0});const i=s(9),r=s(10),n={returnIndex:!1},o=(t,e,s,i)=>{const n=Array.isArray(s),o=n?s[0]:s;if(!n&&"string"!=typeof o)throw new TypeError("anymatch: second argument must be a string: got "+Object.prototype.toString.call(o));const a=r(o);for(let t=0;t<e.length;t++){if((0,e[t])(a))return!!i&&-1}const l=n&&[a].concat(s.slice(1));for(let e=0;e<t.length;e++){const s=t[e];if(n?s(...l):s(a))return!i||e}return!!i&&-1},a=(t,e,s=n)=>{if(null==t)throw new TypeError("anymatch: specify first argument");const r="boolean"==typeof s?{returnIndex:s}:s,a=r.returnIndex||!1,l=(u=t,Array.isArray(u)?u:[u]);var u;const c=l.filter(t=>"string"==typeof t&&"!"===t.charAt(0)).map(t=>t.slice(1)).map(t=>i(t,r)),h=l.map(t=>((t,e)=>{if("function"==typeof t)return t;if("string"==typeof t){const s=i(t,e);return e=>t===e||s(e)}return t instanceof RegExp?e=>t.test(e):t=>!1})(t,r));return null==e?(t,e=!1)=>o(h,c,t,"boolean"==typeof e&&e):o(h,c,e,a)};a.default=a,t.exports=a},function(t,e,s){"use strict";var i=s(11),r=s(0).posix.dirname,n="win32"===s(12).platform(),o=/\\/g,a=/[\{\[].*[\/]*.*[\}\]]$/,l=/(^|[^\\])([\{\[]|\([^\)]+$)/,u=/\\([\!\*\?\|\[\]\(\)\{\}])/g;t.exports=function(t,e){Object.assign({flipBackslashes:!0},e).flipBackslashes&&n&&t.indexOf("/")<0&&(t=t.replace(o,"/")),a.test(t)&&(t+="/"),t+="a";do{t=r(t)}while(i(t)||l.test(t));return t.replace(u,"$1")}},function(t,e){
+ */
+
+
+
+const util = __webpack_require__(/*! util */ "util");
+const toRegexRange = __webpack_require__(/*! to-regex-range */ "./node_modules/to-regex-range/index.js");
+
+const isObject = val => val !== null && typeof val === 'object' && !Array.isArray(val);
+
+const transform = toNumber => {
+  return value => toNumber === true ? Number(value) : String(value);
+};
+
+const isValidValue = value => {
+  return typeof value === 'number' || (typeof value === 'string' && value !== '');
+};
+
+const isNumber = num => Number.isInteger(+num);
+
+const zeros = input => {
+  let value = `${input}`;
+  let index = -1;
+  if (value[0] === '-') value = value.slice(1);
+  if (value === '0') return false;
+  while (value[++index] === '0');
+  return index > 0;
+};
+
+const stringify = (start, end, options) => {
+  if (typeof start === 'string' || typeof end === 'string') {
+    return true;
+  }
+  return options.stringify === true;
+};
+
+const pad = (input, maxLength, toNumber) => {
+  if (maxLength > 0) {
+    let dash = input[0] === '-' ? '-' : '';
+    if (dash) input = input.slice(1);
+    input = (dash + input.padStart(dash ? maxLength - 1 : maxLength, '0'));
+  }
+  if (toNumber === false) {
+    return String(input);
+  }
+  return input;
+};
+
+const toMaxLen = (input, maxLength) => {
+  let negative = input[0] === '-' ? '-' : '';
+  if (negative) {
+    input = input.slice(1);
+    maxLength--;
+  }
+  while (input.length < maxLength) input = '0' + input;
+  return negative ? ('-' + input) : input;
+};
+
+const toSequence = (parts, options) => {
+  parts.negatives.sort((a, b) => a < b ? -1 : a > b ? 1 : 0);
+  parts.positives.sort((a, b) => a < b ? -1 : a > b ? 1 : 0);
+
+  let prefix = options.capture ? '' : '?:';
+  let positives = '';
+  let negatives = '';
+  let result;
+
+  if (parts.positives.length) {
+    positives = parts.positives.join('|');
+  }
+
+  if (parts.negatives.length) {
+    negatives = `-(${prefix}${parts.negatives.join('|')})`;
+  }
+
+  if (positives && negatives) {
+    result = `${positives}|${negatives}`;
+  } else {
+    result = positives || negatives;
+  }
+
+  if (options.wrap) {
+    return `(${prefix}${result})`;
+  }
+
+  return result;
+};
+
+const toRange = (a, b, isNumbers, options) => {
+  if (isNumbers) {
+    return toRegexRange(a, b, { wrap: false, ...options });
+  }
+
+  let start = String.fromCharCode(a);
+  if (a === b) return start;
+
+  let stop = String.fromCharCode(b);
+  return `[${start}-${stop}]`;
+};
+
+const toRegex = (start, end, options) => {
+  if (Array.isArray(start)) {
+    let wrap = options.wrap === true;
+    let prefix = options.capture ? '' : '?:';
+    return wrap ? `(${prefix}${start.join('|')})` : start.join('|');
+  }
+  return toRegexRange(start, end, options);
+};
+
+const rangeError = (...args) => {
+  return new RangeError('Invalid range arguments: ' + util.inspect(...args));
+};
+
+const invalidRange = (start, end, options) => {
+  if (options.strictRanges === true) throw rangeError([start, end]);
+  return [];
+};
+
+const invalidStep = (step, options) => {
+  if (options.strictRanges === true) {
+    throw new TypeError(`Expected step "${step}" to be a number`);
+  }
+  return [];
+};
+
+const fillNumbers = (start, end, step = 1, options = {}) => {
+  let a = Number(start);
+  let b = Number(end);
+
+  if (!Number.isInteger(a) || !Number.isInteger(b)) {
+    if (options.strictRanges === true) throw rangeError([start, end]);
+    return [];
+  }
+
+  // fix negative zero
+  if (a === 0) a = 0;
+  if (b === 0) b = 0;
+
+  let descending = a > b;
+  let startString = String(start);
+  let endString = String(end);
+  let stepString = String(step);
+  step = Math.max(Math.abs(step), 1);
+
+  let padded = zeros(startString) || zeros(endString) || zeros(stepString);
+  let maxLen = padded ? Math.max(startString.length, endString.length, stepString.length) : 0;
+  let toNumber = padded === false && stringify(start, end, options) === false;
+  let format = options.transform || transform(toNumber);
+
+  if (options.toRegex && step === 1) {
+    return toRange(toMaxLen(start, maxLen), toMaxLen(end, maxLen), true, options);
+  }
+
+  let parts = { negatives: [], positives: [] };
+  let push = num => parts[num < 0 ? 'negatives' : 'positives'].push(Math.abs(num));
+  let range = [];
+  let index = 0;
+
+  while (descending ? a >= b : a <= b) {
+    if (options.toRegex === true && step > 1) {
+      push(a);
+    } else {
+      range.push(pad(format(a, index), maxLen, toNumber));
+    }
+    a = descending ? a - step : a + step;
+    index++;
+  }
+
+  if (options.toRegex === true) {
+    return step > 1
+      ? toSequence(parts, options)
+      : toRegex(range, null, { wrap: false, ...options });
+  }
+
+  return range;
+};
+
+const fillLetters = (start, end, step = 1, options = {}) => {
+  if ((!isNumber(start) && start.length > 1) || (!isNumber(end) && end.length > 1)) {
+    return invalidRange(start, end, options);
+  }
+
+
+  let format = options.transform || (val => String.fromCharCode(val));
+  let a = `${start}`.charCodeAt(0);
+  let b = `${end}`.charCodeAt(0);
+
+  let descending = a > b;
+  let min = Math.min(a, b);
+  let max = Math.max(a, b);
+
+  if (options.toRegex && step === 1) {
+    return toRange(min, max, false, options);
+  }
+
+  let range = [];
+  let index = 0;
+
+  while (descending ? a >= b : a <= b) {
+    range.push(format(a, index));
+    a = descending ? a - step : a + step;
+    index++;
+  }
+
+  if (options.toRegex === true) {
+    return toRegex(range, null, { wrap: false, options });
+  }
+
+  return range;
+};
+
+const fill = (start, end, step, options = {}) => {
+  if (end == null && isValidValue(start)) {
+    return [start];
+  }
+
+  if (!isValidValue(start) || !isValidValue(end)) {
+    return invalidRange(start, end, options);
+  }
+
+  if (typeof step === 'function') {
+    return fill(start, end, 1, { transform: step });
+  }
+
+  if (isObject(step)) {
+    return fill(start, end, 0, step);
+  }
+
+  let opts = { ...options };
+  if (opts.capture === true) opts.wrap = true;
+  step = step || opts.step || 1;
+
+  if (!isNumber(step)) {
+    if (step != null && !isObject(step)) return invalidStep(step, opts);
+    return fill(start, end, 1, step);
+  }
+
+  if (isNumber(start) && isNumber(end)) {
+    return fillNumbers(start, end, step, opts);
+  }
+
+  return fillLetters(start, end, Math.max(Math.abs(step), 1), opts);
+};
+
+module.exports = fill;
+
+
+/***/ }),
+
+/***/ "./node_modules/glob-parent/index.js":
+/*!*******************************************!*\
+  !*** ./node_modules/glob-parent/index.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var isGlob = __webpack_require__(/*! is-glob */ "./node_modules/is-glob/index.js");
+var pathPosixDirname = __webpack_require__(/*! path */ "path").posix.dirname;
+var isWin32 = __webpack_require__(/*! os */ "os").platform() === 'win32';
+
+var slash = '/';
+var backslash = /\\/g;
+var enclosure = /[\{\[].*[\/]*.*[\}\]]$/;
+var globby = /(^|[^\\])([\{\[]|\([^\)]+$)/;
+var escaped = /\\([\!\*\?\|\[\]\(\)\{\}])/g;
+
+/**
+ * @param {string} str
+ * @param {Object} opts
+ * @param {boolean} [opts.flipBackslashes=true]
+ */
+module.exports = function globParent(str, opts) {
+  var options = Object.assign({ flipBackslashes: true }, opts);
+
+  // flip windows path separators
+  if (options.flipBackslashes && isWin32 && str.indexOf(slash) < 0) {
+    str = str.replace(backslash, slash);
+  }
+
+  // special case for strings ending in enclosure containing path separator
+  if (enclosure.test(str)) {
+    str += slash;
+  }
+
+  // preserves full path in case of trailing path separator
+  str += 'a';
+
+  // remove path parts that are globby
+  do {
+    str = pathPosixDirname(str);
+  } while (isGlob(str) || globby.test(str));
+
+  // remove escape chars and return result
+  return str.replace(escaped, '$1');
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/is-binary-path/index.js":
+/*!**********************************************!*\
+  !*** ./node_modules/is-binary-path/index.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+const path = __webpack_require__(/*! path */ "path");
+const binaryExtensions = __webpack_require__(/*! binary-extensions */ "./node_modules/binary-extensions/index.js");
+
+const extensions = new Set(binaryExtensions);
+
+module.exports = filePath => extensions.has(path.extname(filePath).slice(1).toLowerCase());
+
+
+/***/ }),
+
+/***/ "./node_modules/is-extglob/index.js":
+/*!******************************************!*\
+  !*** ./node_modules/is-extglob/index.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
 /*!
  * is-extglob <https://github.com/jonschlinkert/is-extglob>
  *
  * Copyright (c) 2014-2016, Jon Schlinkert.
  * Licensed under the MIT License.
  */
-t.exports=function(t){if("string"!=typeof t||""===t)return!1;for(var e;e=/(\\).|([@?!+*]\(.*\))/g.exec(t);){if(e[2])return!0;t=t.slice(e.index+e[0].length)}return!1}},function(t,e,s){"use strict";const i=s(5),r=s(27),n=s(30),o=s(31),a=(t,e={})=>{let s=[];if(Array.isArray(t))for(let i of t){let t=a.create(i,e);Array.isArray(t)?s.push(...t):s.push(t)}else s=[].concat(a.create(t,e));return e&&!0===e.expand&&!0===e.nodupes&&(s=[...new Set(s)]),s};a.parse=(t,e={})=>o(t,e),a.stringify=(t,e={})=>i("string"==typeof t?a.parse(t,e):t,e),a.compile=(t,e={})=>("string"==typeof t&&(t=a.parse(t,e)),r(t,e)),a.expand=(t,e={})=>{"string"==typeof t&&(t=a.parse(t,e));let s=n(t,e);return!0===e.noempty&&(s=s.filter(Boolean)),!0===e.nodupes&&(s=[...new Set(s)]),s},a.create=(t,e={})=>""===t||t.length<3?[t]:!0!==e.expand?a.compile(t,e):a.expand(t,e),t.exports=a},function(t,e,s){"use strict";const i=s(13),r=s(6);t.exports=(t,e={})=>{let s=(t,n={})=>{let o=r.isInvalidBrace(n),a=!0===t.invalid&&!0===e.escapeInvalid,l=!0===o||!0===a,u=!0===e.escapeInvalid?"\\":"",c="";if(!0===t.isOpen)return u+t.value;if(!0===t.isClose)return u+t.value;if("open"===t.type)return l?u+t.value:"(";if("close"===t.type)return l?u+t.value:")";if("comma"===t.type)return"comma"===t.prev.type?"":l?t.value:"|";if(t.value)return t.value;if(t.nodes&&t.ranges>0){let s=r.reduce(t.nodes),n=i(...s,{...e,wrap:!1,toRegex:!0});if(0!==n.length)return s.length>1&&n.length>1?`(${n})`:n}if(t.nodes)for(let e of t.nodes)c+=s(e,t);return c};return s(t)}},function(t,e,s){"use strict";
+
+module.exports = function isExtglob(str) {
+  if (typeof str !== 'string' || str === '') {
+    return false;
+  }
+
+  var match;
+  while ((match = /(\\).|([@?!+*]\(.*\))/g.exec(str))) {
+    if (match[2]) return true;
+    str = str.slice(match.index + match[0].length);
+  }
+
+  return false;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/is-glob/index.js":
+/*!***************************************!*\
+  !*** ./node_modules/is-glob/index.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
 /*!
- * to-regex-range <https://github.com/micromatch/to-regex-range>
+ * is-glob <https://github.com/jonschlinkert/is-glob>
  *
- * Copyright (c) 2015-present, Jon Schlinkert.
+ * Copyright (c) 2014-2017, Jon Schlinkert.
  * Released under the MIT License.
- */const i=s(29),r=(t,e,s)=>{if(!1===i(t))throw new TypeError("toRegexRange: expected the first argument to be a number");if(void 0===e||t===e)return String(t);if(!1===i(e))throw new TypeError("toRegexRange: expected the second argument to be a number.");let n={relaxZeros:!0,...s};"boolean"==typeof n.strictZeros&&(n.relaxZeros=!1===n.strictZeros);let l=t+":"+e+"="+String(n.relaxZeros)+String(n.shorthand)+String(n.capture)+String(n.wrap);if(r.cache.hasOwnProperty(l))return r.cache[l].result;let u=Math.min(t,e),c=Math.max(t,e);if(1===Math.abs(u-c)){let s=t+"|"+e;return n.capture?`(${s})`:!1===n.wrap?s:`(?:${s})`}let h=d(t)||d(e),p={min:t,max:e,a:u,b:c},f=[],_=[];if(h&&(p.isPadded=h,p.maxLen=String(p.max).length),u<0){_=o(c<0?Math.abs(c):1,Math.abs(u),p,n),u=p.a=0}return c>=0&&(f=o(u,c,p,n)),p.negatives=_,p.positives=f,p.result=function(t,e,s){let i=a(t,e,"-",!1,s)||[],r=a(e,t,"",!1,s)||[],n=a(t,e,"-?",!0,s)||[];return i.concat(n).concat(r).join("|")}(_,f,n),!0===n.capture?p.result=`(${p.result})`:!1!==n.wrap&&f.length+_.length>1&&(p.result=`(?:${p.result})`),r.cache[l]=p,p.result};function n(t,e,s){if(t===e)return{pattern:t,count:[],digits:0};let i=function(t,e){let s=[];for(let i=0;i<t.length;i++)s.push([t[i],e[i]]);return s}(t,e),r=i.length,n="",o=0;for(let t=0;t<r;t++){let[e,r]=i[t];e===r?n+=e:"0"!==e||"9"!==r?n+=f(e,r,s):o++}return o&&(n+=!0===s.shorthand?"\\d":"[0-9]"),{pattern:n,count:[o],digits:r}}function o(t,e,s,i){let r,o=function(t,e){let s=1,i=1,r=c(t,s),n=new Set([e]);for(;t<=r&&r<=e;)n.add(r),s+=1,r=c(t,s);for(r=h(e+1,i)-1;t<r&&r<=e;)n.add(r),i+=1,r=h(e+1,i)-1;return n=[...n],n.sort(l),n}(t,e),a=[],u=t;for(let t=0;t<o.length;t++){let e=o[t],l=n(String(u),String(e),i),c="";s.isPadded||!r||r.pattern!==l.pattern?(s.isPadded&&(c=_(e,s,i)),l.string=c+l.pattern+p(l.count),a.push(l),u=e+1,r=l):(r.count.length>1&&r.count.pop(),r.count.push(l.count[0]),r.string=r.pattern+p(r.count),u=e+1)}return a}function a(t,e,s,i,r){let n=[];for(let r of t){let{string:t}=r;i||u(e,"string",t)||n.push(s+t),i&&u(e,"string",t)&&n.push(s+t)}return n}function l(t,e){return t>e?1:e>t?-1:0}function u(t,e,s){return t.some(t=>t[e]===s)}function c(t,e){return Number(String(t).slice(0,-e)+"9".repeat(e))}function h(t,e){return t-t%Math.pow(10,e)}function p(t){let[e=0,s=""]=t;return s||e>1?`{${e+(s?","+s:"")}}`:""}function f(t,e,s){return`[${t}${e-t==1?"":"-"}${e}]`}function d(t){return/^-?(0+)\d/.test(t)}function _(t,e,s){if(!e.isPadded)return t;let i=Math.abs(e.maxLen-String(t).length),r=!1!==s.relaxZeros;switch(i){case 0:return"";case 1:return r?"0?":"0";case 2:return r?"0{0,2}":"00";default:return r?`0{0,${i}}`:`0{${i}}`}}r.cache={},r.clearCache=()=>r.cache={},t.exports=r},function(t,e,s){"use strict";
+ */
+
+var isExtglob = __webpack_require__(/*! is-extglob */ "./node_modules/is-extglob/index.js");
+var chars = { '{': '}', '(': ')', '[': ']'};
+var strictRegex = /\\(.)|(^!|\*|[\].+)]\?|\[[^\\\]]+\]|\{[^\\}]+\}|\(\?[:!=][^\\)]+\)|\([^|]+\|[^\\)]+\))/;
+var relaxedRegex = /\\(.)|(^!|[*?{}()[\]]|\(\?)/;
+
+module.exports = function isGlob(str, options) {
+  if (typeof str !== 'string' || str === '') {
+    return false;
+  }
+
+  if (isExtglob(str)) {
+    return true;
+  }
+
+  var regex = strictRegex;
+  var match;
+
+  // optionally relax regex
+  if (options && options.strict === false) {
+    regex = relaxedRegex;
+  }
+
+  while ((match = regex.exec(str))) {
+    if (match[2]) return true;
+    var idx = match.index + match[0].length;
+
+    // if an open bracket/brace/paren is escaped,
+    // set the index to the next closing character
+    var open = match[1];
+    var close = open ? chars[open] : null;
+    if (open && close) {
+      var n = str.indexOf(close, idx);
+      if (n !== -1) {
+        idx = n + 1;
+      }
+    }
+
+    str = str.slice(idx);
+  }
+  return false;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/is-number/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/is-number/index.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /*!
  * is-number <https://github.com/jonschlinkert/is-number>
  *
  * Copyright (c) 2014-present, Jon Schlinkert.
  * Released under the MIT License.
- */t.exports=function(t){return"number"==typeof t?t-t==0:"string"==typeof t&&""!==t.trim()&&(Number.isFinite?Number.isFinite(+t):isFinite(+t))}},function(t,e,s){"use strict";const i=s(13),r=s(5),n=s(6),o=(t="",e="",s=!1)=>{let i=[];if(t=[].concat(t),!(e=[].concat(e)).length)return t;if(!t.length)return s?n.flatten(e).map(t=>`{${t}}`):e;for(let r of t)if(Array.isArray(r))for(let t of r)i.push(o(t,e,s));else for(let t of e)!0===s&&"string"==typeof t&&(t=`{${t}}`),i.push(Array.isArray(t)?o(r,t,s):r+t);return n.flatten(i)};t.exports=(t,e={})=>{let s=void 0===e.rangeLimit?1e3:e.rangeLimit,a=(t,l={})=>{t.queue=[];let u=l,c=l.queue;for(;"brace"!==u.type&&"root"!==u.type&&u.parent;)u=u.parent,c=u.queue;if(t.invalid||t.dollar)return void c.push(o(c.pop(),r(t,e)));if("brace"===t.type&&!0!==t.invalid&&2===t.nodes.length)return void c.push(o(c.pop(),["{}"]));if(t.nodes&&t.ranges>0){let a=n.reduce(t.nodes);if(n.exceedsLimit(...a,e.step,s))throw new RangeError("expanded array length exceeds range limit. Use options.rangeLimit to increase or disable the limit.");let l=i(...a,e);return 0===l.length&&(l=r(t,e)),c.push(o(c.pop(),l)),void(t.nodes=[])}let h=n.encloseBrace(t),p=t.queue,f=t;for(;"brace"!==f.type&&"root"!==f.type&&f.parent;)f=f.parent,p=f.queue;for(let e=0;e<t.nodes.length;e++){let s=t.nodes[e];"comma"!==s.type||"brace"!==t.type?"close"!==s.type?s.value&&"open"!==s.type?p.push(o(p.pop(),s.value)):s.nodes&&a(s,t):c.push(o(c.pop(),p,h)):(1===e&&p.push(""),p.push(""))}return p};return n.flatten(a(t))}},function(t,e,s){"use strict";const i=s(5),{MAX_LENGTH:r,CHAR_BACKSLASH:n,CHAR_BACKTICK:o,CHAR_COMMA:a,CHAR_DOT:l,CHAR_LEFT_PARENTHESES:u,CHAR_RIGHT_PARENTHESES:c,CHAR_LEFT_CURLY_BRACE:h,CHAR_RIGHT_CURLY_BRACE:p,CHAR_LEFT_SQUARE_BRACKET:f,CHAR_RIGHT_SQUARE_BRACKET:d,CHAR_DOUBLE_QUOTE:_,CHAR_SINGLE_QUOTE:E,CHAR_NO_BREAK_SPACE:g,CHAR_ZERO_WIDTH_NOBREAK_SPACE:m}=s(32);t.exports=(t,e={})=>{if("string"!=typeof t)throw new TypeError("Expected a string");let s=e||{},y="number"==typeof s.maxLength?Math.min(r,s.maxLength):r;if(t.length>y)throw new SyntaxError(`Input length (${t.length}), exceeds max characters (${y})`);let R,A={type:"root",input:t,nodes:[]},w=[A],v=A,b=A,S=0,C=t.length,x=0,T=0;const H=()=>t[x++],O=t=>{if("text"===t.type&&"dot"===b.type&&(b.type="text"),!b||"text"!==b.type||"text"!==t.type)return v.nodes.push(t),t.parent=v,t.prev=b,b=t,t;b.value+=t.value};for(O({type:"bos"});x<C;)if(v=w[w.length-1],R=H(),R!==m&&R!==g)if(R!==n)if(R!==d)if(R!==f)if(R!==u)if(R!==c)if(R!==_&&R!==E&&R!==o)if(R!==h)if(R!==p)if(R===a&&T>0){if(v.ranges>0){v.ranges=0;let t=v.nodes.shift();v.nodes=[t,{type:"text",value:i(v)}]}O({type:"comma",value:R}),v.commas++}else if(R===l&&T>0&&0===v.commas){let t=v.nodes;if(0===T||0===t.length){O({type:"text",value:R});continue}if("dot"===b.type){if(v.range=[],b.value+=R,b.type="range",3!==v.nodes.length&&5!==v.nodes.length){v.invalid=!0,v.ranges=0,b.type="text";continue}v.ranges++,v.args=[];continue}if("range"===b.type){t.pop();let e=t[t.length-1];e.value+=b.value+R,b=e,v.ranges--;continue}O({type:"dot",value:R})}else O({type:"text",value:R});else{if("brace"!==v.type){O({type:"text",value:R});continue}let t="close";v=w.pop(),v.close=!0,O({type:t,value:R}),T--,v=w[w.length-1]}else{T++;let t=b.value&&"$"===b.value.slice(-1)||!0===v.dollar;v=O({type:"brace",open:!0,close:!1,dollar:t,depth:T,commas:0,ranges:0,nodes:[]}),w.push(v),O({type:"open",value:R})}else{let t,s=R;for(!0!==e.keepQuotes&&(R="");x<C&&(t=H());)if(t!==n){if(t===s){!0===e.keepQuotes&&(R+=t);break}R+=t}else R+=t+H();O({type:"text",value:R})}else{if("paren"!==v.type){O({type:"text",value:R});continue}v=w.pop(),O({type:"text",value:R}),v=w[w.length-1]}else v=O({type:"paren",nodes:[]}),w.push(v),O({type:"text",value:R});else{S++;let t;for(;x<C&&(t=H());)if(R+=t,t!==f)if(t!==n){if(t===d&&(S--,0===S))break}else R+=H();else S++;O({type:"text",value:R})}else O({type:"text",value:"\\"+R});else O({type:"text",value:(e.keepEscaping?R:"")+H()});do{if(v=w.pop(),"root"!==v.type){v.nodes.forEach(t=>{t.nodes||("open"===t.type&&(t.isOpen=!0),"close"===t.type&&(t.isClose=!0),t.nodes||(t.type="text"),t.invalid=!0)});let t=w[w.length-1],e=t.nodes.indexOf(v);t.nodes.splice(e,1,...v.nodes)}}while(w.length>0);return O({type:"eos"}),A}},function(t,e,s){"use strict";t.exports={MAX_LENGTH:65536,CHAR_0:"0",CHAR_9:"9",CHAR_UPPERCASE_A:"A",CHAR_LOWERCASE_A:"a",CHAR_UPPERCASE_Z:"Z",CHAR_LOWERCASE_Z:"z",CHAR_LEFT_PARENTHESES:"(",CHAR_RIGHT_PARENTHESES:")",CHAR_ASTERISK:"*",CHAR_AMPERSAND:"&",CHAR_AT:"@",CHAR_BACKSLASH:"\\",CHAR_BACKTICK:"`",CHAR_CARRIAGE_RETURN:"\r",CHAR_CIRCUMFLEX_ACCENT:"^",CHAR_COLON:":",CHAR_COMMA:",",CHAR_DOLLAR:"$",CHAR_DOT:".",CHAR_DOUBLE_QUOTE:'"',CHAR_EQUAL:"=",CHAR_EXCLAMATION_MARK:"!",CHAR_FORM_FEED:"\f",CHAR_FORWARD_SLASH:"/",CHAR_HASH:"#",CHAR_HYPHEN_MINUS:"-",CHAR_LEFT_ANGLE_BRACKET:"<",CHAR_LEFT_CURLY_BRACE:"{",CHAR_LEFT_SQUARE_BRACKET:"[",CHAR_LINE_FEED:"\n",CHAR_NO_BREAK_SPACE:" ",CHAR_PERCENT:"%",CHAR_PLUS:"+",CHAR_QUESTION_MARK:"?",CHAR_RIGHT_ANGLE_BRACKET:">",CHAR_RIGHT_CURLY_BRACE:"}",CHAR_RIGHT_SQUARE_BRACKET:"]",CHAR_SEMICOLON:";",CHAR_SINGLE_QUOTE:"'",CHAR_SPACE:" ",CHAR_TAB:"\t",CHAR_UNDERSCORE:"_",CHAR_VERTICAL_LINE:"|",CHAR_ZERO_WIDTH_NOBREAK_SPACE:"\ufeff"}},function(t,e,s){"use strict";const i=s(1),r=s(0),{promisify:n}=s(2),o=s(34),{isWindows:a,isLinux:l,EMPTY_FN:u,EMPTY_STR:c,KEY_LISTENERS:h,KEY_ERR:p,KEY_RAW:f,HANDLER_KEYS:d,EV_CHANGE:_,EV_ADD:E,EV_ADD_DIR:g,EV_ERROR:m,STR_DATA:y,STR_END:R,BRACE_START:A,STAR:w}=s(7),v=n(i.open),b=n(i.stat),S=n(i.lstat),C=n(i.close),x=n(i.realpath),T={lstat:S,stat:b},H=(t,e)=>{t instanceof Set?t.forEach(e):e(t)},O=(t,e,s)=>{let i=t[e];i instanceof Set||(t[e]=i=new Set([i])),i.add(s)},L=(t,e,s)=>{const i=t[e];i instanceof Set?i.delete(s):i===s&&delete t[e]},N=t=>t instanceof Set?0===t.size:!t,P=new Map;function I(t,e,s,n,o){const a=(e,i)=>{s(t),o(e,i,{watchedPath:t}),i&&t!==i&&D(r.resolve(t,i),h,r.join(t,i))};try{return i.watch(t,e,a)}catch(t){n(t)}}const D=(t,e,s,i,r)=>{const n=P.get(t);n&&H(n[e],t=>{t(s,i,r)})},k=(t,e,s,i)=>{const{listener:r,errHandler:n,rawEmitter:o}=i;let l,u=P.get(e);if(!s.persistent)return l=I(t,s,r,n,o),l.close.bind(l);if(u)O(u,h,r),O(u,p,n),O(u,f,o);else{if(l=I(t,s,D.bind(null,e,h),n,D.bind(null,e,f)),!l)return;l.on(m,async s=>{const i=D.bind(null,e,p);if(u.watcherUnusable=!0,a&&"EPERM"===s.code)try{const e=await v(t,"r");await C(e),i(s)}catch(t){}else i(s)}),u={listeners:r,errHandlers:n,rawEmitters:o,watcher:l},P.set(e,u)}return()=>{L(u,h,r),L(u,p,n),L(u,f,o),N(u.listeners)&&(u.watcher.close(),P.delete(e),d.forEach((t=>e=>{const s=t[e];s instanceof Set?s.clear():delete t[e]})(u)),u.watcher=void 0,Object.freeze(u))}},F=new Map;t.exports=class{constructor(t){this.fsw=t,this._boundHandleError=e=>t._handleError(e)}_watchWithNodeFs(t,e){const s=this.fsw.options,n=r.dirname(t),a=r.basename(t);this.fsw._getWatchedDir(n).add(a);const l=r.resolve(t),c={persistent:s.persistent};let p;return e||(e=u),s.usePolling?(c.interval=s.enableBinaryInterval&&o(a)?s.binaryInterval:s.interval,p=((t,e,s,r)=>{const{listener:n,rawEmitter:o}=r;let a=F.get(e),l=new Set,u=new Set;const c=a&&a.options;return c&&(c.persistent<s.persistent||c.interval>s.interval)&&(l=a.listeners,u=a.rawEmitters,i.unwatchFile(e),a=void 0),a?(O(a,h,n),O(a,f,o)):(a={listeners:n,rawEmitters:o,options:s,watcher:i.watchFile(e,s,(s,i)=>{H(a.rawEmitters,t=>{t(_,e,{curr:s,prev:i})});const r=s.mtimeMs;(s.size!==i.size||r>i.mtimeMs||0===r)&&H(a.listeners,e=>e(t,s))})},F.set(e,a)),()=>{L(a,h,n),L(a,f,o),N(a.listeners)&&(F.delete(e),i.unwatchFile(e),a.options=a.watcher=void 0,Object.freeze(a))}})(t,l,c,{listener:e,rawEmitter:this.fsw._emitRaw})):p=k(t,l,c,{listener:e,errHandler:this._boundHandleError,rawEmitter:this.fsw._emitRaw}),p}_handleFile(t,e,s){if(this.fsw.closed)return;const i=r.dirname(t),n=r.basename(t),o=this.fsw._getWatchedDir(i);let a=e;if(o.has(n))return;const u=async(e,s)=>{if(this.fsw._throttle("watch",t,5))if(s&&0!==s.mtimeMs){if(o.has(n)){const e=s.atimeMs,i=s.mtimeMs;(!e||e<=i||i!==a.mtimeMs)&&this.fsw._emit(_,t,s),a=s}}else try{const s=await b(t);if(this.fsw.closed)return;const i=s.atimeMs,r=s.mtimeMs;(!i||i<=r||r!==a.mtimeMs)&&this.fsw._emit(_,t,s),l&&a.ino!==s.ino?(this.fsw._closeFile(e),a=s,this.fsw._addPathCloser(e,this._watchWithNodeFs(t,u))):a=s}catch(t){this.fsw._remove(i,n)}},c=this._watchWithNodeFs(t,u);if((!s||!this.fsw.options.ignoreInitial)&&this.fsw._isntIgnored(t)){if(!this.fsw._throttle(E,t,0))return;this.fsw._emit(E,t,e)}return c}async _handleSymlink(t,e,s,i){if(this.fsw.closed)return;const r=t.fullPath,n=this.fsw._getWatchedDir(e);if(!this.fsw.options.followSymlinks){this.fsw._incrReadyCount();const e=await x(s);if(this.fsw.closed)return;return n.has(i)?this.fsw._symlinkPaths.get(r)!==e&&(this.fsw._symlinkPaths.set(r,e),this.fsw._emit(_,s,t.stats)):(n.add(i),this.fsw._symlinkPaths.set(r,e),this.fsw._emit(E,s,t.stats)),this.fsw._emitReady(),!0}if(this.fsw._symlinkPaths.has(r))return!0;this.fsw._symlinkPaths.set(r,!0)}_handleRead(t,e,s,i,n,o,a){if(t=r.join(t,c),!s.hasGlob&&!(a=this.fsw._throttle("readdir",t,1e3)))return;const l=this.fsw._getWatchedDir(s.path),u=new Set;let h=this.fsw._readdirp(t,{fileFilter:t=>s.filterPath(t),directoryFilter:t=>s.filterDir(t),depth:0}).on(y,async a=>{if(this.fsw.closed)return void(h=void 0);const c=a.path;let p=r.join(t,c);u.add(c),a.stats.isSymbolicLink()&&await this._handleSymlink(a,t,p,c)||(this.fsw.closed?h=void 0:c!==i&&(i||l.has(c))||(this.fsw._incrReadyCount(),p=r.join(n,r.relative(n,p)),this._addToNodeFs(p,e,s,o+1)))}).on(m,this._boundHandleError);return new Promise(e=>h.once(R,()=>{if(this.fsw.closed)return void(h=void 0);const c=!!a&&a.clear();e(),l.getChildren().filter(e=>e!==t&&!u.has(e)&&(!s.hasGlob||s.filterPath({fullPath:r.resolve(t,e)}))).forEach(e=>{this.fsw._remove(t,e)}),h=void 0,c&&this._handleRead(t,!1,s,i,n,o,a)}))}async _handleDir(t,e,s,i,n,o,a){const l=this.fsw._getWatchedDir(r.dirname(t)),u=l.has(r.basename(t));let c;s&&this.fsw.options.ignoreInitial||n||u||o.hasGlob&&!o.globFilter(t)||this.fsw._emit(g,t,e),l.add(r.basename(t)),this.fsw._getWatchedDir(t);const h=this.fsw.options.depth;if((null==h||i<=h)&&!this.fsw._symlinkPaths.has(a)){if(!n&&(await this._handleRead(t,s,o,n,t,i,void 0),this.fsw.closed))return;c=this._watchWithNodeFs(t,(e,s)=>{s&&0===s.mtimeMs||this._handleRead(e,!1,o,n,t,i,void 0)})}return c}async _addToNodeFs(t,e,s,i,n){const o=this.fsw._emitReady;if(this.fsw._isIgnored(t)||this.fsw.closed)return o(),!1;const a=this.fsw._getWatchHelpers(t,i);!a.hasGlob&&s&&(a.hasGlob=s.hasGlob,a.globFilter=s.globFilter,a.filterPath=t=>s.filterPath(t),a.filterDir=t=>s.filterDir(t));try{const s=await T[a.statMethod](a.watchPath);if(this.fsw.closed)return;if(this.fsw._isIgnored(a.watchPath,s))return o(),!1;const l=this.fsw.options.followSymlinks&&!t.includes(w)&&!t.includes(A);let u;if(s.isDirectory()){const r=l?await x(t):t;if(this.fsw.closed)return;if(u=await this._handleDir(a.watchPath,s,e,i,n,a,r),this.fsw.closed)return;t!==r&&void 0!==r&&this.fsw._symlinkPaths.set(r,!0)}else if(s.isSymbolicLink()){const n=l?await x(t):t;if(this.fsw.closed)return;const o=r.dirname(a.watchPath);if(this.fsw._getWatchedDir(o).add(a.watchPath),this.fsw._emit(E,a.watchPath,s),u=await this._handleDir(o,s,e,i,t,a,n),this.fsw.closed)return;void 0!==n&&this.fsw._symlinkPaths.set(r.resolve(t),n)}else u=this._handleFile(a.watchPath,s,e);return o(),this.fsw._addPathCloser(t,u),!1}catch(e){if(this.fsw._handleError(e))return o(),t}}}},function(t,e,s){"use strict";const i=s(0),r=s(35),n=new Set(r);t.exports=t=>n.has(i.extname(t).slice(1).toLowerCase())},function(t,e,s){t.exports=s(36)},function(t){t.exports=JSON.parse('["3dm","3ds","3g2","3gp","7z","a","aac","adp","ai","aif","aiff","alz","ape","apk","appimage","ar","arj","asf","au","avi","bak","baml","bh","bin","bk","bmp","btif","bz2","bzip2","cab","caf","cgm","class","cmx","cpio","cr2","cur","dat","dcm","deb","dex","djvu","dll","dmg","dng","doc","docm","docx","dot","dotm","dra","DS_Store","dsk","dts","dtshd","dvb","dwg","dxf","ecelp4800","ecelp7470","ecelp9600","egg","eol","eot","epub","exe","f4v","fbs","fh","fla","flac","flatpak","fli","flv","fpx","fst","fvt","g3","gh","gif","graffle","gz","gzip","h261","h263","h264","icns","ico","ief","img","ipa","iso","jar","jpeg","jpg","jpgv","jpm","jxr","key","ktx","lha","lib","lvp","lz","lzh","lzma","lzo","m3u","m4a","m4v","mar","mdi","mht","mid","midi","mj2","mka","mkv","mmr","mng","mobi","mov","movie","mp3","mp4","mp4a","mpeg","mpg","mpga","mxu","nef","npx","numbers","nupkg","o","oga","ogg","ogv","otf","pages","pbm","pcx","pdb","pdf","pea","pgm","pic","png","pnm","pot","potm","potx","ppa","ppam","ppm","pps","ppsm","ppsx","ppt","pptm","pptx","psd","pya","pyc","pyo","pyv","qt","rar","ras","raw","resources","rgb","rip","rlc","rmf","rmvb","rpm","rtf","rz","s3m","s7z","scpt","sgi","shar","snap","sil","sketch","slk","smv","snk","so","stl","suo","sub","swf","tar","tbz","tbz2","tga","tgz","thmx","tif","tiff","tlz","ttc","ttf","txz","udf","uvh","uvi","uvm","uvp","uvs","uvu","viv","vob","war","wav","wax","wbmp","wdp","weba","webm","webp","whl","wim","wm","wma","wmv","wmx","woff","woff2","wrm","wvx","xbm","xif","xla","xlam","xls","xlsb","xlsm","xlsx","xlt","xltm","xltx","xm","xmind","xpi","xpm","xwd","xz","z","zip","zipx"]')},function(t,e,s){"use strict";const i=s(1),r=s(0),{promisify:n}=s(2);let o;try{o=s(38)}catch(t){process.env.CHOKIDAR_PRINT_FSEVENTS_REQUIRE_ERROR&&console.error(t)}if(o){const t=process.version.match(/v(\d+)\.(\d+)/);if(t&&t[1]&&t[2]){const e=Number.parseInt(t[1],10),s=Number.parseInt(t[2],10);8===e&&s<16&&(o=void 0)}}const{EV_ADD:a,EV_CHANGE:l,EV_ADD_DIR:u,EV_UNLINK:c,EV_ERROR:h,STR_DATA:p,STR_END:f,FSEVENT_CREATED:d,FSEVENT_MODIFIED:_,FSEVENT_DELETED:E,FSEVENT_MOVED:g,FSEVENT_UNKNOWN:m,FSEVENT_TYPE_FILE:y,FSEVENT_TYPE_DIRECTORY:R,FSEVENT_TYPE_SYMLINK:A,ROOT_GLOBSTAR:w,DIR_SUFFIX:v,DOT_SLASH:b,FUNCTION_TYPE:S,EMPTY_FN:C,IDENTITY_FN:x}=s(7),T=n(i.stat),H=n(i.lstat),O=n(i.realpath),L={stat:T,lstat:H},N=new Map,P=new Set([69888,70400,71424,72704,73472,131328,131840,262912]),I=(t,e)=>({stop:o.watch(t,e)});const D=t=>{let e=0;for(const s of N.keys())if(0===s.indexOf(t)&&(e++,e>=10))return!0;return!1},k=(t,e)=>{let s=0;for(;!t.indexOf(e)&&(t=r.dirname(t))!==e;)s++;return s},F=(t,e)=>t.type===R&&e.isDirectory()||t.type===A&&e.isSymbolicLink()||t.type===y&&e.isFile();t.exports=class{constructor(t){this.fsw=t}checkIgnored(t,e){const s=this.fsw._ignoredPaths;if(this.fsw._isIgnored(t,e))return s.add(t),e&&e.isDirectory()&&s.add(t+w),!0;s.delete(t),s.delete(t+w)}addOrChange(t,e,s,i,r,n,o,u){const c=r.has(n)?l:a;this.handleEvent(c,t,e,s,i,r,n,o,u)}async checkExists(t,e,s,i,r,n,o,a){try{const l=await T(t);if(this.fsw.closed)return;F(o,l)?this.addOrChange(t,e,s,i,r,n,o,a):this.handleEvent(c,t,e,s,i,r,n,o,a)}catch(l){"EACCES"===l.code?this.addOrChange(t,e,s,i,r,n,o,a):this.handleEvent(c,t,e,s,i,r,n,o,a)}}handleEvent(t,e,s,i,r,n,o,l,h){if(!this.fsw.closed&&!this.checkIgnored(e))if(t===c){const t=l.type===R;(t||n.has(o))&&this.fsw._remove(r,o,t)}else{if(t===a){if(l.type===R&&this.fsw._getWatchedDir(e),l.type===A&&h.followSymlinks){const t=void 0===h.depth?void 0:k(s,i)+1;return this._addToFsEvents(e,!1,!0,t)}this.fsw._getWatchedDir(r).add(o)}const n=l.type===R?t+v:t;this.fsw._emit(n,e),n===u&&this._addToFsEvents(e,!1,!0)}}_watchWithFsEvents(t,e,s,i){if(this.fsw.closed)return;if(this.fsw._isIgnored(t))return;const n=this.fsw.options,a=function(t,e,s,i){let n=r.extname(t)?r.dirname(t):t;const a=r.dirname(n);let l=N.get(n);D(a)&&(n=a);const u=r.resolve(t),c=u!==e,h=(t,i,n)=>{c&&(t=t.replace(e,u)),t!==u&&t.indexOf(u+r.sep)||s(t,i,n)};let p=!1;for(const t of N.keys())if(0===e.indexOf(r.resolve(t)+r.sep)){n=t,l=N.get(n),p=!0;break}return l||p?l.listeners.add(h):(l={listeners:new Set([h]),rawEmitter:i,watcher:I(n,(t,e)=>{if(!l.listeners.size)return;const s=o.getInfo(t,e);l.listeners.forEach(i=>{i(t,e,s)}),l.rawEmitter(s.event,t,s)})},N.set(n,l)),()=>{const t=l.listeners;if(t.delete(h),!t.size&&(N.delete(n),l.watcher))return l.watcher.stop().then(()=>{l.rawEmitter=l.watcher=void 0,Object.freeze(l)})}}(t,e,async(o,a,l)=>{if(this.fsw.closed)return;if(void 0!==n.depth&&k(o,e)>n.depth)return;const u=s(r.join(t,r.relative(t,o)));if(i&&!i(u))return;const h=r.dirname(u),p=r.basename(u),f=this.fsw._getWatchedDir(l.type===R?u:h);if(P.has(a)||l.event===m)if(typeof n.ignored===S){let t;try{t=await T(u)}catch(t){}if(this.fsw.closed)return;if(this.checkIgnored(u,t))return;F(l,t)?this.addOrChange(u,o,e,h,f,p,l,n):this.handleEvent(c,u,o,e,h,f,p,l,n)}else this.checkExists(u,o,e,h,f,p,l,n);else switch(l.event){case d:case _:return this.addOrChange(u,o,e,h,f,p,l,n);case E:case g:return this.checkExists(u,o,e,h,f,p,l,n)}},this.fsw._emitRaw);return this.fsw._emitReady(),a}async _handleFsEventsSymlink(t,e,s,i){if(!this.fsw.closed&&!this.fsw._symlinkPaths.has(e)){this.fsw._symlinkPaths.set(e,!0),this.fsw._incrReadyCount();try{const e=await O(t);if(this.fsw.closed)return;if(this.fsw._isIgnored(e))return this.fsw._emitReady();this.fsw._incrReadyCount(),this._addToFsEvents(e||t,i=>{let n=t;return e&&e!==b?n=i.replace(e,t):i!==b&&(n=r.join(t,i)),s(n)},!1,i)}catch(t){if(this.fsw._handleError(t))return this.fsw._emitReady()}}}emitAdd(t,e,s,i,n){const o=s(t),l=e.isDirectory(),c=this.fsw._getWatchedDir(r.dirname(o)),h=r.basename(o);l&&this.fsw._getWatchedDir(o),c.has(h)||(c.add(h),i.ignoreInitial&&!0!==n||this.fsw._emit(l?u:a,o,e))}initWatch(t,e,s,i){if(this.fsw.closed)return;const n=this._watchWithFsEvents(s.watchPath,r.resolve(t||s.watchPath),i,s.globFilter);this.fsw._addPathCloser(e,n)}async _addToFsEvents(t,e,s,i){if(this.fsw.closed)return;const n=this.fsw.options,o=typeof e===S?e:x,a=this.fsw._getWatchHelpers(t);try{const e=await L[a.statMethod](a.watchPath);if(this.fsw.closed)return;if(this.fsw._isIgnored(a.watchPath,e))throw null;if(e.isDirectory()){if(a.globFilter||this.emitAdd(o(t),e,o,n,s),i&&i>n.depth)return;this.fsw._readdirp(a.watchPath,{fileFilter:t=>a.filterPath(t),directoryFilter:t=>a.filterDir(t),...(l=n.depth-(i||0),isNaN(l)?{}:{depth:l})}).on(p,t=>{if(this.fsw.closed)return;if(t.stats.isDirectory()&&!a.filterPath(t))return;const e=r.join(a.watchPath,t.path),{fullPath:i}=t;if(a.followSymlinks&&t.stats.isSymbolicLink()){const t=void 0===n.depth?void 0:k(e,r.resolve(a.watchPath))+1;this._handleFsEventsSymlink(e,i,o,t)}else this.emitAdd(e,t.stats,o,n,s)}).on(h,C).on(f,()=>{this.fsw._emitReady()})}else this.emitAdd(a.watchPath,e,o,n,s),this.fsw._emitReady()}catch(t){t&&!this.fsw._handleError(t)||(this.fsw._emitReady(),this.fsw._emitReady())}var l;if(n.persistent&&!0!==s)if(typeof e===S)this.initWatch(void 0,t,a,o);else{let e;try{e=await O(a.watchPath)}catch(t){}this.initWatch(e,t,a,o)}}},t.exports.canUse=()=>o&&N.size<128},function(t,e){if(void 0===require("fsevents")){var s=new Error("Cannot find module 'require('fsevents')'");throw s.code="MODULE_NOT_FOUND",s}t.exports=require("fsevents")},function(t,e,s){"use strict";var i=this&&this.__createBinding||(Object.create?function(t,e,s,i){void 0===i&&(i=s),Object.defineProperty(t,i,{enumerable:!0,get:function(){return e[s]}})}:function(t,e,s,i){void 0===i&&(i=s),t[i]=e[s]}),r=this&&this.__setModuleDefault||(Object.create?function(t,e){Object.defineProperty(t,"default",{enumerable:!0,value:e})}:function(t,e){t.default=e}),n=this&&this.__importStar||function(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var s in t)"default"!==s&&Object.prototype.hasOwnProperty.call(t,s)&&i(e,t,s);return r(e,t),e};Object.defineProperty(e,"__esModule",{value:!0});var o,a,l=n(s(8)),u=n(s(12)),c=n(s(1)),h="\\users\\"+u.userInfo().username+"\\downloads",p={Images:["png","jpg","gif"],"Executables/Installers":["msi","exe"]},f=(o=Object.keys(p),a={},o.forEach((function(t){p[t].forEach((function(e){a[e]=t}))})),a);l.watch(h,{persistent:!0,depth:2,awaitWriteFinish:{stabilityThreshold:0,pollInterval:100},ignoreInitial:!1}).on("add",(function(t){var e=t.split("\\").pop(),s=e.split(".").pop(),i={};if(!f[s])return;i.dir=h+"\\"+f[s],i.path=i.dir+"\\"+e,i.path&&i.path.toLowerCase()!=t.toLowerCase()&&(i&&!c.existsSync(i.dir)&&c.mkdirSync(i.dir),c.renameSync(t,i.path))}))},function(t,e){t.exports=require("electron-reload")}]);
+ */
+
+
+
+module.exports = function(num) {
+  if (typeof num === 'number') {
+    return num - num === 0;
+  }
+  if (typeof num === 'string' && num.trim() !== '') {
+    return Number.isFinite ? Number.isFinite(+num) : isFinite(+num);
+  }
+  return false;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/normalize-path/index.js":
+/*!**********************************************!*\
+  !*** ./node_modules/normalize-path/index.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * normalize-path <https://github.com/jonschlinkert/normalize-path>
+ *
+ * Copyright (c) 2014-2018, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+module.exports = function(path, stripTrailing) {
+  if (typeof path !== 'string') {
+    throw new TypeError('expected path to be a string');
+  }
+
+  if (path === '\\' || path === '/') return '/';
+
+  var len = path.length;
+  if (len <= 1) return path;
+
+  // ensure that win32 namespaces has two leading slashes, so that the path is
+  // handled properly by the win32 version of path.parse() after being normalized
+  // https://msdn.microsoft.com/library/windows/desktop/aa365247(v=vs.85).aspx#namespaces
+  var prefix = '';
+  if (len > 4 && path[3] === '\\') {
+    var ch = path[2];
+    if ((ch === '?' || ch === '.') && path.slice(0, 2) === '\\\\') {
+      path = path.slice(2);
+      prefix = '//';
+    }
+  }
+
+  var segs = path.split(/[/\\]+/);
+  if (stripTrailing !== false && segs[segs.length - 1] === '') {
+    segs.pop();
+  }
+  return prefix + segs.join('/');
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/picomatch/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/picomatch/index.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = __webpack_require__(/*! ./lib/picomatch */ "./node_modules/picomatch/lib/picomatch.js");
+
+
+/***/ }),
+
+/***/ "./node_modules/picomatch/lib/constants.js":
+/*!*************************************************!*\
+  !*** ./node_modules/picomatch/lib/constants.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const path = __webpack_require__(/*! path */ "path");
+const WIN_SLASH = '\\\\/';
+const WIN_NO_SLASH = `[^${WIN_SLASH}]`;
+
+/**
+ * Posix glob regex
+ */
+
+const DOT_LITERAL = '\\.';
+const PLUS_LITERAL = '\\+';
+const QMARK_LITERAL = '\\?';
+const SLASH_LITERAL = '\\/';
+const ONE_CHAR = '(?=.)';
+const QMARK = '[^/]';
+const END_ANCHOR = `(?:${SLASH_LITERAL}|$)`;
+const START_ANCHOR = `(?:^|${SLASH_LITERAL})`;
+const DOTS_SLASH = `${DOT_LITERAL}{1,2}${END_ANCHOR}`;
+const NO_DOT = `(?!${DOT_LITERAL})`;
+const NO_DOTS = `(?!${START_ANCHOR}${DOTS_SLASH})`;
+const NO_DOT_SLASH = `(?!${DOT_LITERAL}{0,1}${END_ANCHOR})`;
+const NO_DOTS_SLASH = `(?!${DOTS_SLASH})`;
+const QMARK_NO_DOT = `[^.${SLASH_LITERAL}]`;
+const STAR = `${QMARK}*?`;
+
+const POSIX_CHARS = {
+  DOT_LITERAL,
+  PLUS_LITERAL,
+  QMARK_LITERAL,
+  SLASH_LITERAL,
+  ONE_CHAR,
+  QMARK,
+  END_ANCHOR,
+  DOTS_SLASH,
+  NO_DOT,
+  NO_DOTS,
+  NO_DOT_SLASH,
+  NO_DOTS_SLASH,
+  QMARK_NO_DOT,
+  STAR,
+  START_ANCHOR
+};
+
+/**
+ * Windows glob regex
+ */
+
+const WINDOWS_CHARS = {
+  ...POSIX_CHARS,
+
+  SLASH_LITERAL: `[${WIN_SLASH}]`,
+  QMARK: WIN_NO_SLASH,
+  STAR: `${WIN_NO_SLASH}*?`,
+  DOTS_SLASH: `${DOT_LITERAL}{1,2}(?:[${WIN_SLASH}]|$)`,
+  NO_DOT: `(?!${DOT_LITERAL})`,
+  NO_DOTS: `(?!(?:^|[${WIN_SLASH}])${DOT_LITERAL}{1,2}(?:[${WIN_SLASH}]|$))`,
+  NO_DOT_SLASH: `(?!${DOT_LITERAL}{0,1}(?:[${WIN_SLASH}]|$))`,
+  NO_DOTS_SLASH: `(?!${DOT_LITERAL}{1,2}(?:[${WIN_SLASH}]|$))`,
+  QMARK_NO_DOT: `[^.${WIN_SLASH}]`,
+  START_ANCHOR: `(?:^|[${WIN_SLASH}])`,
+  END_ANCHOR: `(?:[${WIN_SLASH}]|$)`
+};
+
+/**
+ * POSIX Bracket Regex
+ */
+
+const POSIX_REGEX_SOURCE = {
+  alnum: 'a-zA-Z0-9',
+  alpha: 'a-zA-Z',
+  ascii: '\\x00-\\x7F',
+  blank: ' \\t',
+  cntrl: '\\x00-\\x1F\\x7F',
+  digit: '0-9',
+  graph: '\\x21-\\x7E',
+  lower: 'a-z',
+  print: '\\x20-\\x7E ',
+  punct: '\\-!"#$%&\'()\\*+,./:;<=>?@[\\]^_`{|}~',
+  space: ' \\t\\r\\n\\v\\f',
+  upper: 'A-Z',
+  word: 'A-Za-z0-9_',
+  xdigit: 'A-Fa-f0-9'
+};
+
+module.exports = {
+  MAX_LENGTH: 1024 * 64,
+  POSIX_REGEX_SOURCE,
+
+  // regular expressions
+  REGEX_BACKSLASH: /\\(?![*+?^${}(|)[\]])/g,
+  REGEX_NON_SPECIAL_CHARS: /^[^@![\].,$*+?^{}()|\\/]+/,
+  REGEX_SPECIAL_CHARS: /[-*+?.^${}(|)[\]]/,
+  REGEX_SPECIAL_CHARS_BACKREF: /(\\?)((\W)(\3*))/g,
+  REGEX_SPECIAL_CHARS_GLOBAL: /([-*+?.^${}(|)[\]])/g,
+  REGEX_REMOVE_BACKSLASH: /(?:\[.*?[^\\]\]|\\(?=.))/g,
+
+  // Replace globs with equivalent patterns to reduce parsing time.
+  REPLACEMENTS: {
+    '***': '*',
+    '**/**': '**',
+    '**/**/**': '**'
+  },
+
+  // Digits
+  CHAR_0: 48, /* 0 */
+  CHAR_9: 57, /* 9 */
+
+  // Alphabet chars.
+  CHAR_UPPERCASE_A: 65, /* A */
+  CHAR_LOWERCASE_A: 97, /* a */
+  CHAR_UPPERCASE_Z: 90, /* Z */
+  CHAR_LOWERCASE_Z: 122, /* z */
+
+  CHAR_LEFT_PARENTHESES: 40, /* ( */
+  CHAR_RIGHT_PARENTHESES: 41, /* ) */
+
+  CHAR_ASTERISK: 42, /* * */
+
+  // Non-alphabetic chars.
+  CHAR_AMPERSAND: 38, /* & */
+  CHAR_AT: 64, /* @ */
+  CHAR_BACKWARD_SLASH: 92, /* \ */
+  CHAR_CARRIAGE_RETURN: 13, /* \r */
+  CHAR_CIRCUMFLEX_ACCENT: 94, /* ^ */
+  CHAR_COLON: 58, /* : */
+  CHAR_COMMA: 44, /* , */
+  CHAR_DOT: 46, /* . */
+  CHAR_DOUBLE_QUOTE: 34, /* " */
+  CHAR_EQUAL: 61, /* = */
+  CHAR_EXCLAMATION_MARK: 33, /* ! */
+  CHAR_FORM_FEED: 12, /* \f */
+  CHAR_FORWARD_SLASH: 47, /* / */
+  CHAR_GRAVE_ACCENT: 96, /* ` */
+  CHAR_HASH: 35, /* # */
+  CHAR_HYPHEN_MINUS: 45, /* - */
+  CHAR_LEFT_ANGLE_BRACKET: 60, /* < */
+  CHAR_LEFT_CURLY_BRACE: 123, /* { */
+  CHAR_LEFT_SQUARE_BRACKET: 91, /* [ */
+  CHAR_LINE_FEED: 10, /* \n */
+  CHAR_NO_BREAK_SPACE: 160, /* \u00A0 */
+  CHAR_PERCENT: 37, /* % */
+  CHAR_PLUS: 43, /* + */
+  CHAR_QUESTION_MARK: 63, /* ? */
+  CHAR_RIGHT_ANGLE_BRACKET: 62, /* > */
+  CHAR_RIGHT_CURLY_BRACE: 125, /* } */
+  CHAR_RIGHT_SQUARE_BRACKET: 93, /* ] */
+  CHAR_SEMICOLON: 59, /* ; */
+  CHAR_SINGLE_QUOTE: 39, /* ' */
+  CHAR_SPACE: 32, /*   */
+  CHAR_TAB: 9, /* \t */
+  CHAR_UNDERSCORE: 95, /* _ */
+  CHAR_VERTICAL_LINE: 124, /* | */
+  CHAR_ZERO_WIDTH_NOBREAK_SPACE: 65279, /* \uFEFF */
+
+  SEP: path.sep,
+
+  /**
+   * Create EXTGLOB_CHARS
+   */
+
+  extglobChars(chars) {
+    return {
+      '!': { type: 'negate', open: '(?:(?!(?:', close: `))${chars.STAR})` },
+      '?': { type: 'qmark', open: '(?:', close: ')?' },
+      '+': { type: 'plus', open: '(?:', close: ')+' },
+      '*': { type: 'star', open: '(?:', close: ')*' },
+      '@': { type: 'at', open: '(?:', close: ')' }
+    };
+  },
+
+  /**
+   * Create GLOB_CHARS
+   */
+
+  globChars(win32) {
+    return win32 === true ? WINDOWS_CHARS : POSIX_CHARS;
+  }
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/picomatch/lib/parse.js":
+/*!*********************************************!*\
+  !*** ./node_modules/picomatch/lib/parse.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const constants = __webpack_require__(/*! ./constants */ "./node_modules/picomatch/lib/constants.js");
+const utils = __webpack_require__(/*! ./utils */ "./node_modules/picomatch/lib/utils.js");
+
+/**
+ * Constants
+ */
+
+const {
+  MAX_LENGTH,
+  POSIX_REGEX_SOURCE,
+  REGEX_NON_SPECIAL_CHARS,
+  REGEX_SPECIAL_CHARS_BACKREF,
+  REPLACEMENTS
+} = constants;
+
+/**
+ * Helpers
+ */
+
+const expandRange = (args, options) => {
+  if (typeof options.expandRange === 'function') {
+    return options.expandRange(...args, options);
+  }
+
+  args.sort();
+  const value = `[${args.join('-')}]`;
+
+  try {
+    /* eslint-disable-next-line no-new */
+    new RegExp(value);
+  } catch (ex) {
+    return args.map(v => utils.escapeRegex(v)).join('..');
+  }
+
+  return value;
+};
+
+/**
+ * Create the message for a syntax error
+ */
+
+const syntaxError = (type, char) => {
+  return `Missing ${type}: "${char}" - use "\\\\${char}" to match literal characters`;
+};
+
+/**
+ * Parse the given input string.
+ * @param {String} input
+ * @param {Object} options
+ * @return {Object}
+ */
+
+const parse = (input, options) => {
+  if (typeof input !== 'string') {
+    throw new TypeError('Expected a string');
+  }
+
+  input = REPLACEMENTS[input] || input;
+
+  const opts = { ...options };
+  const max = typeof opts.maxLength === 'number' ? Math.min(MAX_LENGTH, opts.maxLength) : MAX_LENGTH;
+
+  let len = input.length;
+  if (len > max) {
+    throw new SyntaxError(`Input length: ${len}, exceeds maximum allowed length: ${max}`);
+  }
+
+  const bos = { type: 'bos', value: '', output: opts.prepend || '' };
+  const tokens = [bos];
+
+  const capture = opts.capture ? '' : '?:';
+  const win32 = utils.isWindows(options);
+
+  // create constants based on platform, for windows or posix
+  const PLATFORM_CHARS = constants.globChars(win32);
+  const EXTGLOB_CHARS = constants.extglobChars(PLATFORM_CHARS);
+
+  const {
+    DOT_LITERAL,
+    PLUS_LITERAL,
+    SLASH_LITERAL,
+    ONE_CHAR,
+    DOTS_SLASH,
+    NO_DOT,
+    NO_DOT_SLASH,
+    NO_DOTS_SLASH,
+    QMARK,
+    QMARK_NO_DOT,
+    STAR,
+    START_ANCHOR
+  } = PLATFORM_CHARS;
+
+  const globstar = (opts) => {
+    return `(${capture}(?:(?!${START_ANCHOR}${opts.dot ? DOTS_SLASH : DOT_LITERAL}).)*?)`;
+  };
+
+  const nodot = opts.dot ? '' : NO_DOT;
+  const qmarkNoDot = opts.dot ? QMARK : QMARK_NO_DOT;
+  let star = opts.bash === true ? globstar(opts) : STAR;
+
+  if (opts.capture) {
+    star = `(${star})`;
+  }
+
+  // minimatch options support
+  if (typeof opts.noext === 'boolean') {
+    opts.noextglob = opts.noext;
+  }
+
+  const state = {
+    input,
+    index: -1,
+    start: 0,
+    dot: opts.dot === true,
+    consumed: '',
+    output: '',
+    prefix: '',
+    backtrack: false,
+    negated: false,
+    brackets: 0,
+    braces: 0,
+    parens: 0,
+    quotes: 0,
+    globstar: false,
+    tokens
+  };
+
+  input = utils.removePrefix(input, state);
+  len = input.length;
+
+  const extglobs = [];
+  const braces = [];
+  const stack = [];
+  let prev = bos;
+  let value;
+
+  /**
+   * Tokenizing helpers
+   */
+
+  const eos = () => state.index === len - 1;
+  const peek = state.peek = (n = 1) => input[state.index + n];
+  const advance = state.advance = () => input[++state.index];
+  const remaining = () => input.slice(state.index + 1);
+  const consume = (value = '', num = 0) => {
+    state.consumed += value;
+    state.index += num;
+  };
+  const append = token => {
+    state.output += token.output != null ? token.output : token.value;
+    consume(token.value);
+  };
+
+  const negate = () => {
+    let count = 1;
+
+    while (peek() === '!' && (peek(2) !== '(' || peek(3) === '?')) {
+      advance();
+      state.start++;
+      count++;
+    }
+
+    if (count % 2 === 0) {
+      return false;
+    }
+
+    state.negated = true;
+    state.start++;
+    return true;
+  };
+
+  const increment = type => {
+    state[type]++;
+    stack.push(type);
+  };
+
+  const decrement = type => {
+    state[type]--;
+    stack.pop();
+  };
+
+  /**
+   * Push tokens onto the tokens array. This helper speeds up
+   * tokenizing by 1) helping us avoid backtracking as much as possible,
+   * and 2) helping us avoid creating extra tokens when consecutive
+   * characters are plain text. This improves performance and simplifies
+   * lookbehinds.
+   */
+
+  const push = tok => {
+    if (prev.type === 'globstar') {
+      const isBrace = state.braces > 0 && (tok.type === 'comma' || tok.type === 'brace');
+      const isExtglob = tok.extglob === true || (extglobs.length && (tok.type === 'pipe' || tok.type === 'paren'));
+
+      if (tok.type !== 'slash' && tok.type !== 'paren' && !isBrace && !isExtglob) {
+        state.output = state.output.slice(0, -prev.output.length);
+        prev.type = 'star';
+        prev.value = '*';
+        prev.output = star;
+        state.output += prev.output;
+      }
+    }
+
+    if (extglobs.length && tok.type !== 'paren' && !EXTGLOB_CHARS[tok.value]) {
+      extglobs[extglobs.length - 1].inner += tok.value;
+    }
+
+    if (tok.value || tok.output) append(tok);
+    if (prev && prev.type === 'text' && tok.type === 'text') {
+      prev.value += tok.value;
+      prev.output = (prev.output || '') + tok.value;
+      return;
+    }
+
+    tok.prev = prev;
+    tokens.push(tok);
+    prev = tok;
+  };
+
+  const extglobOpen = (type, value) => {
+    const token = { ...EXTGLOB_CHARS[value], conditions: 1, inner: '' };
+
+    token.prev = prev;
+    token.parens = state.parens;
+    token.output = state.output;
+    const output = (opts.capture ? '(' : '') + token.open;
+
+    increment('parens');
+    push({ type, value, output: state.output ? '' : ONE_CHAR });
+    push({ type: 'paren', extglob: true, value: advance(), output });
+    extglobs.push(token);
+  };
+
+  const extglobClose = token => {
+    let output = token.close + (opts.capture ? ')' : '');
+
+    if (token.type === 'negate') {
+      let extglobStar = star;
+
+      if (token.inner && token.inner.length > 1 && token.inner.includes('/')) {
+        extglobStar = globstar(opts);
+      }
+
+      if (extglobStar !== star || eos() || /^\)+$/.test(remaining())) {
+        output = token.close = `)$))${extglobStar}`;
+      }
+
+      if (token.prev.type === 'bos' && eos()) {
+        state.negatedExtglob = true;
+      }
+    }
+
+    push({ type: 'paren', extglob: true, value, output });
+    decrement('parens');
+  };
+
+  /**
+   * Fast paths
+   */
+
+  if (opts.fastpaths !== false && !/(^[*!]|[/()[\]{}"])/.test(input)) {
+    let backslashes = false;
+
+    let output = input.replace(REGEX_SPECIAL_CHARS_BACKREF, (m, esc, chars, first, rest, index) => {
+      if (first === '\\') {
+        backslashes = true;
+        return m;
+      }
+
+      if (first === '?') {
+        if (esc) {
+          return esc + first + (rest ? QMARK.repeat(rest.length) : '');
+        }
+        if (index === 0) {
+          return qmarkNoDot + (rest ? QMARK.repeat(rest.length) : '');
+        }
+        return QMARK.repeat(chars.length);
+      }
+
+      if (first === '.') {
+        return DOT_LITERAL.repeat(chars.length);
+      }
+
+      if (first === '*') {
+        if (esc) {
+          return esc + first + (rest ? star : '');
+        }
+        return star;
+      }
+      return esc ? m : `\\${m}`;
+    });
+
+    if (backslashes === true) {
+      if (opts.unescape === true) {
+        output = output.replace(/\\/g, '');
+      } else {
+        output = output.replace(/\\+/g, m => {
+          return m.length % 2 === 0 ? '\\\\' : (m ? '\\' : '');
+        });
+      }
+    }
+
+    if (output === input && opts.contains === true) {
+      state.output = input;
+      return state;
+    }
+
+    state.output = utils.wrapOutput(output, state, options);
+    return state;
+  }
+
+  /**
+   * Tokenize input until we reach end-of-string
+   */
+
+  while (!eos()) {
+    value = advance();
+
+    if (value === '\u0000') {
+      continue;
+    }
+
+    /**
+     * Escaped characters
+     */
+
+    if (value === '\\') {
+      const next = peek();
+
+      if (next === '/' && opts.bash !== true) {
+        continue;
+      }
+
+      if (next === '.' || next === ';') {
+        continue;
+      }
+
+      if (!next) {
+        value += '\\';
+        push({ type: 'text', value });
+        continue;
+      }
+
+      // collapse slashes to reduce potential for exploits
+      const match = /^\\+/.exec(remaining());
+      let slashes = 0;
+
+      if (match && match[0].length > 2) {
+        slashes = match[0].length;
+        state.index += slashes;
+        if (slashes % 2 !== 0) {
+          value += '\\';
+        }
+      }
+
+      if (opts.unescape === true) {
+        value = advance() || '';
+      } else {
+        value += advance() || '';
+      }
+
+      if (state.brackets === 0) {
+        push({ type: 'text', value });
+        continue;
+      }
+    }
+
+    /**
+     * If we're inside a regex character class, continue
+     * until we reach the closing bracket.
+     */
+
+    if (state.brackets > 0 && (value !== ']' || prev.value === '[' || prev.value === '[^')) {
+      if (opts.posix !== false && value === ':') {
+        const inner = prev.value.slice(1);
+        if (inner.includes('[')) {
+          prev.posix = true;
+
+          if (inner.includes(':')) {
+            const idx = prev.value.lastIndexOf('[');
+            const pre = prev.value.slice(0, idx);
+            const rest = prev.value.slice(idx + 2);
+            const posix = POSIX_REGEX_SOURCE[rest];
+            if (posix) {
+              prev.value = pre + posix;
+              state.backtrack = true;
+              advance();
+
+              if (!bos.output && tokens.indexOf(prev) === 1) {
+                bos.output = ONE_CHAR;
+              }
+              continue;
+            }
+          }
+        }
+      }
+
+      if ((value === '[' && peek() !== ':') || (value === '-' && peek() === ']')) {
+        value = `\\${value}`;
+      }
+
+      if (value === ']' && (prev.value === '[' || prev.value === '[^')) {
+        value = `\\${value}`;
+      }
+
+      if (opts.posix === true && value === '!' && prev.value === '[') {
+        value = '^';
+      }
+
+      prev.value += value;
+      append({ value });
+      continue;
+    }
+
+    /**
+     * If we're inside a quoted string, continue
+     * until we reach the closing double quote.
+     */
+
+    if (state.quotes === 1 && value !== '"') {
+      value = utils.escapeRegex(value);
+      prev.value += value;
+      append({ value });
+      continue;
+    }
+
+    /**
+     * Double quotes
+     */
+
+    if (value === '"') {
+      state.quotes = state.quotes === 1 ? 0 : 1;
+      if (opts.keepQuotes === true) {
+        push({ type: 'text', value });
+      }
+      continue;
+    }
+
+    /**
+     * Parentheses
+     */
+
+    if (value === '(') {
+      increment('parens');
+      push({ type: 'paren', value });
+      continue;
+    }
+
+    if (value === ')') {
+      if (state.parens === 0 && opts.strictBrackets === true) {
+        throw new SyntaxError(syntaxError('opening', '('));
+      }
+
+      const extglob = extglobs[extglobs.length - 1];
+      if (extglob && state.parens === extglob.parens + 1) {
+        extglobClose(extglobs.pop());
+        continue;
+      }
+
+      push({ type: 'paren', value, output: state.parens ? ')' : '\\)' });
+      decrement('parens');
+      continue;
+    }
+
+    /**
+     * Square brackets
+     */
+
+    if (value === '[') {
+      if (opts.nobracket === true || !remaining().includes(']')) {
+        if (opts.nobracket !== true && opts.strictBrackets === true) {
+          throw new SyntaxError(syntaxError('closing', ']'));
+        }
+
+        value = `\\${value}`;
+      } else {
+        increment('brackets');
+      }
+
+      push({ type: 'bracket', value });
+      continue;
+    }
+
+    if (value === ']') {
+      if (opts.nobracket === true || (prev && prev.type === 'bracket' && prev.value.length === 1)) {
+        push({ type: 'text', value, output: `\\${value}` });
+        continue;
+      }
+
+      if (state.brackets === 0) {
+        if (opts.strictBrackets === true) {
+          throw new SyntaxError(syntaxError('opening', '['));
+        }
+
+        push({ type: 'text', value, output: `\\${value}` });
+        continue;
+      }
+
+      decrement('brackets');
+
+      const prevValue = prev.value.slice(1);
+      if (prev.posix !== true && prevValue[0] === '^' && !prevValue.includes('/')) {
+        value = `/${value}`;
+      }
+
+      prev.value += value;
+      append({ value });
+
+      // when literal brackets are explicitly disabled
+      // assume we should match with a regex character class
+      if (opts.literalBrackets === false || utils.hasRegexChars(prevValue)) {
+        continue;
+      }
+
+      const escaped = utils.escapeRegex(prev.value);
+      state.output = state.output.slice(0, -prev.value.length);
+
+      // when literal brackets are explicitly enabled
+      // assume we should escape the brackets to match literal characters
+      if (opts.literalBrackets === true) {
+        state.output += escaped;
+        prev.value = escaped;
+        continue;
+      }
+
+      // when the user specifies nothing, try to match both
+      prev.value = `(${capture}${escaped}|${prev.value})`;
+      state.output += prev.value;
+      continue;
+    }
+
+    /**
+     * Braces
+     */
+
+    if (value === '{' && opts.nobrace !== true) {
+      increment('braces');
+
+      const open = {
+        type: 'brace',
+        value,
+        output: '(',
+        outputIndex: state.output.length,
+        tokensIndex: state.tokens.length
+      };
+
+      braces.push(open);
+      push(open);
+      continue;
+    }
+
+    if (value === '}') {
+      const brace = braces[braces.length - 1];
+
+      if (opts.nobrace === true || !brace) {
+        push({ type: 'text', value, output: value });
+        continue;
+      }
+
+      let output = ')';
+
+      if (brace.dots === true) {
+        const arr = tokens.slice();
+        const range = [];
+
+        for (let i = arr.length - 1; i >= 0; i--) {
+          tokens.pop();
+          if (arr[i].type === 'brace') {
+            break;
+          }
+          if (arr[i].type !== 'dots') {
+            range.unshift(arr[i].value);
+          }
+        }
+
+        output = expandRange(range, opts);
+        state.backtrack = true;
+      }
+
+      if (brace.comma !== true && brace.dots !== true) {
+        const out = state.output.slice(0, brace.outputIndex);
+        const toks = state.tokens.slice(brace.tokensIndex);
+        brace.value = brace.output = '\\{';
+        value = output = '\\}';
+        state.output = out;
+        for (const t of toks) {
+          state.output += (t.output || t.value);
+        }
+      }
+
+      push({ type: 'brace', value, output });
+      decrement('braces');
+      braces.pop();
+      continue;
+    }
+
+    /**
+     * Pipes
+     */
+
+    if (value === '|') {
+      if (extglobs.length > 0) {
+        extglobs[extglobs.length - 1].conditions++;
+      }
+      push({ type: 'text', value });
+      continue;
+    }
+
+    /**
+     * Commas
+     */
+
+    if (value === ',') {
+      let output = value;
+
+      const brace = braces[braces.length - 1];
+      if (brace && stack[stack.length - 1] === 'braces') {
+        brace.comma = true;
+        output = '|';
+      }
+
+      push({ type: 'comma', value, output });
+      continue;
+    }
+
+    /**
+     * Slashes
+     */
+
+    if (value === '/') {
+      // if the beginning of the glob is "./", advance the start
+      // to the current index, and don't add the "./" characters
+      // to the state. This greatly simplifies lookbehinds when
+      // checking for BOS characters like "!" and "." (not "./")
+      if (prev.type === 'dot' && state.index === state.start + 1) {
+        state.start = state.index + 1;
+        state.consumed = '';
+        state.output = '';
+        tokens.pop();
+        prev = bos; // reset "prev" to the first token
+        continue;
+      }
+
+      push({ type: 'slash', value, output: SLASH_LITERAL });
+      continue;
+    }
+
+    /**
+     * Dots
+     */
+
+    if (value === '.') {
+      if (state.braces > 0 && prev.type === 'dot') {
+        if (prev.value === '.') prev.output = DOT_LITERAL;
+        const brace = braces[braces.length - 1];
+        prev.type = 'dots';
+        prev.output += value;
+        prev.value += value;
+        brace.dots = true;
+        continue;
+      }
+
+      if ((state.braces + state.parens) === 0 && prev.type !== 'bos' && prev.type !== 'slash') {
+        push({ type: 'text', value, output: DOT_LITERAL });
+        continue;
+      }
+
+      push({ type: 'dot', value, output: DOT_LITERAL });
+      continue;
+    }
+
+    /**
+     * Question marks
+     */
+
+    if (value === '?') {
+      const isGroup = prev && prev.value === '(';
+      if (!isGroup && opts.noextglob !== true && peek() === '(' && peek(2) !== '?') {
+        extglobOpen('qmark', value);
+        continue;
+      }
+
+      if (prev && prev.type === 'paren') {
+        const next = peek();
+        let output = value;
+
+        if (next === '<' && !utils.supportsLookbehinds()) {
+          throw new Error('Node.js v10 or higher is required for regex lookbehinds');
+        }
+
+        if ((prev.value === '(' && !/[!=<:]/.test(next)) || (next === '<' && !/<([!=]|\w+>)/.test(remaining()))) {
+          output = `\\${value}`;
+        }
+
+        push({ type: 'text', value, output });
+        continue;
+      }
+
+      if (opts.dot !== true && (prev.type === 'slash' || prev.type === 'bos')) {
+        push({ type: 'qmark', value, output: QMARK_NO_DOT });
+        continue;
+      }
+
+      push({ type: 'qmark', value, output: QMARK });
+      continue;
+    }
+
+    /**
+     * Exclamation
+     */
+
+    if (value === '!') {
+      if (opts.noextglob !== true && peek() === '(') {
+        if (peek(2) !== '?' || !/[!=<:]/.test(peek(3))) {
+          extglobOpen('negate', value);
+          continue;
+        }
+      }
+
+      if (opts.nonegate !== true && state.index === 0) {
+        negate();
+        continue;
+      }
+    }
+
+    /**
+     * Plus
+     */
+
+    if (value === '+') {
+      if (opts.noextglob !== true && peek() === '(' && peek(2) !== '?') {
+        extglobOpen('plus', value);
+        continue;
+      }
+
+      if ((prev && prev.value === '(') || opts.regex === false) {
+        push({ type: 'plus', value, output: PLUS_LITERAL });
+        continue;
+      }
+
+      if ((prev && (prev.type === 'bracket' || prev.type === 'paren' || prev.type === 'brace')) || state.parens > 0) {
+        push({ type: 'plus', value });
+        continue;
+      }
+
+      push({ type: 'plus', value: PLUS_LITERAL });
+      continue;
+    }
+
+    /**
+     * Plain text
+     */
+
+    if (value === '@') {
+      if (opts.noextglob !== true && peek() === '(' && peek(2) !== '?') {
+        push({ type: 'at', extglob: true, value, output: '' });
+        continue;
+      }
+
+      push({ type: 'text', value });
+      continue;
+    }
+
+    /**
+     * Plain text
+     */
+
+    if (value !== '*') {
+      if (value === '$' || value === '^') {
+        value = `\\${value}`;
+      }
+
+      const match = REGEX_NON_SPECIAL_CHARS.exec(remaining());
+      if (match) {
+        value += match[0];
+        state.index += match[0].length;
+      }
+
+      push({ type: 'text', value });
+      continue;
+    }
+
+    /**
+     * Stars
+     */
+
+    if (prev && (prev.type === 'globstar' || prev.star === true)) {
+      prev.type = 'star';
+      prev.star = true;
+      prev.value += value;
+      prev.output = star;
+      state.backtrack = true;
+      state.globstar = true;
+      consume(value);
+      continue;
+    }
+
+    let rest = remaining();
+    if (opts.noextglob !== true && /^\([^?]/.test(rest)) {
+      extglobOpen('star', value);
+      continue;
+    }
+
+    if (prev.type === 'star') {
+      if (opts.noglobstar === true) {
+        consume(value);
+        continue;
+      }
+
+      const prior = prev.prev;
+      const before = prior.prev;
+      const isStart = prior.type === 'slash' || prior.type === 'bos';
+      const afterStar = before && (before.type === 'star' || before.type === 'globstar');
+
+      if (opts.bash === true && (!isStart || (rest[0] && rest[0] !== '/'))) {
+        push({ type: 'star', value, output: '' });
+        continue;
+      }
+
+      const isBrace = state.braces > 0 && (prior.type === 'comma' || prior.type === 'brace');
+      const isExtglob = extglobs.length && (prior.type === 'pipe' || prior.type === 'paren');
+      if (!isStart && prior.type !== 'paren' && !isBrace && !isExtglob) {
+        push({ type: 'star', value, output: '' });
+        continue;
+      }
+
+      // strip consecutive `/**/`
+      while (rest.slice(0, 3) === '/**') {
+        const after = input[state.index + 4];
+        if (after && after !== '/') {
+          break;
+        }
+        rest = rest.slice(3);
+        consume('/**', 3);
+      }
+
+      if (prior.type === 'bos' && eos()) {
+        prev.type = 'globstar';
+        prev.value += value;
+        prev.output = globstar(opts);
+        state.output = prev.output;
+        state.globstar = true;
+        consume(value);
+        continue;
+      }
+
+      if (prior.type === 'slash' && prior.prev.type !== 'bos' && !afterStar && eos()) {
+        state.output = state.output.slice(0, -(prior.output + prev.output).length);
+        prior.output = `(?:${prior.output}`;
+
+        prev.type = 'globstar';
+        prev.output = globstar(opts) + (opts.strictSlashes ? ')' : '|$)');
+        prev.value += value;
+        state.globstar = true;
+        state.output += prior.output + prev.output;
+        consume(value);
+        continue;
+      }
+
+      if (prior.type === 'slash' && prior.prev.type !== 'bos' && rest[0] === '/') {
+        const end = rest[1] !== void 0 ? '|$' : '';
+
+        state.output = state.output.slice(0, -(prior.output + prev.output).length);
+        prior.output = `(?:${prior.output}`;
+
+        prev.type = 'globstar';
+        prev.output = `${globstar(opts)}${SLASH_LITERAL}|${SLASH_LITERAL}${end})`;
+        prev.value += value;
+
+        state.output += prior.output + prev.output;
+        state.globstar = true;
+
+        consume(value + advance());
+
+        push({ type: 'slash', value: '/', output: '' });
+        continue;
+      }
+
+      if (prior.type === 'bos' && rest[0] === '/') {
+        prev.type = 'globstar';
+        prev.value += value;
+        prev.output = `(?:^|${SLASH_LITERAL}|${globstar(opts)}${SLASH_LITERAL})`;
+        state.output = prev.output;
+        state.globstar = true;
+        consume(value + advance());
+        push({ type: 'slash', value: '/', output: '' });
+        continue;
+      }
+
+      // remove single star from output
+      state.output = state.output.slice(0, -prev.output.length);
+
+      // reset previous token to globstar
+      prev.type = 'globstar';
+      prev.output = globstar(opts);
+      prev.value += value;
+
+      // reset output with globstar
+      state.output += prev.output;
+      state.globstar = true;
+      consume(value);
+      continue;
+    }
+
+    const token = { type: 'star', value, output: star };
+
+    if (opts.bash === true) {
+      token.output = '.*?';
+      if (prev.type === 'bos' || prev.type === 'slash') {
+        token.output = nodot + token.output;
+      }
+      push(token);
+      continue;
+    }
+
+    if (prev && (prev.type === 'bracket' || prev.type === 'paren') && opts.regex === true) {
+      token.output = value;
+      push(token);
+      continue;
+    }
+
+    if (state.index === state.start || prev.type === 'slash' || prev.type === 'dot') {
+      if (prev.type === 'dot') {
+        state.output += NO_DOT_SLASH;
+        prev.output += NO_DOT_SLASH;
+
+      } else if (opts.dot === true) {
+        state.output += NO_DOTS_SLASH;
+        prev.output += NO_DOTS_SLASH;
+
+      } else {
+        state.output += nodot;
+        prev.output += nodot;
+      }
+
+      if (peek() !== '*') {
+        state.output += ONE_CHAR;
+        prev.output += ONE_CHAR;
+      }
+    }
+
+    push(token);
+  }
+
+  while (state.brackets > 0) {
+    if (opts.strictBrackets === true) throw new SyntaxError(syntaxError('closing', ']'));
+    state.output = utils.escapeLast(state.output, '[');
+    decrement('brackets');
+  }
+
+  while (state.parens > 0) {
+    if (opts.strictBrackets === true) throw new SyntaxError(syntaxError('closing', ')'));
+    state.output = utils.escapeLast(state.output, '(');
+    decrement('parens');
+  }
+
+  while (state.braces > 0) {
+    if (opts.strictBrackets === true) throw new SyntaxError(syntaxError('closing', '}'));
+    state.output = utils.escapeLast(state.output, '{');
+    decrement('braces');
+  }
+
+  if (opts.strictSlashes !== true && (prev.type === 'star' || prev.type === 'bracket')) {
+    push({ type: 'maybe_slash', value: '', output: `${SLASH_LITERAL}?` });
+  }
+
+  // rebuild the output if we had to backtrack at any point
+  if (state.backtrack === true) {
+    state.output = '';
+
+    for (const token of state.tokens) {
+      state.output += token.output != null ? token.output : token.value;
+
+      if (token.suffix) {
+        state.output += token.suffix;
+      }
+    }
+  }
+
+  return state;
+};
+
+/**
+ * Fast paths for creating regular expressions for common glob patterns.
+ * This can significantly speed up processing and has very little downside
+ * impact when none of the fast paths match.
+ */
+
+parse.fastpaths = (input, options) => {
+  const opts = { ...options };
+  const max = typeof opts.maxLength === 'number' ? Math.min(MAX_LENGTH, opts.maxLength) : MAX_LENGTH;
+  const len = input.length;
+  if (len > max) {
+    throw new SyntaxError(`Input length: ${len}, exceeds maximum allowed length: ${max}`);
+  }
+
+  input = REPLACEMENTS[input] || input;
+  const win32 = utils.isWindows(options);
+
+  // create constants based on platform, for windows or posix
+  const {
+    DOT_LITERAL,
+    SLASH_LITERAL,
+    ONE_CHAR,
+    DOTS_SLASH,
+    NO_DOT,
+    NO_DOTS,
+    NO_DOTS_SLASH,
+    STAR,
+    START_ANCHOR
+  } = constants.globChars(win32);
+
+  const nodot = opts.dot ? NO_DOTS : NO_DOT;
+  const slashDot = opts.dot ? NO_DOTS_SLASH : NO_DOT;
+  const capture = opts.capture ? '' : '?:';
+  const state = { negated: false, prefix: '' };
+  let star = opts.bash === true ? '.*?' : STAR;
+
+  if (opts.capture) {
+    star = `(${star})`;
+  }
+
+  const globstar = (opts) => {
+    if (opts.noglobstar === true) return star;
+    return `(${capture}(?:(?!${START_ANCHOR}${opts.dot ? DOTS_SLASH : DOT_LITERAL}).)*?)`;
+  };
+
+  const create = str => {
+    switch (str) {
+      case '*':
+        return `${nodot}${ONE_CHAR}${star}`;
+
+      case '.*':
+        return `${DOT_LITERAL}${ONE_CHAR}${star}`;
+
+      case '*.*':
+        return `${nodot}${star}${DOT_LITERAL}${ONE_CHAR}${star}`;
+
+      case '*/*':
+        return `${nodot}${star}${SLASH_LITERAL}${ONE_CHAR}${slashDot}${star}`;
+
+      case '**':
+        return nodot + globstar(opts);
+
+      case '**/*':
+        return `(?:${nodot}${globstar(opts)}${SLASH_LITERAL})?${slashDot}${ONE_CHAR}${star}`;
+
+      case '**/*.*':
+        return `(?:${nodot}${globstar(opts)}${SLASH_LITERAL})?${slashDot}${star}${DOT_LITERAL}${ONE_CHAR}${star}`;
+
+      case '**/.*':
+        return `(?:${nodot}${globstar(opts)}${SLASH_LITERAL})?${DOT_LITERAL}${ONE_CHAR}${star}`;
+
+      default: {
+        const match = /^(.*?)\.(\w+)$/.exec(str);
+        if (!match) return;
+
+        const source = create(match[1]);
+        if (!source) return;
+
+        return source + DOT_LITERAL + match[2];
+      }
+    }
+  };
+
+  const output = utils.removePrefix(input, state);
+  let source = create(output);
+
+  if (source && opts.strictSlashes !== true) {
+    source += `${SLASH_LITERAL}?`;
+  }
+
+  return source;
+};
+
+module.exports = parse;
+
+
+/***/ }),
+
+/***/ "./node_modules/picomatch/lib/picomatch.js":
+/*!*************************************************!*\
+  !*** ./node_modules/picomatch/lib/picomatch.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const path = __webpack_require__(/*! path */ "path");
+const scan = __webpack_require__(/*! ./scan */ "./node_modules/picomatch/lib/scan.js");
+const parse = __webpack_require__(/*! ./parse */ "./node_modules/picomatch/lib/parse.js");
+const utils = __webpack_require__(/*! ./utils */ "./node_modules/picomatch/lib/utils.js");
+const constants = __webpack_require__(/*! ./constants */ "./node_modules/picomatch/lib/constants.js");
+const isObject = val => val && typeof val === 'object' && !Array.isArray(val);
+
+/**
+ * Creates a matcher function from one or more glob patterns. The
+ * returned function takes a string to match as its first argument,
+ * and returns true if the string is a match. The returned matcher
+ * function also takes a boolean as the second argument that, when true,
+ * returns an object with additional information.
+ *
+ * ```js
+ * const picomatch = require('picomatch');
+ * // picomatch(glob[, options]);
+ *
+ * const isMatch = picomatch('*.!(*a)');
+ * console.log(isMatch('a.a')); //=> false
+ * console.log(isMatch('a.b')); //=> true
+ * ```
+ * @name picomatch
+ * @param {String|Array} `globs` One or more glob patterns.
+ * @param {Object=} `options`
+ * @return {Function=} Returns a matcher function.
+ * @api public
+ */
+
+const picomatch = (glob, options, returnState = false) => {
+  if (Array.isArray(glob)) {
+    const fns = glob.map(input => picomatch(input, options, returnState));
+    const arrayMatcher = str => {
+      for (const isMatch of fns) {
+        const state = isMatch(str);
+        if (state) return state;
+      }
+      return false;
+    };
+    return arrayMatcher;
+  }
+
+  const isState = isObject(glob) && glob.tokens && glob.input;
+
+  if (glob === '' || (typeof glob !== 'string' && !isState)) {
+    throw new TypeError('Expected pattern to be a non-empty string');
+  }
+
+  const opts = options || {};
+  const posix = utils.isWindows(options);
+  const regex = isState
+    ? picomatch.compileRe(glob, options)
+    : picomatch.makeRe(glob, options, false, true);
+
+  const state = regex.state;
+  delete regex.state;
+
+  let isIgnored = () => false;
+  if (opts.ignore) {
+    const ignoreOpts = { ...options, ignore: null, onMatch: null, onResult: null };
+    isIgnored = picomatch(opts.ignore, ignoreOpts, returnState);
+  }
+
+  const matcher = (input, returnObject = false) => {
+    const { isMatch, match, output } = picomatch.test(input, regex, options, { glob, posix });
+    const result = { glob, state, regex, posix, input, output, match, isMatch };
+
+    if (typeof opts.onResult === 'function') {
+      opts.onResult(result);
+    }
+
+    if (isMatch === false) {
+      result.isMatch = false;
+      return returnObject ? result : false;
+    }
+
+    if (isIgnored(input)) {
+      if (typeof opts.onIgnore === 'function') {
+        opts.onIgnore(result);
+      }
+      result.isMatch = false;
+      return returnObject ? result : false;
+    }
+
+    if (typeof opts.onMatch === 'function') {
+      opts.onMatch(result);
+    }
+    return returnObject ? result : true;
+  };
+
+  if (returnState) {
+    matcher.state = state;
+  }
+
+  return matcher;
+};
+
+/**
+ * Test `input` with the given `regex`. This is used by the main
+ * `picomatch()` function to test the input string.
+ *
+ * ```js
+ * const picomatch = require('picomatch');
+ * // picomatch.test(input, regex[, options]);
+ *
+ * console.log(picomatch.test('foo/bar', /^(?:([^/]*?)\/([^/]*?))$/));
+ * // { isMatch: true, match: [ 'foo/', 'foo', 'bar' ], output: 'foo/bar' }
+ * ```
+ * @param {String} `input` String to test.
+ * @param {RegExp} `regex`
+ * @return {Object} Returns an object with matching info.
+ * @api public
+ */
+
+picomatch.test = (input, regex, options, { glob, posix } = {}) => {
+  if (typeof input !== 'string') {
+    throw new TypeError('Expected input to be a string');
+  }
+
+  if (input === '') {
+    return { isMatch: false, output: '' };
+  }
+
+  const opts = options || {};
+  const format = opts.format || (posix ? utils.toPosixSlashes : null);
+  let match = input === glob;
+  let output = (match && format) ? format(input) : input;
+
+  if (match === false) {
+    output = format ? format(input) : input;
+    match = output === glob;
+  }
+
+  if (match === false || opts.capture === true) {
+    if (opts.matchBase === true || opts.basename === true) {
+      match = picomatch.matchBase(input, regex, options, posix);
+    } else {
+      match = regex.exec(output);
+    }
+  }
+
+  return { isMatch: Boolean(match), match, output };
+};
+
+/**
+ * Match the basename of a filepath.
+ *
+ * ```js
+ * const picomatch = require('picomatch');
+ * // picomatch.matchBase(input, glob[, options]);
+ * console.log(picomatch.matchBase('foo/bar.js', '*.js'); // true
+ * ```
+ * @param {String} `input` String to test.
+ * @param {RegExp|String} `glob` Glob pattern or regex created by [.makeRe](#makeRe).
+ * @return {Boolean}
+ * @api public
+ */
+
+picomatch.matchBase = (input, glob, options, posix = utils.isWindows(options)) => {
+  const regex = glob instanceof RegExp ? glob : picomatch.makeRe(glob, options);
+  return regex.test(path.basename(input));
+};
+
+/**
+ * Returns true if **any** of the given glob `patterns` match the specified `string`.
+ *
+ * ```js
+ * const picomatch = require('picomatch');
+ * // picomatch.isMatch(string, patterns[, options]);
+ *
+ * console.log(picomatch.isMatch('a.a', ['b.*', '*.a'])); //=> true
+ * console.log(picomatch.isMatch('a.a', 'b.*')); //=> false
+ * ```
+ * @param {String|Array} str The string to test.
+ * @param {String|Array} patterns One or more glob patterns to use for matching.
+ * @param {Object} [options] See available [options](#options).
+ * @return {Boolean} Returns true if any patterns match `str`
+ * @api public
+ */
+
+picomatch.isMatch = (str, patterns, options) => picomatch(patterns, options)(str);
+
+/**
+ * Parse a glob pattern to create the source string for a regular
+ * expression.
+ *
+ * ```js
+ * const picomatch = require('picomatch');
+ * const result = picomatch.parse(pattern[, options]);
+ * ```
+ * @param {String} `pattern`
+ * @param {Object} `options`
+ * @return {Object} Returns an object with useful properties and output to be used as a regex source string.
+ * @api public
+ */
+
+picomatch.parse = (pattern, options) => {
+  if (Array.isArray(pattern)) return pattern.map(p => picomatch.parse(p, options));
+  return parse(pattern, { ...options, fastpaths: false });
+};
+
+/**
+ * Scan a glob pattern to separate the pattern into segments.
+ *
+ * ```js
+ * const picomatch = require('picomatch');
+ * // picomatch.scan(input[, options]);
+ *
+ * const result = picomatch.scan('!./foo/*.js');
+ * console.log(result);
+ * { prefix: '!./',
+ *   input: '!./foo/*.js',
+ *   start: 3,
+ *   base: 'foo',
+ *   glob: '*.js',
+ *   isBrace: false,
+ *   isBracket: false,
+ *   isGlob: true,
+ *   isExtglob: false,
+ *   isGlobstar: false,
+ *   negated: true }
+ * ```
+ * @param {String} `input` Glob pattern to scan.
+ * @param {Object} `options`
+ * @return {Object} Returns an object with
+ * @api public
+ */
+
+picomatch.scan = (input, options) => scan(input, options);
+
+/**
+ * Create a regular expression from a parsed glob pattern.
+ *
+ * ```js
+ * const picomatch = require('picomatch');
+ * const state = picomatch.parse('*.js');
+ * // picomatch.compileRe(state[, options]);
+ *
+ * console.log(picomatch.compileRe(state));
+ * //=> /^(?:(?!\.)(?=.)[^/]*?\.js)$/
+ * ```
+ * @param {String} `state` The object returned from the `.parse` method.
+ * @param {Object} `options`
+ * @return {RegExp} Returns a regex created from the given pattern.
+ * @api public
+ */
+
+picomatch.compileRe = (parsed, options, returnOutput = false, returnState = false) => {
+  if (returnOutput === true) {
+    return parsed.output;
+  }
+
+  const opts = options || {};
+  const prepend = opts.contains ? '' : '^';
+  const append = opts.contains ? '' : '$';
+
+  let source = `${prepend}(?:${parsed.output})${append}`;
+  if (parsed && parsed.negated === true) {
+    source = `^(?!${source}).*$`;
+  }
+
+  const regex = picomatch.toRegex(source, options);
+  if (returnState === true) {
+    regex.state = parsed;
+  }
+
+  return regex;
+};
+
+picomatch.makeRe = (input, options, returnOutput = false, returnState = false) => {
+  if (!input || typeof input !== 'string') {
+    throw new TypeError('Expected a non-empty string');
+  }
+
+  const opts = options || {};
+  let parsed = { negated: false, fastpaths: true };
+  let prefix = '';
+  let output;
+
+  if (input.startsWith('./')) {
+    input = input.slice(2);
+    prefix = parsed.prefix = './';
+  }
+
+  if (opts.fastpaths !== false && (input[0] === '.' || input[0] === '*')) {
+    output = parse.fastpaths(input, options);
+  }
+
+  if (output === undefined) {
+    parsed = parse(input, options);
+    parsed.prefix = prefix + (parsed.prefix || '');
+  } else {
+    parsed.output = output;
+  }
+
+  return picomatch.compileRe(parsed, options, returnOutput, returnState);
+};
+
+/**
+ * Create a regular expression from the given regex source string.
+ *
+ * ```js
+ * const picomatch = require('picomatch');
+ * // picomatch.toRegex(source[, options]);
+ *
+ * const { output } = picomatch.parse('*.js');
+ * console.log(picomatch.toRegex(output));
+ * //=> /^(?:(?!\.)(?=.)[^/]*?\.js)$/
+ * ```
+ * @param {String} `source` Regular expression source string.
+ * @param {Object} `options`
+ * @return {RegExp}
+ * @api public
+ */
+
+picomatch.toRegex = (source, options) => {
+  try {
+    const opts = options || {};
+    return new RegExp(source, opts.flags || (opts.nocase ? 'i' : ''));
+  } catch (err) {
+    if (options && options.debug === true) throw err;
+    return /$^/;
+  }
+};
+
+/**
+ * Picomatch constants.
+ * @return {Object}
+ */
+
+picomatch.constants = constants;
+
+/**
+ * Expose "picomatch"
+ */
+
+module.exports = picomatch;
+
+
+/***/ }),
+
+/***/ "./node_modules/picomatch/lib/scan.js":
+/*!********************************************!*\
+  !*** ./node_modules/picomatch/lib/scan.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const utils = __webpack_require__(/*! ./utils */ "./node_modules/picomatch/lib/utils.js");
+const {
+  CHAR_ASTERISK,             /* * */
+  CHAR_AT,                   /* @ */
+  CHAR_BACKWARD_SLASH,       /* \ */
+  CHAR_COMMA,                /* , */
+  CHAR_DOT,                  /* . */
+  CHAR_EXCLAMATION_MARK,     /* ! */
+  CHAR_FORWARD_SLASH,        /* / */
+  CHAR_LEFT_CURLY_BRACE,     /* { */
+  CHAR_LEFT_PARENTHESES,     /* ( */
+  CHAR_LEFT_SQUARE_BRACKET,  /* [ */
+  CHAR_PLUS,                 /* + */
+  CHAR_QUESTION_MARK,        /* ? */
+  CHAR_RIGHT_CURLY_BRACE,    /* } */
+  CHAR_RIGHT_PARENTHESES,    /* ) */
+  CHAR_RIGHT_SQUARE_BRACKET  /* ] */
+} = __webpack_require__(/*! ./constants */ "./node_modules/picomatch/lib/constants.js");
+
+const isPathSeparator = code => {
+  return code === CHAR_FORWARD_SLASH || code === CHAR_BACKWARD_SLASH;
+};
+
+const depth = token => {
+  if (token.isPrefix !== true) {
+    token.depth = token.isGlobstar ? Infinity : 1;
+  }
+};
+
+/**
+ * Quickly scans a glob pattern and returns an object with a handful of
+ * useful properties, like `isGlob`, `path` (the leading non-glob, if it exists),
+ * `glob` (the actual pattern), and `negated` (true if the path starts with `!`).
+ *
+ * ```js
+ * const pm = require('picomatch');
+ * console.log(pm.scan('foo/bar/*.js'));
+ * { isGlob: true, input: 'foo/bar/*.js', base: 'foo/bar', glob: '*.js' }
+ * ```
+ * @param {String} `str`
+ * @param {Object} `options`
+ * @return {Object} Returns an object with tokens and regex source string.
+ * @api public
+ */
+
+const scan = (input, options) => {
+  const opts = options || {};
+
+  const length = input.length - 1;
+  const scanToEnd = opts.parts === true || opts.scanToEnd === true;
+  const slashes = [];
+  const tokens = [];
+  const parts = [];
+
+  let str = input;
+  let index = -1;
+  let start = 0;
+  let lastIndex = 0;
+  let isBrace = false;
+  let isBracket = false;
+  let isGlob = false;
+  let isExtglob = false;
+  let isGlobstar = false;
+  let braceEscaped = false;
+  let backslashes = false;
+  let negated = false;
+  let finished = false;
+  let braces = 0;
+  let prev;
+  let code;
+  let token = { value: '', depth: 0, isGlob: false };
+
+  const eos = () => index >= length;
+  const peek = () => str.charCodeAt(index + 1);
+  const advance = () => {
+    prev = code;
+    return str.charCodeAt(++index);
+  };
+
+  while (index < length) {
+    code = advance();
+    let next;
+
+    if (code === CHAR_BACKWARD_SLASH) {
+      backslashes = token.backslashes = true;
+      code = advance();
+
+      if (code === CHAR_LEFT_CURLY_BRACE) {
+        braceEscaped = true;
+      }
+      continue;
+    }
+
+    if (braceEscaped === true || code === CHAR_LEFT_CURLY_BRACE) {
+      braces++;
+
+      while (eos() !== true && (code = advance())) {
+        if (code === CHAR_BACKWARD_SLASH) {
+          backslashes = token.backslashes = true;
+          advance();
+          continue;
+        }
+
+        if (code === CHAR_LEFT_CURLY_BRACE) {
+          braces++;
+          continue;
+        }
+
+        if (braceEscaped !== true && code === CHAR_DOT && (code = advance()) === CHAR_DOT) {
+          isBrace = token.isBrace = true;
+          isGlob = token.isGlob = true;
+          finished = true;
+
+          if (scanToEnd === true) {
+            continue;
+          }
+
+          break;
+        }
+
+        if (braceEscaped !== true && code === CHAR_COMMA) {
+          isBrace = token.isBrace = true;
+          isGlob = token.isGlob = true;
+          finished = true;
+
+          if (scanToEnd === true) {
+            continue;
+          }
+
+          break;
+        }
+
+        if (code === CHAR_RIGHT_CURLY_BRACE) {
+          braces--;
+
+          if (braces === 0) {
+            braceEscaped = false;
+            isBrace = token.isBrace = true;
+            finished = true;
+            break;
+          }
+        }
+      }
+
+      if (scanToEnd === true) {
+        continue;
+      }
+
+      break;
+    }
+
+    if (code === CHAR_FORWARD_SLASH) {
+      slashes.push(index);
+      tokens.push(token);
+      token = { value: '', depth: 0, isGlob: false };
+
+      if (finished === true) continue;
+      if (prev === CHAR_DOT && index === (start + 1)) {
+        start += 2;
+        continue;
+      }
+
+      lastIndex = index + 1;
+      continue;
+    }
+
+    if (opts.noext !== true) {
+      const isExtglobChar = code === CHAR_PLUS
+        || code === CHAR_AT
+        || code === CHAR_ASTERISK
+        || code === CHAR_QUESTION_MARK
+        || code === CHAR_EXCLAMATION_MARK;
+
+      if (isExtglobChar === true && peek() === CHAR_LEFT_PARENTHESES) {
+        isGlob = token.isGlob = true;
+        isExtglob = token.isExtglob = true;
+        finished = true;
+
+        if (scanToEnd === true) {
+          while (eos() !== true && (code = advance())) {
+            if (code === CHAR_BACKWARD_SLASH) {
+              backslashes = token.backslashes = true;
+              code = advance();
+              continue;
+            }
+
+            if (code === CHAR_RIGHT_PARENTHESES) {
+              isGlob = token.isGlob = true;
+              finished = true;
+              break;
+            }
+          }
+          continue;
+        }
+        break;
+      }
+    }
+
+    if (code === CHAR_ASTERISK) {
+      if (prev === CHAR_ASTERISK) isGlobstar = token.isGlobstar = true;
+      isGlob = token.isGlob = true;
+      finished = true;
+
+      if (scanToEnd === true) {
+        continue;
+      }
+      break;
+    }
+
+    if (code === CHAR_QUESTION_MARK) {
+      isGlob = token.isGlob = true;
+      finished = true;
+
+      if (scanToEnd === true) {
+        continue;
+      }
+      break;
+    }
+
+    if (code === CHAR_LEFT_SQUARE_BRACKET) {
+      while (eos() !== true && (next = advance())) {
+        if (next === CHAR_BACKWARD_SLASH) {
+          backslashes = token.backslashes = true;
+          advance();
+          continue;
+        }
+
+        if (next === CHAR_RIGHT_SQUARE_BRACKET) {
+          isBracket = token.isBracket = true;
+          isGlob = token.isGlob = true;
+          finished = true;
+
+          if (scanToEnd === true) {
+            continue;
+          }
+          break;
+        }
+      }
+    }
+
+    if (opts.nonegate !== true && code === CHAR_EXCLAMATION_MARK && index === start) {
+      negated = token.negated = true;
+      start++;
+      continue;
+    }
+
+    if (opts.noparen !== true && code === CHAR_LEFT_PARENTHESES) {
+      isGlob = token.isGlob = true;
+
+      if (scanToEnd === true) {
+        while (eos() !== true && (code = advance())) {
+          if (code === CHAR_LEFT_PARENTHESES) {
+            backslashes = token.backslashes = true;
+            code = advance();
+            continue;
+          }
+
+          if (code === CHAR_RIGHT_PARENTHESES) {
+            finished = true;
+            break;
+          }
+        }
+        continue;
+      }
+      break;
+    }
+
+    if (isGlob === true) {
+      finished = true;
+
+      if (scanToEnd === true) {
+        continue;
+      }
+
+      break;
+    }
+  }
+
+  if (opts.noext === true) {
+    isExtglob = false;
+    isGlob = false;
+  }
+
+  let base = str;
+  let prefix = '';
+  let glob = '';
+
+  if (start > 0) {
+    prefix = str.slice(0, start);
+    str = str.slice(start);
+    lastIndex -= start;
+  }
+
+  if (base && isGlob === true && lastIndex > 0) {
+    base = str.slice(0, lastIndex);
+    glob = str.slice(lastIndex);
+  } else if (isGlob === true) {
+    base = '';
+    glob = str;
+  } else {
+    base = str;
+  }
+
+  if (base && base !== '' && base !== '/' && base !== str) {
+    if (isPathSeparator(base.charCodeAt(base.length - 1))) {
+      base = base.slice(0, -1);
+    }
+  }
+
+  if (opts.unescape === true) {
+    if (glob) glob = utils.removeBackslashes(glob);
+
+    if (base && backslashes === true) {
+      base = utils.removeBackslashes(base);
+    }
+  }
+
+  const state = {
+    prefix,
+    input,
+    start,
+    base,
+    glob,
+    isBrace,
+    isBracket,
+    isGlob,
+    isExtglob,
+    isGlobstar,
+    negated
+  };
+
+  if (opts.tokens === true) {
+    state.maxDepth = 0;
+    if (!isPathSeparator(code)) {
+      tokens.push(token);
+    }
+    state.tokens = tokens;
+  }
+
+  if (opts.parts === true || opts.tokens === true) {
+    let prevIndex;
+
+    for (let idx = 0; idx < slashes.length; idx++) {
+      const n = prevIndex ? prevIndex + 1 : start;
+      const i = slashes[idx];
+      const value = input.slice(n, i);
+      if (opts.tokens) {
+        if (idx === 0 && start !== 0) {
+          tokens[idx].isPrefix = true;
+          tokens[idx].value = prefix;
+        } else {
+          tokens[idx].value = value;
+        }
+        depth(tokens[idx]);
+        state.maxDepth += tokens[idx].depth;
+      }
+      if (idx !== 0 || value !== '') {
+        parts.push(value);
+      }
+      prevIndex = i;
+    }
+
+    if (prevIndex && prevIndex + 1 < input.length) {
+      const value = input.slice(prevIndex + 1);
+      parts.push(value);
+
+      if (opts.tokens) {
+        tokens[tokens.length - 1].value = value;
+        depth(tokens[tokens.length - 1]);
+        state.maxDepth += tokens[tokens.length - 1].depth;
+      }
+    }
+
+    state.slashes = slashes;
+    state.parts = parts;
+  }
+
+  return state;
+};
+
+module.exports = scan;
+
+
+/***/ }),
+
+/***/ "./node_modules/picomatch/lib/utils.js":
+/*!*********************************************!*\
+  !*** ./node_modules/picomatch/lib/utils.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const path = __webpack_require__(/*! path */ "path");
+const win32 = process.platform === 'win32';
+const {
+  REGEX_BACKSLASH,
+  REGEX_REMOVE_BACKSLASH,
+  REGEX_SPECIAL_CHARS,
+  REGEX_SPECIAL_CHARS_GLOBAL
+} = __webpack_require__(/*! ./constants */ "./node_modules/picomatch/lib/constants.js");
+
+exports.isObject = val => val !== null && typeof val === 'object' && !Array.isArray(val);
+exports.hasRegexChars = str => REGEX_SPECIAL_CHARS.test(str);
+exports.isRegexChar = str => str.length === 1 && exports.hasRegexChars(str);
+exports.escapeRegex = str => str.replace(REGEX_SPECIAL_CHARS_GLOBAL, '\\$1');
+exports.toPosixSlashes = str => str.replace(REGEX_BACKSLASH, '/');
+
+exports.removeBackslashes = str => {
+  return str.replace(REGEX_REMOVE_BACKSLASH, match => {
+    return match === '\\' ? '' : match;
+  });
+};
+
+exports.supportsLookbehinds = () => {
+  const segs = process.version.slice(1).split('.').map(Number);
+  if (segs.length === 3 && segs[0] >= 9 || (segs[0] === 8 && segs[1] >= 10)) {
+    return true;
+  }
+  return false;
+};
+
+exports.isWindows = options => {
+  if (options && typeof options.windows === 'boolean') {
+    return options.windows;
+  }
+  return win32 === true || path.sep === '\\';
+};
+
+exports.escapeLast = (input, char, lastIdx) => {
+  const idx = input.lastIndexOf(char, lastIdx);
+  if (idx === -1) return input;
+  if (input[idx - 1] === '\\') return exports.escapeLast(input, char, idx - 1);
+  return `${input.slice(0, idx)}\\${input.slice(idx)}`;
+};
+
+exports.removePrefix = (input, state = {}) => {
+  let output = input;
+  if (output.startsWith('./')) {
+    output = output.slice(2);
+    state.prefix = './';
+  }
+  return output;
+};
+
+exports.wrapOutput = (input, state = {}, options = {}) => {
+  const prepend = options.contains ? '' : '^';
+  const append = options.contains ? '' : '$';
+
+  let output = `${prepend}(?:${input})${append}`;
+  if (state.negated === true) {
+    output = `(?:^(?!${output}).*$)`;
+  }
+  return output;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/readdirp/index.js":
+/*!****************************************!*\
+  !*** ./node_modules/readdirp/index.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const fs = __webpack_require__(/*! fs */ "fs");
+const { Readable } = __webpack_require__(/*! stream */ "stream");
+const sysPath = __webpack_require__(/*! path */ "path");
+const { promisify } = __webpack_require__(/*! util */ "util");
+const picomatch = __webpack_require__(/*! picomatch */ "./node_modules/picomatch/index.js");
+
+const readdir = promisify(fs.readdir);
+const stat = promisify(fs.stat);
+const lstat = promisify(fs.lstat);
+const realpath = promisify(fs.realpath);
+
+/**
+ * @typedef {Object} EntryInfo
+ * @property {String} path
+ * @property {String} fullPath
+ * @property {fs.Stats=} stats
+ * @property {fs.Dirent=} dirent
+ * @property {String} basename
+ */
+
+const BANG = '!';
+const NORMAL_FLOW_ERRORS = new Set(['ENOENT', 'EPERM', 'EACCES', 'ELOOP']);
+const FILE_TYPE = 'files';
+const DIR_TYPE = 'directories';
+const FILE_DIR_TYPE = 'files_directories';
+const EVERYTHING_TYPE = 'all';
+const ALL_TYPES = [FILE_TYPE, DIR_TYPE, FILE_DIR_TYPE, EVERYTHING_TYPE];
+
+const isNormalFlowError = error => NORMAL_FLOW_ERRORS.has(error.code);
+
+const normalizeFilter = filter => {
+  if (filter === undefined) return;
+  if (typeof filter === 'function') return filter;
+
+  if (typeof filter === 'string') {
+    const glob = picomatch(filter.trim());
+    return entry => glob(entry.basename);
+  }
+
+  if (Array.isArray(filter)) {
+    const positive = [];
+    const negative = [];
+    for (const item of filter) {
+      const trimmed = item.trim();
+      if (trimmed.charAt(0) === BANG) {
+        negative.push(picomatch(trimmed.slice(1)));
+      } else {
+        positive.push(picomatch(trimmed));
+      }
+    }
+
+    if (negative.length > 0) {
+      if (positive.length > 0) {
+        return entry =>
+          positive.some(f => f(entry.basename)) && !negative.some(f => f(entry.basename));
+      }
+      return entry => !negative.some(f => f(entry.basename));
+    }
+    return entry => positive.some(f => f(entry.basename));
+  }
+};
+
+class ReaddirpStream extends Readable {
+  static get defaultOptions() {
+    return {
+      root: '.',
+      /* eslint-disable no-unused-vars */
+      fileFilter: (path) => true,
+      directoryFilter: (path) => true,
+      /* eslint-enable no-unused-vars */
+      type: FILE_TYPE,
+      lstat: false,
+      depth: 2147483648,
+      alwaysStat: false
+    };
+  }
+
+  constructor(options = {}) {
+    super({
+      objectMode: true,
+      autoDestroy: true,
+      highWaterMark: options.highWaterMark || 4096
+    });
+    const opts = { ...ReaddirpStream.defaultOptions, ...options };
+    const { root, type } = opts;
+
+    this._fileFilter = normalizeFilter(opts.fileFilter);
+    this._directoryFilter = normalizeFilter(opts.directoryFilter);
+
+    const statMethod = opts.lstat ? lstat : stat;
+    // Use bigint stats if it's windows and stat() supports options (node 10+).
+    if (process.platform === 'win32' && stat.length === 3) {
+      this._stat = path => statMethod(path, { bigint: true });
+    } else {
+      this._stat = statMethod;
+    }
+
+    this._maxDepth = opts.depth;
+    this._wantsDir = [DIR_TYPE, FILE_DIR_TYPE, EVERYTHING_TYPE].includes(type);
+    this._wantsFile = [FILE_TYPE, FILE_DIR_TYPE, EVERYTHING_TYPE].includes(type);
+    this._wantsEverything = type === EVERYTHING_TYPE;
+    this._root = sysPath.resolve(root);
+    this._isDirent = ('Dirent' in fs) && !opts.alwaysStat;
+    this._statsProp = this._isDirent ? 'dirent' : 'stats';
+    this._rdOptions = { encoding: 'utf8', withFileTypes: this._isDirent };
+
+    // Launch stream with one parent, the root dir.
+    this.parents = [this._exploreDir(root, 1)];
+    this.reading = false;
+    this.parent = undefined;
+  }
+
+  async _read(batch) {
+    if (this.reading) return;
+    this.reading = true;
+
+    try {
+      while (!this.destroyed && batch > 0) {
+        const { path, depth, files = [] } = this.parent || {};
+
+        if (files.length > 0) {
+          const slice = files.splice(0, batch).map(dirent => this._formatEntry(dirent, path));
+          for (const entry of await Promise.all(slice)) {
+            if (this.destroyed) return;
+
+            const entryType = await this._getEntryType(entry);
+            if (entryType === 'directory' && this._directoryFilter(entry)) {
+              if (depth <= this._maxDepth) {
+                this.parents.push(this._exploreDir(entry.fullPath, depth + 1));
+              }
+
+              if (this._wantsDir) {
+                this.push(entry);
+                batch--;
+              }
+            } else if ((entryType === 'file' || this._includeAsFile(entry)) && this._fileFilter(entry)) {
+              if (this._wantsFile) {
+                this.push(entry);
+                batch--;
+              }
+            }
+          }
+        } else {
+          const parent = this.parents.pop();
+          if (!parent) {
+            this.push(null);
+            break;
+          }
+          this.parent = await parent;
+          if (this.destroyed) return;
+        }
+      }
+    } catch (error) {
+      this.destroy(error);
+    } finally {
+      this.reading = false;
+    }
+  }
+
+  async _exploreDir(path, depth) {
+    let files;
+    try {
+      files = await readdir(path, this._rdOptions);
+    } catch (error) {
+      this._onError(error);
+    }
+    return {files, depth, path};
+  }
+
+  async _formatEntry(dirent, path) {
+    let entry;
+    try {
+      const basename = this._isDirent ? dirent.name : dirent;
+      const fullPath = sysPath.resolve(sysPath.join(path, basename));
+      entry = {path: sysPath.relative(this._root, fullPath), fullPath, basename};
+      entry[this._statsProp] = this._isDirent ? dirent : await this._stat(fullPath);
+    } catch (err) {
+      this._onError(err);
+    }
+    return entry;
+  }
+
+  _onError(err) {
+    if (isNormalFlowError(err) && !this.destroyed) {
+      this.emit('warn', err);
+    } else {
+      this.destroy(err);
+    }
+  }
+
+  async _getEntryType(entry) {
+    // entry may be undefined, because a warning or an error were emitted
+    // and the statsProp is undefined
+    const stats = entry && entry[this._statsProp];
+    if (!stats) {
+      return;
+    }
+    if (stats.isFile()) {
+      return 'file';
+    }
+    if (stats.isDirectory()) {
+      return 'directory';
+    }
+    if (stats && stats.isSymbolicLink()) {
+      try {
+        const entryRealPath = await realpath(entry.fullPath);
+        const entryRealPathStats = await lstat(entryRealPath);
+        if (entryRealPathStats.isFile()) {
+          return 'file';
+        }
+        if (entryRealPathStats.isDirectory()) {
+          return 'directory';
+        }
+      } catch (error) {
+        this._onError(error);
+      }
+    }
+  }
+
+  _includeAsFile(entry) {
+    const stats = entry && entry[this._statsProp];
+
+    return stats && this._wantsEverything && !stats.isDirectory();
+  }
+}
+
+/**
+ * @typedef {Object} ReaddirpArguments
+ * @property {Function=} fileFilter
+ * @property {Function=} directoryFilter
+ * @property {String=} type
+ * @property {Number=} depth
+ * @property {String=} root
+ * @property {Boolean=} lstat
+ * @property {Boolean=} bigint
+ */
+
+/**
+ * Main function which ends up calling readdirRec and reads all files and directories in given root recursively.
+ * @param {String} root Root directory
+ * @param {ReaddirpArguments=} options Options to specify root (start directory), filters and recursion depth
+ */
+const readdirp = (root, options = {}) => {
+  let type = options.entryType || options.type;
+  if (type === 'both') type = FILE_DIR_TYPE; // backwards-compatibility
+  if (type) options.type = type;
+  if (!root) {
+    throw new Error('readdirp: root argument is required. Usage: readdirp(root, options)');
+  } else if (typeof root !== 'string') {
+    throw new TypeError('readdirp: root argument must be a string. Usage: readdirp(root, options)');
+  } else if (type && !ALL_TYPES.includes(type)) {
+    throw new Error(`readdirp: Invalid type passed. Use one of ${ALL_TYPES.join(', ')}`);
+  }
+
+  options.root = root;
+  return new ReaddirpStream(options);
+};
+
+const readdirpPromise = (root, options = {}) => {
+  return new Promise((resolve, reject) => {
+    const files = [];
+    readdirp(root, options)
+      .on('data', entry => files.push(entry))
+      .on('end', () => resolve(files))
+      .on('error', error => reject(error));
+  });
+};
+
+readdirp.promise = readdirpPromise;
+readdirp.ReaddirpStream = ReaddirpStream;
+readdirp.default = readdirp;
+
+module.exports = readdirp;
+
+
+/***/ }),
+
+/***/ "./node_modules/to-regex-range/index.js":
+/*!**********************************************!*\
+  !*** ./node_modules/to-regex-range/index.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * to-regex-range <https://github.com/micromatch/to-regex-range>
+ *
+ * Copyright (c) 2015-present, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+const isNumber = __webpack_require__(/*! is-number */ "./node_modules/is-number/index.js");
+
+const toRegexRange = (min, max, options) => {
+  if (isNumber(min) === false) {
+    throw new TypeError('toRegexRange: expected the first argument to be a number');
+  }
+
+  if (max === void 0 || min === max) {
+    return String(min);
+  }
+
+  if (isNumber(max) === false) {
+    throw new TypeError('toRegexRange: expected the second argument to be a number.');
+  }
+
+  let opts = { relaxZeros: true, ...options };
+  if (typeof opts.strictZeros === 'boolean') {
+    opts.relaxZeros = opts.strictZeros === false;
+  }
+
+  let relax = String(opts.relaxZeros);
+  let shorthand = String(opts.shorthand);
+  let capture = String(opts.capture);
+  let wrap = String(opts.wrap);
+  let cacheKey = min + ':' + max + '=' + relax + shorthand + capture + wrap;
+
+  if (toRegexRange.cache.hasOwnProperty(cacheKey)) {
+    return toRegexRange.cache[cacheKey].result;
+  }
+
+  let a = Math.min(min, max);
+  let b = Math.max(min, max);
+
+  if (Math.abs(a - b) === 1) {
+    let result = min + '|' + max;
+    if (opts.capture) {
+      return `(${result})`;
+    }
+    if (opts.wrap === false) {
+      return result;
+    }
+    return `(?:${result})`;
+  }
+
+  let isPadded = hasPadding(min) || hasPadding(max);
+  let state = { min, max, a, b };
+  let positives = [];
+  let negatives = [];
+
+  if (isPadded) {
+    state.isPadded = isPadded;
+    state.maxLen = String(state.max).length;
+  }
+
+  if (a < 0) {
+    let newMin = b < 0 ? Math.abs(b) : 1;
+    negatives = splitToPatterns(newMin, Math.abs(a), state, opts);
+    a = state.a = 0;
+  }
+
+  if (b >= 0) {
+    positives = splitToPatterns(a, b, state, opts);
+  }
+
+  state.negatives = negatives;
+  state.positives = positives;
+  state.result = collatePatterns(negatives, positives, opts);
+
+  if (opts.capture === true) {
+    state.result = `(${state.result})`;
+  } else if (opts.wrap !== false && (positives.length + negatives.length) > 1) {
+    state.result = `(?:${state.result})`;
+  }
+
+  toRegexRange.cache[cacheKey] = state;
+  return state.result;
+};
+
+function collatePatterns(neg, pos, options) {
+  let onlyNegative = filterPatterns(neg, pos, '-', false, options) || [];
+  let onlyPositive = filterPatterns(pos, neg, '', false, options) || [];
+  let intersected = filterPatterns(neg, pos, '-?', true, options) || [];
+  let subpatterns = onlyNegative.concat(intersected).concat(onlyPositive);
+  return subpatterns.join('|');
+}
+
+function splitToRanges(min, max) {
+  let nines = 1;
+  let zeros = 1;
+
+  let stop = countNines(min, nines);
+  let stops = new Set([max]);
+
+  while (min <= stop && stop <= max) {
+    stops.add(stop);
+    nines += 1;
+    stop = countNines(min, nines);
+  }
+
+  stop = countZeros(max + 1, zeros) - 1;
+
+  while (min < stop && stop <= max) {
+    stops.add(stop);
+    zeros += 1;
+    stop = countZeros(max + 1, zeros) - 1;
+  }
+
+  stops = [...stops];
+  stops.sort(compare);
+  return stops;
+}
+
+/**
+ * Convert a range to a regex pattern
+ * @param {Number} `start`
+ * @param {Number} `stop`
+ * @return {String}
+ */
+
+function rangeToPattern(start, stop, options) {
+  if (start === stop) {
+    return { pattern: start, count: [], digits: 0 };
+  }
+
+  let zipped = zip(start, stop);
+  let digits = zipped.length;
+  let pattern = '';
+  let count = 0;
+
+  for (let i = 0; i < digits; i++) {
+    let [startDigit, stopDigit] = zipped[i];
+
+    if (startDigit === stopDigit) {
+      pattern += startDigit;
+
+    } else if (startDigit !== '0' || stopDigit !== '9') {
+      pattern += toCharacterClass(startDigit, stopDigit, options);
+
+    } else {
+      count++;
+    }
+  }
+
+  if (count) {
+    pattern += options.shorthand === true ? '\\d' : '[0-9]';
+  }
+
+  return { pattern, count: [count], digits };
+}
+
+function splitToPatterns(min, max, tok, options) {
+  let ranges = splitToRanges(min, max);
+  let tokens = [];
+  let start = min;
+  let prev;
+
+  for (let i = 0; i < ranges.length; i++) {
+    let max = ranges[i];
+    let obj = rangeToPattern(String(start), String(max), options);
+    let zeros = '';
+
+    if (!tok.isPadded && prev && prev.pattern === obj.pattern) {
+      if (prev.count.length > 1) {
+        prev.count.pop();
+      }
+
+      prev.count.push(obj.count[0]);
+      prev.string = prev.pattern + toQuantifier(prev.count);
+      start = max + 1;
+      continue;
+    }
+
+    if (tok.isPadded) {
+      zeros = padZeros(max, tok, options);
+    }
+
+    obj.string = zeros + obj.pattern + toQuantifier(obj.count);
+    tokens.push(obj);
+    start = max + 1;
+    prev = obj;
+  }
+
+  return tokens;
+}
+
+function filterPatterns(arr, comparison, prefix, intersection, options) {
+  let result = [];
+
+  for (let ele of arr) {
+    let { string } = ele;
+
+    // only push if _both_ are negative...
+    if (!intersection && !contains(comparison, 'string', string)) {
+      result.push(prefix + string);
+    }
+
+    // or _both_ are positive
+    if (intersection && contains(comparison, 'string', string)) {
+      result.push(prefix + string);
+    }
+  }
+  return result;
+}
+
+/**
+ * Zip strings
+ */
+
+function zip(a, b) {
+  let arr = [];
+  for (let i = 0; i < a.length; i++) arr.push([a[i], b[i]]);
+  return arr;
+}
+
+function compare(a, b) {
+  return a > b ? 1 : b > a ? -1 : 0;
+}
+
+function contains(arr, key, val) {
+  return arr.some(ele => ele[key] === val);
+}
+
+function countNines(min, len) {
+  return Number(String(min).slice(0, -len) + '9'.repeat(len));
+}
+
+function countZeros(integer, zeros) {
+  return integer - (integer % Math.pow(10, zeros));
+}
+
+function toQuantifier(digits) {
+  let [start = 0, stop = ''] = digits;
+  if (stop || start > 1) {
+    return `{${start + (stop ? ',' + stop : '')}}`;
+  }
+  return '';
+}
+
+function toCharacterClass(a, b, options) {
+  return `[${a}${(b - a === 1) ? '' : '-'}${b}]`;
+}
+
+function hasPadding(str) {
+  return /^-?(0+)\d/.test(str);
+}
+
+function padZeros(value, tok, options) {
+  if (!tok.isPadded) {
+    return value;
+  }
+
+  let diff = Math.abs(tok.maxLen - String(value).length);
+  let relax = options.relaxZeros !== false;
+
+  switch (diff) {
+    case 0:
+      return '';
+    case 1:
+      return relax ? '0?' : '0';
+    case 2:
+      return relax ? '0{0,2}' : '00';
+    default: {
+      return relax ? `0{0,${diff}}` : `0{${diff}}`;
+    }
+  }
+}
+
+/**
+ * Cache
+ */
+
+toRegexRange.cache = {};
+toRegexRange.clearCache = () => (toRegexRange.cache = {});
+
+/**
+ * Expose `toRegexRange`
+ */
+
+module.exports = toRegexRange;
+
+
+/***/ }),
+
+/***/ "./src/main/event-handler.ts":
+/*!***********************************!*\
+  !*** ./src/main/event-handler.ts ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var chokidar = __importStar(__webpack_require__(/*! chokidar */ "./node_modules/chokidar/index.js"));
+var os = __importStar(__webpack_require__(/*! os */ "os"));
+var fs = __importStar(__webpack_require__(/*! fs */ "fs"));
+// Default download path for windows
+var path = "\\users\\" + os.userInfo().username + "\\downloads";
+// Make sure to get this data from a config file later
+var categories = {
+    'Images': ['png', 'jpg', 'gif'],
+    'Executables/Installers': ['msi', 'exe']
+};
+var mappedCategories = mapCategories();
+var watcher = chokidar.watch(path, {
+    persistent: true,
+    depth: 2,
+    awaitWriteFinish: {
+        stabilityThreshold: 0,
+        pollInterval: 100
+    },
+    ignoreInitial: false
+});
+watcher.on('add', added);
+/**
+ *
+ * @param {string} origin Path of the new file, looks somthing like this: c:\users\user-name\downloads\filename.extension`
+ */
+function added(origin) {
+    var name = origin.split('\\').pop();
+    var extension = name.split('.').pop();
+    var dest = {};
+    // Validate of our extension has a defined category before we continue
+    if (!mappedCategories[extension]) {
+        return;
+    }
+    dest.dir = path + "\\" + mappedCategories[extension];
+    dest.path = dest.dir + "\\" + name;
+    // Moving the file triggers the 'add' event again, validate the paths to avoid executing logic twice
+    if (dest.path && dest.path.toLowerCase() != origin.toLowerCase()) {
+        // Validate that our destination exists
+        if (dest && !fs.existsSync(dest.dir)) {
+            fs.mkdirSync(dest.dir);
+        }
+        fs.renameSync(origin, dest.path);
+    }
+}
+/**
+ * Takes the defined categories and maps them so that we can easily know which extension file goes to which folder,
+ * creates some data redundancy but gets rid of any lookup time if we want to know where a file should go
+ */
+function mapCategories() {
+    var paths = Object.keys(categories);
+    var map = {};
+    paths.forEach(function (path) {
+        var extensions = categories[path];
+        extensions.forEach(function (extension) {
+            map[extension] = path;
+        });
+    });
+    return map;
+}
+
+
+/***/ }),
+
+/***/ "./src/main/main.ts":
+/*!**************************!*\
+  !*** ./src/main/main.ts ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var electron_1 = __webpack_require__(/*! electron */ "electron");
+// Live reload for the render process
+__webpack_require__(/*! electron-reload */ "electron-reload")('dist/app');
+// let win = null;
+var isQuiting = false;
+var win;
+var tray;
+function init() {
+    win = createWindow();
+    tray = createTray();
+}
+function createWindow() {
+    // Create the browser window.
+    win = new electron_1.BrowserWindow({
+        width: 800,
+        height: 600,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    });
+    // Path to index on the dist folder   
+    win.loadFile('app/index.html');
+    win.on('close', function (event) {
+        if (!isQuiting) {
+            event.preventDefault();
+            win.hide();
+            return false;
+        }
+    });
+    return win;
+}
+function createTray() {
+    var tray = new electron_1.Tray('favicon.ico');
+    var contextMenu = electron_1.Menu.buildFromTemplate([
+        {
+            label: 'Quit',
+            click: function () {
+                isQuiting = true;
+                electron_1.app.quit();
+            }
+        },
+    ]);
+    tray.setToolTip('Files sorter.');
+    tray.setContextMenu(contextMenu);
+    tray.on('click', function () {
+        win.show();
+    });
+    return tray;
+}
+electron_1.app.on('ready', init);
+
+
+/***/ }),
+
+/***/ 0:
+/*!************************************************************!*\
+  !*** multi ./src/main/main.ts ./src/main/event-handler.ts ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ./src/main/main.ts */"./src/main/main.ts");
+module.exports = __webpack_require__(/*! ./src/main/event-handler.ts */"./src/main/event-handler.ts");
+
+
+/***/ }),
+
+/***/ "electron":
+/*!***************************!*\
+  !*** external "electron" ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("electron");
+
+/***/ }),
+
+/***/ "electron-reload":
+/*!*********************************************!*\
+  !*** external "require('electron-reload')" ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require('electron-reload');
+
+/***/ }),
+
+/***/ "events":
+/*!*************************!*\
+  !*** external "events" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("events");
+
+/***/ }),
+
+/***/ "fs":
+/*!*********************!*\
+  !*** external "fs" ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("fs");
+
+/***/ }),
+
+/***/ "fsevents":
+/*!**************************************!*\
+  !*** external "require('fsevents')" ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+if(typeof require('fsevents') === 'undefined') {var e = new Error("Cannot find module 'require('fsevents')'"); e.code = 'MODULE_NOT_FOUND'; throw e;}
+module.exports = require('fsevents');
+
+/***/ }),
+
+/***/ "os":
+/*!*********************!*\
+  !*** external "os" ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("os");
+
+/***/ }),
+
+/***/ "path":
+/*!***********************!*\
+  !*** external "path" ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("path");
+
+/***/ }),
+
+/***/ "stream":
+/*!*************************!*\
+  !*** external "stream" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("stream");
+
+/***/ }),
+
+/***/ "util":
+/*!***********************!*\
+  !*** external "util" ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("util");
+
+/***/ })
+
+/******/ });
+//# sourceMappingURL=main.js.map

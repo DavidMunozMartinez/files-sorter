@@ -11,7 +11,8 @@ module.exports = [
       fsevents: "require('fsevents')",
       "electron-reload": "require('electron-reload')"
     },
-    // mode: 'development',
+    mode: 'development',
+    devtool: 'source-map',
     module: {
       rules: [{
         test: /\.ts$/,
@@ -20,7 +21,8 @@ module.exports = [
     },
     output: {
       path: __dirname + '/dist',
-      filename: 'main.js'
+      filename: 'main.js',
+      devtoolModuleFilenameTemplate: '[absolute-resource-path]'
     },
     plugins: [
         ElectronReloadPlugin()
@@ -30,6 +32,7 @@ module.exports = [
     target: 'web',
     entry: ['./src/render/app.ts', './src/render/styles.scss'],
     mode: 'development',
+    devtool: 'source-map',
     module: {
       rules: [{
         test: /\.ts$/,
