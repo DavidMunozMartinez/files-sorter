@@ -15,15 +15,12 @@ export class CategoriesHandler {
         this.setupEvents();
     }
 
-    setActiveFolder(folder: string | null) {
-        this.activeFolder = folder;
-        if (folder) {
+    setActiveFolder(folder: string) {
+        if (this.activeFolder != folder) {
+            this.activeFolder = folder;
             this.hideOverlay();
             this.activeCategoryList = this.getCategoriesForFolder(folder);
             this.renderCategoryList();
-        }
-        else {
-            this.showOverlay();
         }
     }
 
@@ -86,6 +83,9 @@ export class CategoriesHandler {
     }
 
     private renderCategoryList() {
+        if (this.listRef) {
+            this.listRef.innerHTML = ''
+        }
         if (this.activeCategoryList && this.activeCategoryList.length > 0) {
             this.activeCategoryList.forEach((category) => {
                 this.appendListItem(category);
