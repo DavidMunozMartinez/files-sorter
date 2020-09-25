@@ -73,6 +73,7 @@
         border: 1px solid $secondary-background;
         border-radius: 5px;
         overflow: scroll;
+        display: block;
         .folder-list-item {
             height: 36px;
             // border-bottom: 1px solid $secondary-background;
@@ -80,5 +81,9 @@
             padding-left: 15px;
             box-sizing: border-box;
         }
+    }
+
+    .smart-hover-shadow {
+        background: rgba(0,0,0,0.2);
     }
 }

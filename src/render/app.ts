@@ -1,5 +1,4 @@
 let platform = require('electron-platform');
-const { dialog } = require('electron').remote;
 import { FolderHandler } from './left-column/folder-handler';
 
 if (!platform.isDarwin) {
@@ -16,16 +15,16 @@ if (!platform.isDarwin) {
 
 let folderHandler = new FolderHandler('div.add-folder', 'div.submit-folder');
 let displayFolder = document.querySelector('.folder-path');
-let foldersRef = document.querySelector('.folder-list');
+let folderListRef: SmartHover | null = document.querySelector('.folder-list');
 
-folderHandler.on('submit', (event: any) => {
+folderHandler.on('submit', () => {
     if (folderHandler.path) {
         addToFolderList(folderHandler.path);
     }
 });
 
-folderHandler.on('change', (event: any) => {
-    if (displayFolder && folderHandler.path)  {
+folderHandler.on('change', () => {
+    if (displayFolder && folderHandler.path) {
         displayFolder.innerHTML = folderHandler.path;
         displayFolder.setAttribute('title', folderHandler.path);
     }
@@ -37,10 +36,10 @@ if (folderHandler.folders && folderHandler.folders.length > 0) {
     })
 }
 
-function addToFolderList (folder: string) {
-    if (foldersRef && folder) {
+function addToFolderList(folder: string) {
+    if (folderListRef && folder) {
         let listElement = createListElement(folder);
-        foldersRef.append(listElement);
+        folderListRef.append(listElement);
     }
 }
 
@@ -49,11 +48,17 @@ function createListElement(folder: string): Element {
     element.innerHTML = folder;
     element.classList.add('folder-list-item');
     element.onclick = () => {
-        loadFolder(folder);
+        // loadFolder(folder);
     }
     return element;
 }
 
-function loadFolder(folder: string) {}
+// Define WebComponents
+import { SmartHover } from './webcomponents/smart-hover';
+window.customElements.define('smart-hover', SmartHover);
+
+
+
+
 
 
