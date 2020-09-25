@@ -60,6 +60,12 @@ div[style="position: relative;"] + .main-content {
     top: 29px;
 }
 
+.smart-hover-shadow {
+    background: rgba(255,255,255,0.1);
+    border-radius: 7px;
+    z-index: 0;
+}
+
 .footer {
     color: rgb(83, 83, 83);
     position: fixed;

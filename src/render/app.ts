@@ -32,8 +32,9 @@ folderHandler.on('change', () => {
     }
 });
 
-if (folderHandler.folders && folderHandler.folders.length > 0) {
-    folderHandler.folders.forEach((folder) => {
+if (folderHandler.folders && Object.keys(folderHandler.folders).length > 0) {
+    let folders = Object.keys(folderHandler.folders);
+    folders.forEach((folder) => {
         addToFolderList(folder);
     })
 }

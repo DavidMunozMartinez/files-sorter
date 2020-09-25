@@ -3,7 +3,7 @@ import { remote } from 'electron';
 
 export class FolderHandler {
     public path: string | null;
-    public folders: Array<string>;
+    public folders: any;
     public activeRef!: Element;
 
     private trigger: Element | null;
@@ -62,7 +62,7 @@ export class FolderHandler {
     }
 
     private getLocalFolders() {
-        let data = [];
+        let data = {};
         let raw: string | null = localStorage.getItem('folders');
         if (raw) {
             data = JSON.parse(raw);
@@ -71,10 +71,12 @@ export class FolderHandler {
     }
 
     private saveLocalFolder(folder: string): boolean {
-        let data = this.getLocalFolders();
+        let data: any = this.getLocalFolders();
         let success = false;
-        if (data.indexOf(folder) == -1) {
-            data.push(folder);
+        if (!data[folder]) {
+            data[folder] = {
+                categories: {}
+            }
             localStorage.setItem('folders', JSON.stringify(data));
             success = true;
         }
