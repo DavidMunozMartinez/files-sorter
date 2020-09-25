@@ -59,12 +59,12 @@ module.exports = [{
           test: /\.(ttf|eot|svg|gif|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
           use: [{
             loader: 'file-loader',
-            options: {
-              name: "[path][name].[ext]"
-            }
           }]
         }
       ]
+    },
+    resolve: {
+      extensions: ['.ts', '.js']
     },
     output: {
       path: __dirname + '/dist/app',

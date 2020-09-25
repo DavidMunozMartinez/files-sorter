@@ -59,6 +59,8 @@
             outline-color: unset;
             outline: unset;
             border-radius: 0;
+            overflow: hidden;
+            padding: 5px;
         }
     }
 
@@ -70,5 +72,13 @@
         bottom: 0;
         border: 1px solid $secondary-background;
         border-radius: 5px;
+        overflow: scroll;
+        .folder-list-item {
+            height: 36px;
+            // border-bottom: 1px solid $secondary-background;
+            padding: 6px;
+            padding-left: 15px;
+            box-sizing: border-box;
+        }
     }
 }

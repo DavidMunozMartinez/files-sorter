@@ -7,7 +7,7 @@ $secondary: rgb(77, 126, 199);
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 @import '../../node_modules/material-icons-font/material-icons-font.css';
 
-@import 'left-column.scss';
+@import './left-column/left-column.scss';
 @import 'right-column.scss';
 
 div#electron-titlebar {
