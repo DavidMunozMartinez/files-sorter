@@ -1,5 +1,6 @@
 let platform = require('electron-platform');
 import { FolderHandler } from './left-column/folder-handler';
+import { CategoriesHandler } from './right-column/categories-handler';
 
 if (!platform.isDarwin) {
     const titlebar = document.createElement('div');
@@ -14,6 +15,7 @@ if (!platform.isDarwin) {
 }
 
 let folderHandler = new FolderHandler('div.add-folder', 'div.submit-folder');
+let categoriesHandler = new CategoriesHandler();
 let displayFolder = document.querySelector('.folder-path');
 let folderListRef: SmartHover | null = document.querySelector('.folder-list');
 
@@ -48,15 +50,19 @@ function createListElement(folder: string): Element {
     element.innerHTML = folder;
     element.classList.add('folder-list-item');
     element.addEventListener('click', (event) => {
-        let target = event.target;
-        if (folderHandler.activeRef) {
-            folderHandler.activeRef.classList.toggle('active');
-        }
-        folderHandler.activeRef = element;
-        folderHandler.activeRef.classList.toggle('active');
-
+        selectionChanged(event);
     });
     return element;
+}
+
+function selectionChanged (event: any) {
+    let target = event.target;
+    if (folderHandler.activeRef) {
+        folderHandler.activeRef.classList.toggle('active');
+    }
+    folderHandler.activeRef = target;
+    folderHandler.activeRef.classList.toggle('active');
+    categoriesHandler.setActiveFolder(folderHandler.activeRef.innerHTML);
 }
 
 // Define WebComponents

@@ -8,7 +8,7 @@ $secondary: rgb(77, 126, 199);
 @import '../../node_modules/material-icons-font/material-icons-font.css';
 
 @import './left-column/left-column.scss';
-@import 'right-column.scss';
+@import './right-column/right-column.scss';
 
 div#electron-titlebar {
     height: 29px;
@@ -25,6 +25,7 @@ div#electron-titlebar {
 }
 
 body {
+    font-size: 13px;
     font-family: 'Ubuntu', sans-serif;
     background: $primary-background;
     color: $text;
