@@ -4,6 +4,8 @@ import { remote } from 'electron';
 export class FolderHandler {
     public path: string | null;
     public folders: Array<string>;
+    public activeRef!: Element;
+
     private trigger: Element | null;
     private submitter: Element | null;
     private subcriptions: any = {

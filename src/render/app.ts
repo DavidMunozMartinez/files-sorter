@@ -47,9 +47,15 @@ function createListElement(folder: string): Element {
     let element = document.createElement('div');
     element.innerHTML = folder;
     element.classList.add('folder-list-item');
-    element.onclick = () => {
-        // loadFolder(folder);
-    }
+    element.addEventListener('click', (event) => {
+        let target = event.target;
+        if (folderHandler.activeRef) {
+            folderHandler.activeRef.classList.toggle('active');
+        }
+        folderHandler.activeRef = element;
+        folderHandler.activeRef.classList.toggle('active');
+
+    });
     return element;
 }
 

@@ -25,8 +25,8 @@ function init() {
 function createWindow(): BrowserWindow {
     // Create the browser window.
     win = new BrowserWindow({
-        width: 700,
-        height: 500,
+        width: 850,
+        height: 600,
         frame: process.platform == 'darwin',
         maximizable: false,
         webPreferences: {

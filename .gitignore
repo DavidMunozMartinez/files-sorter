@@ -1,6 +1,6 @@
 node_modules
 dist/**/*.js
 dist/**/*.map
-dist/app/**.woff
-dist/app/**.woff2
-dist/app/**.ttf
+dist/app/*.woff
+dist/app/*.woff2
+dist/app/*.ttf
