@@ -132,6 +132,11 @@ export class CategoriesHandler {
     }
 
     private onCategoryClick(event: any, category: string) {
+        if (!this.activeFolder) {
+            return;
+        }
+
+        this.extensionHandler.setActiveFolder(this.activeFolder);
         this.extensionHandler.setActiveCategory(category);
         let active = this.listRef?.querySelector('.active');
         let target = event.target;

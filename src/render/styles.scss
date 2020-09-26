@@ -46,9 +46,73 @@ body {
         flex: 1;
         position: relative;
     }
-    .column .column-title {
-        width: 100%;
-        text-align: center;
+
+    .column {
+        .column-title {
+            width: 100%;
+            text-align: right;
+            box-sizing: border-box;
+            padding: 5px;
+            padding-right: 18px;
+            margin-right: 15px;
+
+        }
+        .input-container {
+            height: 30px;
+            width: 130px;
+            position: absolute;
+            margin: 11px;
+            cursor: pointer;
+            top: 0px;
+            i {
+                top: 3px;
+                left: 3px;
+                position: absolute;
+                pointer-events: none;
+            }
+            div:focus+i {
+                display: none;
+            }
+        }
+
+        .category-input,
+        .extensions-input,
+        .folder-input {
+            transition: all 0.2s;
+            background: $secondary;
+            outline-color: unset;
+            outline: unset;
+            border-radius: 5px;
+            height: 30px;
+            width: 30px;
+            padding: 7px;
+            box-sizing: border-box;
+        }
+
+        div.category-input:hover,
+        div.extensions-input:hover,
+        div.folder-input:hover,
+        div.category-input:focus,
+        div.extensions-input:focus {
+            border-radius: 10px;
+        }
+
+        .section-tip {
+            color: $secondary-background-highlight;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0;
+            display: none;
+        }
+        .section-tip.active {
+            opacity: 1;
+            z-index: 1;
+            display: block;
+            box-sizing: border-box;
+            position: absolute;
+            margin: 20px;
+        }
+
     }
 }
 
@@ -69,7 +133,7 @@ div[style="position: relative;"] + .main-content {
 .footer {
     color: rgb(83, 83, 83);
     position: fixed;
-    bottom: 5px;
+    bottom: 3px;
     left: 5px;
     font-size: 11px;
 }

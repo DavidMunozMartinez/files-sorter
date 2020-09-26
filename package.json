@@ -27,6 +27,7 @@
     "webpack-electron-reload": "^1.0.1"
   },
   "dependencies": {
+    "chokidar": "^3.4.2",
     "electron-titlebar": "0.0.3",
     "material-icons": "^0.3.1",
     "material-icons-font": "^2.1.0",

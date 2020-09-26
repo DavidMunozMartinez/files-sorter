@@ -1,5 +1,13 @@
 import { app, BrowserWindow, Tray, Menu, nativeImage } from 'electron';
 import * as path from 'path';
+/**
+ * I dont know how, i dont know why, and i dont want to know, its 3:30AM and at this point i don't care
+ * for some god damn reason, chokidar needs to be imported in the main process so that it works properly
+ * in the render process, i am leaving this here as a reminder that i am not as good developer as i think
+ * i am
+ */
+// import * as chokidar from 'chokidar';
+
 // Live reload for the render process
 require('electron-reload')('dist/app');
 
@@ -25,7 +33,7 @@ function init() {
 function createWindow(): BrowserWindow {
     // Create the browser window.
     win = new BrowserWindow({
-        width: 850,
+        width: 810,
         height: 600,
         frame: process.platform == 'darwin',
         maximizable: false,

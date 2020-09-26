@@ -15,46 +15,8 @@
         flex: 1;
     }
 
-    .input-container {
-        height: 30px;
-        width: 130px;
-        position: absolute;
-        margin: 11px;
-        cursor: pointer;
-        top: 0px;
-        i {
-            top: 3px;
-            left: 3px;
-            position: absolute;
-            pointer-events: none;
-        }
-        div:focus+i {
-            display: none;
-        }
-    }
-    
-    .category-input,
-    .extensions-input {
-        transition: all 0.2s;
-        background: $secondary;
-        outline-color: unset;
-        outline: unset;
-        border-radius: 5px;
-        height: 30px;
-        width: 30px;
-        padding: 7px;
-        box-sizing: border-box;
-    }
-
-    .category-input:hover,
-    .extensions-input:hover,
-    .category-input:focus,
-    .extensions-input:focus {
-        border-radius: 10px;
-    }
-
-    .category-input:focus,
-    .extensions-input:focus {
+    div.category-input:focus,
+    div.extensions-input:focus {
         border-radius: 5px;
         border: 1px solid #535353;
         width: 130px;
@@ -89,22 +51,8 @@
 
         .extension-list-item {
             border: 1px solid $secondary-background-highlight;
-        }
-
-        .section-tip {
-            color: $secondary-background-highlight;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0;
-            display: none;
-        }
-        .section-tip.active {
-            opacity: 1;
-            z-index: 1;
-            display: block;
-            box-sizing: border-box;
-            position: absolute;
-            margin: 20px;
+            height: 30px;
+            padding: 8px;
         }
     }
 

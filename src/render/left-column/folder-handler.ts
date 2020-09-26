@@ -1,27 +1,27 @@
-// import { dialog } from 'electron';
 import { remote } from 'electron';
 
 export class FolderHandler {
     public path: string | null;
     public folders: any;
     public activeRef!: Element;
+    listRef: HTMLElement | null;
 
     private trigger: Element | null;
-    private submitter: Element | null;
     private subcriptions: any = {
         change: [],
         submit: []
     };
 
-    constructor (trigger: string, submitter: string) {
+    constructor (trigger: string) {
         this.path = null;
-        this.trigger = document.querySelector(trigger)
-        this.submitter = document.querySelector(submitter);
-
+        this.trigger = document.querySelector(trigger);
         this.trigger?.addEventListener('click', () => this.select(event));
-        this.submitter?.addEventListener('click', () => this.submit(event));
-
+        this.listRef = document.querySelector('smart-hover.folder-list');
         this.folders = this.getLocalFolders();
+
+        if (Object.keys(this.folders).length == 0) {
+            this.showTip();
+        }
     }
 
     on(event: string, callback: any) {
@@ -38,13 +38,14 @@ export class FolderHandler {
         if (path.filePaths.length > 0) {
             this.path = path.filePaths[0];
         }
-
+        this.submit(event);
         this.dispatchEvents('change', event)
     }
 
     submit(event: any) {
         if (this.path && this.saveLocalFolder(this.path)) {
             this.dispatchEvents('submit', event);
+            this.removeTip();
         }
     }
 
@@ -81,5 +82,19 @@ export class FolderHandler {
             success = true;
         }
         return success;
+    }
+
+    private showTip() {
+        let tip = this.listRef?.querySelector('.section-tip');
+        if (tip && !tip.classList.contains('active')) {
+            tip.classList.add('active');
+        }
+    }
+
+    private removeTip() {
+        let tip = this.listRef?.querySelector('.section-tip');
+        if (tip && tip.classList.contains('active')) {
+            tip.classList.remove('active');
+        }
     }
 }

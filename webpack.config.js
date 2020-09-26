@@ -5,7 +5,7 @@ const ElectronReloadPlugin = require('webpack-electron-reload')({
 
 module.exports = [{
     target: 'electron-main',
-    entry: ['./src/main/main.ts', './src/main/event-handler.ts'],
+    entry: ['./src/main/main.ts'],
     externals: {
       fsevents: "require('fsevents')",
       "electron-reload": "require('electron-reload')"
@@ -35,7 +35,8 @@ module.exports = [{
     mode: 'development',
     devtool: 'source-map',
     externals: {
-      'electron-titlebar': 'require("electron-titlebar")'
+      'electron-titlebar': 'require("electron-titlebar")',
+      fsevents: "require('fsevents')",
     },
     module: {
       rules: [{
