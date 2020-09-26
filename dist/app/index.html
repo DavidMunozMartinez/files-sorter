@@ -20,7 +20,11 @@
                     <div class="submit-folder">
                         <i class="material-icons">check</i>
                     </div>
-                    <div class="folder-path" spellcheck="false"></div>
+                    <div class="folder-path" spellcheck="false">
+                        <span class="placeholder">
+                           <- Select a folder that needs organizing.
+                        </span>
+                    </div>
                 </div>
                 
                 <smart-hover class="folder-list">
@@ -30,20 +34,24 @@
         </div>
         <div class="column right-column">
             <div class="categories">
-                <div class="inactive-overlay"></div>
+                <div class="inactive-overlay">
+                </div>
                 <div class="column-title">
                     <p>Categories</p>
                 </div>
                 <div class="input-container">
-                    <div class="category-input" contenteditable="true"></div>
+                    <div class="category-input" contenteditable="true">
+                    </div>
                     <i class="material-icons">add</i>
                 </div>
 
                 <smart-hover class="category-list">
+                    <span class="section-tip">Categories are subfolders that will hold your organized files. You can create as many categories as you want.</span>
                 </smart-hover>
             </div>
             <div class="extensions">
-                <div class="inactive-overlay"></div>
+                <div class="inactive-overlay">
+                </div>
                 <div class="column-title">
                     <p>Extensions</p>
                 </div>
@@ -53,8 +61,9 @@
                     <i class="material-icons">add</i>
                 </div>
 
-                <smart-hover class="extension-list">
-                </smart-hover>
+                <div class="extension-list">
+                    <span class="section-tip">Here you decide which files go into your category by extensions, extensions are what you find after the dot in your file names, IE. *.doc, *.png, there is no need to include the dot.</span>
+                </div>
             </div>
         </div> 
     </div>

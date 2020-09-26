@@ -69,6 +69,7 @@
         position: absolute;
         bottom: 0;
         padding: 5px;
+        box-sizing: border-box;
         .category-list-item,
         .extension-list-item {
             height: 40px;
@@ -77,14 +78,33 @@
             padding-right: 18px;
             width: fit-content;
             box-sizing: border-box;
-            // background: rgba(255,255,255,0.05);
             display: inline-block;
             margin: 5px;
             border-radius: 5px;
             cursor: pointer;
             &.active {
-                background: rgba(255,255,255, 0.1);
+                background: rgba(255,255,255, 0.25);
             }
+        }
+
+        .extension-list-item {
+            border: 1px solid $secondary-background-highlight;
+        }
+
+        .section-tip {
+            color: $secondary-background-highlight;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0;
+            display: none;
+        }
+        .section-tip.active {
+            opacity: 1;
+            z-index: 1;
+            display: block;
+            box-sizing: border-box;
+            position: absolute;
+            margin: 20px;
         }
     }
 
@@ -96,6 +116,10 @@
         background: rgba(0,0,0,0.3);
         opacity: 1;
         transition: all 0.2s;
+        color: $secondary-background-highlight;
+        padding: 30px;
+        padding-top: 100px;
+        box-sizing: border-box;
     }
     .inactive-overlay.hiden {
         opacity: 0;

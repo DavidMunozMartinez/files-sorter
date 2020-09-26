@@ -9,7 +9,7 @@ export class ExtensionsHandler {
     constructor() {
         this.elementRef = document.querySelector('div.extensions');
         this.inputRef = this.elementRef?.querySelector('div.extensions-input');
-        this.listRef = this.elementRef?.querySelector('smart-hover.extension-list');
+        this.listRef = this.elementRef?.querySelector('div.extension-list');
         this.overlayRef = this.elementRef?.querySelector('div.inactive-overlay');
         this.inputRef?.addEventListener('keydown', (event) => { this.inputKeydown(event) })
     }
@@ -25,6 +25,12 @@ export class ExtensionsHandler {
             let extensions = this.getExtensionsForCategory(this.activeFolder, this.activeCategory);
             this.renderExtensionList(extensions);
             this.hideOverlay();
+            if (extensions.length == 0) {
+                this.showTip();
+            }
+            else {
+                this.removeTip();
+            }
         }
     }
 
@@ -39,7 +45,6 @@ export class ExtensionsHandler {
         extensions.map((extension) => {
             this.appendToList(extension);
         });
-
     }
 
     private clearExtensionList() {
@@ -103,9 +108,13 @@ export class ExtensionsHandler {
             let value = event.target.innerText;
             this.appendToList(value);
             this.storeExtension(value);
-            target.innerText = '';
+            event.preventDefault();
             target.blur();
             target.focus();
+            this.removeTip();
+            if (this.inputRef) {
+                this.inputRef.innerText = '';
+            }
         }
     }
 
@@ -115,4 +124,17 @@ export class ExtensionsHandler {
         }
     }
 
+    private showTip() {
+        let tip = this.listRef?.querySelector('.section-tip');
+        if (tip && !tip.classList.contains('active')) {
+            tip.classList.add('active');
+        }
+    }
+
+    private removeTip() {
+        let tip = this.listRef?.querySelector('.section-tip');
+        if (tip && tip.classList.contains('active')) {
+            tip.classList.remove('active');
+        }
+    }
 }

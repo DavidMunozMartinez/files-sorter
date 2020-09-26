@@ -10,7 +10,7 @@ export class CategoriesHandler {
 
     private extensionHandler: ExtensionsHandler;
 
-    constructor () {
+    constructor() {
         this.elementRef = document.querySelector('div.categories');
         this.inputRef = this.elementRef?.querySelector('div.category-input');
         this.listRef = this.elementRef?.querySelector('smart-hover.category-list');
@@ -28,6 +28,12 @@ export class CategoriesHandler {
             this.activeCategoryList = this.getCategoriesForFolder(folder);
             this.renderCategoryList();
             this.extensionHandler.setActiveFolder(folder);
+            if (this.activeCategoryList.length == 0) {
+                setTimeout(() => {
+                    this.inputRef?.focus();
+                    this.showTip();
+                }, 500);
+            }
         }
     }
 
@@ -36,7 +42,7 @@ export class CategoriesHandler {
             let value = this.inputRef.innerText;
             this.storeCategory(value);
             this.appendListItem(value);
-            this.inputRef.innerText='';
+            this.inputRef.innerText = '';
         }
     }
 
@@ -44,6 +50,7 @@ export class CategoriesHandler {
         this.inputRef?.addEventListener('keydown', (event: any) => {
             if (event.which == 13) {
                 this.addCategory();
+                this.removeTip();
                 event.preventDefault();
                 event.target.blur();
                 event.target.focus();
@@ -92,6 +99,12 @@ export class CategoriesHandler {
                 this.appendListItem(category);
             });
         }
+
+        if (this.activeCategoryList.length > 0) {
+            setTimeout(() => {
+                this.extensionHandler.inputRef?.focus()
+            }, 500);
+        }
     }
 
     private clearCategoryList() {
@@ -111,9 +124,11 @@ export class CategoriesHandler {
         let item = document.createElement('div');
         item.classList.add('category-list-item');
         item.innerText = value;
-        item.addEventListener('click', (event) => { this.onCategoryClick(event ,value) });
+        item.addEventListener('click', (event) => { this.onCategoryClick(event, value) });
         this.listRef?.append(item);
-        
+        this.onCategoryClick({
+            target: item
+        }, value);
     }
 
     private onCategoryClick(event: any, category: string) {
@@ -123,10 +138,28 @@ export class CategoriesHandler {
 
         if (active == target) {
             return;
-        } 
+        }
         if (active) {
             active.classList.remove('active');
         }
         event.target.classList.add('active');
+
+        setTimeout(() => {
+            this.extensionHandler.inputRef?.focus();
+        }, 500)
+    }
+
+    private showTip() {
+        let tip = this.listRef?.querySelector('.section-tip');
+        if (tip && !tip.classList.contains('active')) {
+            tip.classList.add('active');
+        }
+    }
+
+    private removeTip() {
+        let tip = this.listRef?.querySelector('.section-tip');
+        if (tip && tip.classList.contains('active')) {
+            tip.classList.remove('active');
+        }
     }
 }

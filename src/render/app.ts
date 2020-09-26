@@ -43,6 +43,7 @@ function addToFolderList(folder: string) {
     if (folderListRef && folder) {
         let listElement = createListElement(folder);
         folderListRef.append(listElement);
+        selectionChanged(listElement);
     }
 }
 
@@ -51,13 +52,12 @@ function createListElement(folder: string): Element {
     element.innerHTML = folder;
     element.classList.add('folder-list-item');
     element.addEventListener('click', (event) => {
-        selectionChanged(event);
+        selectionChanged(event.target);
     });
     return element;
 }
 
-function selectionChanged (event: any) {
-    let target = event.target;
+function selectionChanged (target: any) {
     if (folderHandler.activeRef) {
         folderHandler.activeRef.classList.toggle('active');
     }
