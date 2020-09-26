@@ -62,26 +62,28 @@
         background: unset;
     }
 
-    .category-list {
+    .category-list,
+    .extension-list {
         height: calc(100% - 55px);
         width: 100%;
         position: absolute;
         bottom: 0;
         padding: 5px;
-        .category-list-item {
+        .category-list-item,
+        .extension-list-item {
             height: 40px;
             padding: 12px;
             padding-left: 18px;
             padding-right: 18px;
             width: fit-content;
             box-sizing: border-box;
-            background: rgba(255,255,255,0.08);
+            // background: rgba(255,255,255,0.05);
             display: inline-block;
             margin: 5px;
             border-radius: 5px;
             cursor: pointer;
-            &:hover {
-                background: rgba(255,255,255, 0.12);
+            &.active {
+                background: rgba(255,255,255, 0.1);
             }
         }
     }

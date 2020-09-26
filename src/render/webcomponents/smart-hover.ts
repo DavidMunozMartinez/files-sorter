@@ -1,5 +1,6 @@
 export class SmartHover extends HTMLElement {
-    private props = ['top', 'left', 'height', 'width']
+    private props = ['top', 'left', 'height', 'width'];
+    private totalChilds = 0;
 
     shadow!: HTMLElement;
     active!: HTMLElement;
@@ -15,12 +16,21 @@ export class SmartHover extends HTMLElement {
             this.shadow.style.opacity = '0';
         });
         this.addEventListener('mouseenter', () => {
-            this.shadow.style.opacity = '1';
+            if (this.children.length > 1) {
+                this.shadow.style.opacity = '1';
+            }
+
+            if (this.totalChilds != this.children.length) {
+                this.applyChilds();
+            }
+
+            this.totalChilds = this.children.length;
         });
     }
 
     // Public so the user can re-apply the listeners if the container has changed
     public applyChilds() {
+        this.totalChilds = this.children.length;
         for (let i = 0; i < this.children.length; i++) {
             let child = this.children[i];
             if (child != this.shadow) {

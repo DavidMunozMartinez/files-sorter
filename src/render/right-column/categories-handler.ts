@@ -1,3 +1,5 @@
+import { ExtensionsHandler } from './extensions-handler';
+
 export class CategoriesHandler {
     elementRef: HTMLElement | null;
     overlayRef: HTMLElement | null | undefined;
@@ -6,12 +8,16 @@ export class CategoriesHandler {
     activeFolder: string | null;
     activeCategoryList!: Array<string>;
 
+    private extensionHandler: ExtensionsHandler;
+
     constructor () {
         this.elementRef = document.querySelector('div.categories');
         this.inputRef = this.elementRef?.querySelector('div.category-input');
         this.listRef = this.elementRef?.querySelector('smart-hover.category-list');
         this.overlayRef = this.elementRef?.querySelector('div.inactive-overlay');
         this.activeFolder = null;
+        this.extensionHandler = new ExtensionsHandler();
+
         this.setupEvents();
     }
 
@@ -21,13 +27,14 @@ export class CategoriesHandler {
             this.hideOverlay();
             this.activeCategoryList = this.getCategoriesForFolder(folder);
             this.renderCategoryList();
+            this.extensionHandler.setActiveFolder(folder);
         }
     }
 
     addCategory() {
         if (this.inputRef) {
             let value = this.inputRef.innerText;
-            this.storageNewCategory(value);
+            this.storeCategory(value);
             this.appendListItem(value);
             this.inputRef.innerText='';
         }
@@ -50,13 +57,7 @@ export class CategoriesHandler {
         }
     }
 
-    private showOverlay() {
-        if (this.overlayRef && this.overlayRef.classList.contains('hiden')) {
-            this.overlayRef.classList.remove('hiden')
-        }
-    }
-
-    private storageNewCategory(value: string) {
+    private storeCategory(value: string) {
         if (!this.activeFolder) {
             return;
         }
@@ -84,7 +85,7 @@ export class CategoriesHandler {
 
     private renderCategoryList() {
         if (this.listRef) {
-            this.listRef.innerHTML = ''
+            this.clearCategoryList();
         }
         if (this.activeCategoryList && this.activeCategoryList.length > 0) {
             this.activeCategoryList.forEach((category) => {
@@ -93,11 +94,39 @@ export class CategoriesHandler {
         }
     }
 
+    private clearCategoryList() {
+        if (!this.listRef) {
+            return;
+        }
+
+        let items = this.listRef.querySelectorAll('.category-list-item');
+
+        for (let i = 0; i < items.length; i++) {
+            let child = items[i];
+            this.listRef.removeChild(child);
+        }
+    }
+
     private appendListItem(value: string) {
         let item = document.createElement('div');
         item.classList.add('category-list-item');
         item.innerText = value;
+        item.addEventListener('click', (event) => { this.onCategoryClick(event ,value) });
         this.listRef?.append(item);
         
+    }
+
+    private onCategoryClick(event: any, category: string) {
+        this.extensionHandler.setActiveCategory(category);
+        let active = this.listRef?.querySelector('.active');
+        let target = event.target;
+
+        if (active == target) {
+            return;
+        } 
+        if (active) {
+            active.classList.remove('active');
+        }
+        event.target.classList.add('active');
     }
 }
