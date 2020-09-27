@@ -17,11 +17,10 @@ export class SmartHover extends HTMLElement {
             this.shadow.style.opacity = '0';
         });
         this.addEventListener('mouseenter', () => {
-            if (this.refChilds != this.children) {
+            if (this.totalChilds != this.children.length) {
                 this.applyChilds();
             }
-            this.refChilds = this.children;
-            // this.totalChilds = this.children.length;
+            this.totalChilds = this.children.length;
         });
     }
 
