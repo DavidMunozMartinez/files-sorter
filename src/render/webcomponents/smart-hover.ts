@@ -2,6 +2,7 @@ export class SmartHover extends HTMLElement {
     private props = ['top', 'left', 'height', 'width'];
     private totalChilds = 0;
 
+    private refChilds!: HTMLCollection;
     shadow!: HTMLElement;
     active!: HTMLElement;
 
@@ -16,15 +17,11 @@ export class SmartHover extends HTMLElement {
             this.shadow.style.opacity = '0';
         });
         this.addEventListener('mouseenter', () => {
-            if (this.children.length > 1) {
-                this.shadow.style.opacity = '1';
-            }
-
-            if (this.totalChilds != this.children.length) {
+            if (this.refChilds != this.children) {
                 this.applyChilds();
             }
-
-            this.totalChilds = this.children.length;
+            this.refChilds = this.children;
+            // this.totalChilds = this.children.length;
         });
     }
 
@@ -42,6 +39,10 @@ export class SmartHover extends HTMLElement {
     }
 
     private onHover(event: any) {
+        if (this.children.length > 1) {
+            this.shadow.style.opacity = '1';
+        }
+
         if (event && event.target && event.target !== this.active) {
             let target = event.target;
             this.active = target;
@@ -52,7 +53,7 @@ export class SmartHover extends HTMLElement {
                 width: target.offsetWidth
             }
     
-            this.applyPosition(rect)
+            this.applyPosition(rect);
         }
     }
 

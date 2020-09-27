@@ -3,8 +3,12 @@ export class ExtensionsHandler {
     inputRef: HTMLElement | null | undefined;
     listRef: HTMLElement | null | undefined;
     overlayRef: HTMLElement | null | undefined;
+
     activeFolder: string | null = null;
     activeCategory: string | null = null;
+    subscriptions: any = {
+        stored: []
+    }
 
     constructor() {
         this.elementRef = document.querySelector('div.extensions');
@@ -32,6 +36,14 @@ export class ExtensionsHandler {
                 this.removeTip();
             }
         }
+    }
+
+    on(event: string, callback: any) {
+        if (!this.subscriptions[event]) {
+            return;
+        }
+
+        this.subscriptions[event].push(callback);
     }
 
     private renderExtensionList(extensions: Array<string>) {
@@ -97,7 +109,10 @@ export class ExtensionsHandler {
         let folderData = data[this.activeFolder];
         if (folderData && folderData.categories && folderData.categories[this.activeCategory]) {
             folderData.categories[this.activeCategory].push(value);
-            localStorage.setItem('folders', JSON.stringify(data))
+            localStorage.setItem('folders', JSON.stringify(data));
+            this.subscriptions['stored'].forEach((fn: any) => {
+                fn();
+            });
         }
 
     }

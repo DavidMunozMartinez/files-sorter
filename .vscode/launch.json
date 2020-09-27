@@ -5,13 +5,28 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Electron: Main",
+            "name": "Electron: Main Process",
             "type": "node",
             "request": "launch",
             "cwd": "${workspaceRoot}",
             "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
             "program": "${workspaceRoot}/dist/main.js",
             "sourceMaps": true
-        }
+        },
+        {
+            "name": "Electron Renderer Process",
+            "type": "chrome",
+            "request": "launch",
+            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+            "windows": {
+              "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+            },
+            "runtimeArgs": [
+              "${workspaceRoot}/dist/main.js",
+              "--remote-debugging-port=9222"
+            ],
+            "webRoot": "${workspaceRoot}",
+            "sourceMaps": true
+          }
     ]
 }

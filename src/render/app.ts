@@ -15,15 +15,17 @@ if (!platform.isDarwin) {
     require('electron-titlebar');
 }
 
-let folderHandler = new FolderHandler('div.folder-input');
+let fileSorter: FileSorter = new FileSorter();
+let folderHandler = new FolderHandler();
 let categoriesHandler = new CategoriesHandler();
+
 let displayFolder = document.querySelector('.folder-path');
 let folderListRef: SmartHover | null = document.querySelector('.folder-list');
-let fileSorter: FileSorter = new FileSorter();
 
 folderHandler.on('submit', () => {
     if (folderHandler.path) {
         addToFolderList(folderHandler.path);
+        fileSorter.addWatcher(folderHandler.path);
     }
 });
 
@@ -33,6 +35,10 @@ folderHandler.on('change', () => {
         displayFolder.setAttribute('title', folderHandler.path);
     }
 });
+
+categoriesHandler.on('stored', () => {
+    fileSorter.updateFoldersData();
+})
 
 if (folderHandler.folders && Object.keys(folderHandler.folders).length > 0) {
     let folders = Object.keys(folderHandler.folders);

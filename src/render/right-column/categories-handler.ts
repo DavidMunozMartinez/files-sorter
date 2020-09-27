@@ -5,8 +5,12 @@ export class CategoriesHandler {
     overlayRef: HTMLElement | null | undefined;
     inputRef: HTMLElement | null | undefined;
     listRef: HTMLElement | null | undefined;
+
     activeFolder: string | null;
     activeCategoryList!: Array<string>;
+    subscriptions: any = {
+        stored: []
+    }
 
     private extensionHandler: ExtensionsHandler;
 
@@ -17,6 +21,11 @@ export class CategoriesHandler {
         this.overlayRef = this.elementRef?.querySelector('div.inactive-overlay');
         this.activeFolder = null;
         this.extensionHandler = new ExtensionsHandler();
+        this.extensionHandler.on('stored', () => {
+            this.subscriptions['stored'].forEach((fn: any) => {
+                fn();
+            });
+        })
 
         this.setupEvents();
     }
@@ -43,6 +52,12 @@ export class CategoriesHandler {
             this.storeCategory(value);
             this.appendListItem(value);
             this.inputRef.innerText = '';
+        }
+    }
+
+    on(event: string, callback: any) {
+        if (this.subscriptions[event]) {
+            this.subscriptions[event].push(callback);
         }
     }
 
@@ -77,6 +92,9 @@ export class CategoriesHandler {
             }
 
             localStorage.setItem('folders', JSON.stringify(data));
+            this.subscriptions['stored'].forEach((fn: any) => {
+                fn();
+            });
         }
     }
 

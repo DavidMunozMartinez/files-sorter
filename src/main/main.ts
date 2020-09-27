@@ -6,8 +6,7 @@ import * as path from 'path';
  * in the render process, i am leaving this here as a reminder that i am not as good developer as i think
  * i am
  */
-// import * as chokidar from 'chokidar';
-
+import chokidar from 'chokidar';
 // Live reload for the render process
 require('electron-reload')('dist/app');
 
@@ -65,7 +64,7 @@ function createTray(): Tray {
     let iconPath = path.join('favicon.ico')
     let tray = new Tray(nativeImage.createFromPath(iconPath));
     const contextMenu = Menu.buildFromTemplate(trayMenu);
-    tray.setToolTip('Files sorter.');
+    tray.setToolTip('Files sorter');
     tray.setContextMenu(contextMenu);
     tray.on('click', onTrayClick);
     return tray;

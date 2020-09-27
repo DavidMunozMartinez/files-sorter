@@ -30,7 +30,7 @@
         width: 100%;
         position: absolute;
         bottom: 0;
-        padding: 5px;
+        padding: 10px;
         box-sizing: border-box;
         .category-list-item,
         .extension-list-item {
@@ -47,6 +47,12 @@
             &.active {
                 background: rgba(255,255,255, 0.25);
             }
+        }
+
+        .category-list-item {
+            width: 100%;
+            box-sizing: border-box;
+            margin: 0;
         }
 
         .extension-list-item {

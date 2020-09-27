@@ -6,16 +6,16 @@ export class FolderHandler {
     public activeRef!: Element;
     listRef: HTMLElement | null;
 
-    private trigger: Element | null;
+    private inputRef: Element | null;
     private subcriptions: any = {
         change: [],
         submit: []
     };
 
-    constructor (trigger: string) {
+    constructor () {
         this.path = null;
-        this.trigger = document.querySelector(trigger);
-        this.trigger?.addEventListener('click', () => this.select(event));
+        this.inputRef = document.querySelector('div.folder-input');
+        this.inputRef?.addEventListener('click', () => this.select(event));
         this.listRef = document.querySelector('smart-hover.folder-list');
         this.folders = this.getLocalFolders();
 
@@ -28,18 +28,6 @@ export class FolderHandler {
         if (this.subcriptions[event]) {
             this.subcriptions[event].push(callback);
         }
-    }
-
-    private async select(event: any) {
-        var path = await remote.dialog.showOpenDialog({
-            properties: ['openDirectory']
-        });
-
-        if (path.filePaths.length > 0) {
-            this.path = path.filePaths[0];
-        }
-        this.submit(event);
-        this.dispatchEvents('change', event)
     }
 
     submit(event: any) {
@@ -82,6 +70,18 @@ export class FolderHandler {
             success = true;
         }
         return success;
+    }
+
+    private async select(event: any) {
+        var path = await remote.dialog.showOpenDialog({
+            properties: ['openDirectory']
+        });
+
+        if (path.filePaths.length > 0) {
+            this.path = path.filePaths[0];
+        }
+        this.submit(event);
+        this.dispatchEvents('change', event)
     }
 
     private showTip() {

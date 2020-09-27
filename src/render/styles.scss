@@ -43,8 +43,11 @@ body {
     flex-direction: row;
     div.left-column,
     div.right-column {
-        flex: 1;
+        flex: 2;
         position: relative;
+    }
+    div.left-column {
+        flex: 3;
     }
 
     .column {
@@ -133,7 +136,7 @@ div[style="position: relative;"] + .main-content {
 .footer {
     color: rgb(83, 83, 83);
     position: fixed;
-    bottom: 3px;
-    left: 5px;
+    bottom: 2px;
+    left: 2px;
     font-size: 11px;
 }
