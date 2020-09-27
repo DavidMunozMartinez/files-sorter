@@ -3,6 +3,10 @@ const ElectronReloadPlugin = require('webpack-electron-reload')({
   path: path.join(__dirname, './dist/main.js'),
 });
 
+// Remove this plugin for the build process to avoid automatically running the app
+// when we just want to run the build after the npm install
+const plugins = process.argv[2] == '--build' ? [] : [ElectronReloadPlugin()];
+
 module.exports = [{
     target: 'electron-main',
     entry: ['./src/main/main.ts'],
@@ -25,9 +29,7 @@ module.exports = [{
       filename: 'main.js',
       devtoolModuleFilenameTemplate: '[absolute-resource-path]'
     },
-    plugins: [
-      ElectronReloadPlugin()
-    ]
+    plugins: plugins
   },
   {
     target: 'electron-renderer',
