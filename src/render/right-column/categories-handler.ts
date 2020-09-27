@@ -30,7 +30,10 @@ export class CategoriesHandler {
         this.setupEvents();
     }
 
-    setActiveFolder(folder: string) {
+    setActiveFolder(folder: string | null) {
+        if (!folder) {
+            return;
+        }
         if (this.activeFolder != folder) {
             this.activeFolder = folder;
             this.hideOverlay();

@@ -20,6 +20,16 @@
             border-radius: 5px;
             margin: 10px;
             cursor: pointer;
+            .value-holder {
+                width: auto;
+                position: absolute;
+                pointer-events: none;
+            }
+            i {
+                position: relative;
+                top: -3px;
+                float: right;
+            }
         }
         .folder-list-item.active {
             background: rgba(255,255,255,0.25);    

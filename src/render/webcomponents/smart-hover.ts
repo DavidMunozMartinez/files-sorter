@@ -2,7 +2,6 @@ export class SmartHover extends HTMLElement {
     private props = ['top', 'left', 'height', 'width'];
     private totalChilds = 0;
 
-    private refChilds!: HTMLCollection;
     shadow!: HTMLElement;
     active!: HTMLElement;
 

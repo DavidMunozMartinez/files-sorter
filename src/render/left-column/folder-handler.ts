@@ -4,6 +4,7 @@ export class FolderHandler {
     public path: string | null;
     public folders: any;
     public activeRef!: Element;
+    public activeFolder: string | null = null;
     listRef: HTMLElement | null;
 
     private inputRef: Element | null;
@@ -34,6 +35,14 @@ export class FolderHandler {
         if (this.path && this.saveLocalFolder(this.path)) {
             this.dispatchEvents('submit', event);
             this.removeTip();
+        }
+    }
+
+    deleteLocalFolder(folder: string) {
+        let data: any = this.getLocalFolders();
+        if (data[folder]) {
+            delete data[folder];
+            localStorage.setItem('folders', JSON.stringify(data));
         }
     }
 

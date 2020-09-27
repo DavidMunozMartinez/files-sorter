@@ -61,8 +61,26 @@ function addToFolderList(folder: string) {
 
 function createListElement(folder: string): Element {
     let element = document.createElement('div');
-    element.innerHTML = folder;
+    let valueHolder = document.createElement('div');
+    let removeIcon = document.createElement('i');
+    removeIcon.classList.add('material-icons');
+    removeIcon.innerText = 'close';
+    removeIcon.addEventListener('click', (event: any) => {
+        fileSorter.deleteWatcher(folder);
+        folderHandler.deleteLocalFolder(folder);
+
+        let target: HTMLElement = event.target;
+        let item = target.closest('.folder-list-item'); 
+        let list = target.closest('.folder-list');
+        if (list && item) {
+            list.removeChild(item);
+        }
+    });
+    valueHolder.classList.add('value-holder');
+    valueHolder.innerHTML = folder;
     element.classList.add('folder-list-item');
+    element.append(valueHolder);
+    element.append(removeIcon);
     element.addEventListener('click', (event) => {
         selectionChanged(event.target);
     });
@@ -75,7 +93,9 @@ function selectionChanged (target: any) {
     }
     folderHandler.activeRef = target;
     folderHandler.activeRef.classList.toggle('active');
-    categoriesHandler.setActiveFolder(folderHandler.activeRef.innerHTML);
+    let valueElement: HTMLElement | null = folderHandler.activeRef.querySelector('.value-holder');
+    let folder: string | null = valueElement?.innerText || null;
+    categoriesHandler.setActiveFolder(folder);
 }
 
 // Define WebComponents
