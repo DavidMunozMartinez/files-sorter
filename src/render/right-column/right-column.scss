@@ -8,11 +8,11 @@
         position: relative;
     }
     .categories {
-        flex: 1;
+        flex: 5;
         margin-bottom: 15px;
     }
     .extensions {
-        flex: 1;
+        flex: 3;
     }
 
     div.category-input:focus,
@@ -32,10 +32,10 @@
         bottom: 0;
         padding: 10px;
         box-sizing: border-box;
+        overflow-y: auto;
         .category-list-item,
         .extension-list-item {
             height: 40px;
-            padding: 12px;
             padding-left: 18px;
             padding-right: 18px;
             width: fit-content;
@@ -44,8 +44,20 @@
             margin: 5px;
             border-radius: 5px;
             cursor: pointer;
+            position: relative;
             &.active {
                 background: rgba(255,255,255, 0.25);
+            }
+            span {
+                position: absolute;
+                top: 12px;
+                left: 55px;
+                pointer-events: none;
+            }
+            i {
+                pointer-events: none;
+                position: absolute;
+                top: 7px;
             }
         }
 

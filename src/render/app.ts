@@ -1,5 +1,5 @@
 let platform = require('electron-platform');
-import { FileSorter } from './event-handler';
+import { FileSorter } from './file-sorter';
 import { FolderHandler } from './left-column/folder-handler';
 import { CategoriesHandler } from './right-column/categories-handler';
 
@@ -15,10 +15,12 @@ if (!platform.isDarwin) {
     require('electron-titlebar');
 }
 
+// Defining handlers
 let fileSorter: FileSorter = new FileSorter();
-let folderHandler = new FolderHandler();
-let categoriesHandler = new CategoriesHandler();
+let folderHandler: FolderHandler = new FolderHandler();
+let categoriesHandler: CategoriesHandler = new CategoriesHandler();
 
+// Elements refs
 let displayFolder = document.querySelector('.folder-path');
 let folderListRef: SmartHover | null = document.querySelector('.folder-list');
 
@@ -51,7 +53,9 @@ function addToFolderList(folder: string) {
     if (folderListRef && folder) {
         let listElement = createListElement(folder);
         folderListRef.append(listElement);
-        selectionChanged(listElement);
+        if (!folderHandler.activeRef) {
+            selectionChanged(listElement);
+        }
     }
 }
 

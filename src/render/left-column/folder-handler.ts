@@ -15,7 +15,7 @@ export class FolderHandler {
     constructor () {
         this.path = null;
         this.inputRef = document.querySelector('div.folder-input');
-        this.inputRef?.addEventListener('click', () => this.select(event));
+        this.inputRef?.addEventListener('click', (event: any) => this.addFolder(event));
         this.listRef = document.querySelector('smart-hover.folder-list');
         this.folders = this.getLocalFolders();
 
@@ -72,7 +72,7 @@ export class FolderHandler {
         return success;
     }
 
-    private async select(event: any) {
+    private async addFolder(event: any) {
         var path = await remote.dialog.showOpenDialog({
             properties: ['openDirectory']
         });
@@ -81,7 +81,7 @@ export class FolderHandler {
             this.path = path.filePaths[0];
         }
         this.submit(event);
-        this.dispatchEvents('change', event)
+        this.dispatchEvents('change', event);
     }
 
     private showTip() {

@@ -121,7 +121,7 @@ export class CategoriesHandler {
         if (this.activeCategoryList.length > 0) {
             setTimeout(() => {
                 this.extensionHandler.inputRef?.focus()
-            }, 500);
+            }, 200);
         }
     }
 
@@ -140,8 +140,12 @@ export class CategoriesHandler {
 
     private appendListItem(value: string) {
         let item = document.createElement('div');
+        let icon = document.createElement('i');
+        icon.classList.add('material-icons');
+        icon.innerHTML = 'folder';
         item.classList.add('category-list-item');
-        item.innerText = value;
+        item.innerHTML = '<span>' + value + '</span>';
+        item.prepend(icon);
         item.addEventListener('click', (event) => { this.onCategoryClick(event, value) });
         this.listRef?.append(item);
         this.onCategoryClick({
@@ -169,7 +173,7 @@ export class CategoriesHandler {
 
         setTimeout(() => {
             this.extensionHandler.inputRef?.focus();
-        }, 500)
+        }, 200)
     }
 
     private showTip() {

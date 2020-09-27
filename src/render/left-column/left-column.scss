@@ -7,7 +7,7 @@
         box-sizing: border-box;
         width: 100%;
         position: absolute;
-        height: calc(100% - 50px);
+        height: calc(100% - 110px);
         overflow-y: auto;
         top: 50px;
         display: block;
@@ -23,6 +23,33 @@
         }
         .folder-list-item.active {
             background: rgba(255,255,255,0.25);    
+        }
+    }
+
+    .folder-options {
+        width: 100%;
+        height: 60px;
+        position: absolute;
+        bottom: 0;
+        z-index: 2;
+        margin: 5px;
+        box-sizing: border-box;
+        .option-button {
+            box-sizing: border-box;
+            margin-right: 15px;
+            padding: 10px;
+            width: auto;
+            height: 35px;
+            // display: inline-block;
+            background: $secondary;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            float: right;
+        }
+        .option-button:hover {
+            transform: scale(1.1);
+            border-radius: 10px;
         }
     }
 }
