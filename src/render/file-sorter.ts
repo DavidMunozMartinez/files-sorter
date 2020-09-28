@@ -17,8 +17,8 @@ export class FileSorter {
     watchers: any = {};
 
     constructor () {
-        this.updateFoldersData();
-        this.defineWatchers(this.paths);
+        // this.updateFoldersData();
+        // this.defineWatchers(this.paths);
     }
 
     updateFoldersData() {

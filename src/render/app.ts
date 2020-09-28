@@ -40,7 +40,7 @@ folderHandler.on('change', () => {
 
 categoriesHandler.on('stored', () => {
     fileSorter.updateFoldersData();
-})
+});
 
 if (folderHandler.folders && Object.keys(folderHandler.folders).length > 0) {
     let folders = Object.keys(folderHandler.folders);
