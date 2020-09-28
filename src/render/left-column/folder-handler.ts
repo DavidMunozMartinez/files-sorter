@@ -44,6 +44,9 @@ export class FolderHandler {
             delete data[folder];
             localStorage.setItem('folders', JSON.stringify(data));
         }
+        if (folder == this.activeFolder) {
+            this.activeFolder = null;
+        }
     }
 
     private dispatchEvents(event: string, original: any) {

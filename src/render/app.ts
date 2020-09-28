@@ -68,6 +68,10 @@ function createListElement(folder: string): Element {
     removeIcon.addEventListener('click', (event: any) => {
         fileSorter.deleteWatcher(folder);
         folderHandler.deleteLocalFolder(folder);
+        
+        if (categoriesHandler.activeFolder == folder) {
+            categoriesHandler.clearCategoryList();
+        }
 
         let target: HTMLElement = event.target;
         let item = target.closest('.folder-list-item'); 
@@ -75,6 +79,13 @@ function createListElement(folder: string): Element {
         if (list && item) {
             list.removeChild(item);
         }
+
+        let items = folderHandler.listRef?.querySelectorAll('.folder-list-item');
+        if (items && items.length > 0) {
+            selectionChanged(items[0]);
+        }
+
+        event.stopImmediatePropagation();
     });
     valueHolder.classList.add('value-holder');
     valueHolder.innerHTML = folder;

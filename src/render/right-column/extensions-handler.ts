@@ -38,6 +38,19 @@ export class ExtensionsHandler {
         }
     }
 
+    clearExtensionList() {
+        if (!this.listRef) {
+            return;
+        }
+
+        let items = this.listRef.querySelectorAll('.extension-list-item');
+
+        for (let i = 0; i < items.length; i++) {
+            let child = items[i];
+            this.listRef.removeChild(child);
+        }
+    }
+
     on(event: string, callback: any) {
         if (!this.subscriptions[event]) {
             return;
@@ -57,19 +70,6 @@ export class ExtensionsHandler {
         extensions.map((extension) => {
             this.appendToList(extension);
         });
-    }
-
-    private clearExtensionList() {
-        if (!this.listRef) {
-            return;
-        }
-
-        let items = this.listRef.querySelectorAll('.extension-list-item');
-
-        for (let i = 0; i < items.length; i++) {
-            let child = items[i];
-            this.listRef.removeChild(child);
-        }
     }
 
     private getExtensionsForCategory(folder: string, category: string): Array<string> {

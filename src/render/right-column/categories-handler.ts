@@ -58,6 +58,21 @@ export class CategoriesHandler {
         }
     }
 
+    clearCategoryList() {
+        if (!this.listRef) {
+            return;
+        }
+
+        let items = this.listRef.querySelectorAll('.category-list-item');
+
+        for (let i = 0; i < items.length; i++) {
+            let child = items[i];
+            this.listRef.removeChild(child);
+        }
+
+        this.extensionHandler.clearExtensionList();
+    }
+
     on(event: string, callback: any) {
         if (this.subscriptions[event]) {
             this.subscriptions[event].push(callback);
@@ -128,18 +143,6 @@ export class CategoriesHandler {
         }
     }
 
-    private clearCategoryList() {
-        if (!this.listRef) {
-            return;
-        }
-
-        let items = this.listRef.querySelectorAll('.category-list-item');
-
-        for (let i = 0; i < items.length; i++) {
-            let child = items[i];
-            this.listRef.removeChild(child);
-        }
-    }
 
     private appendListItem(value: string) {
         let item = document.createElement('div');
