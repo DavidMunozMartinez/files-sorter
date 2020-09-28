@@ -46,21 +46,35 @@ export class SmartHover extends HTMLElement {
     private containerListeners() {
         this.addEventListener('mouseenter', (event: any) => this.containerMouseEnter(event));
         this.addEventListener('mouseleave', (event: any) => this.containerMouseLeave(event));
+        this.addEventListener('mousemove', (event: any) => this.containerMouseMove(event));
     }
 
     private containerMouseEnter(event: any) {
         // Re-apply listeners if the contents has changed
-        if (this.contents !== this.innerText) {
-            this.childrenListeners();
+        let children = this.getChildren();
+        // If we have no child we remove the shadow, also if we get to this event and we have a defined active element
+        // it means that the element was removed on the spot and the mouse enter was triggered on the container
+        if (children.length == 0 || this.active) {
+            this.hideShadow(() => {
+                this.safeRemoveShadow();
+            })
+            return;
         }
-        // Re-define our content
-        this.contents = this.innerText;
+
         this.safeAppendShadow();
     }
 
     private containerMouseLeave(event: any) {
         this.safeRemoveShadow();
         this.siblingsActive = false;
+    }
+
+    private containerMouseMove(event: any) {
+        // If the contents changed during our movements, we update our listeners
+        if (this.contents != this.innerText) {
+            this.childrenListeners();
+        }
+        this.contents = this.innerText;
     }
 
     /**
@@ -135,7 +149,6 @@ export class SmartHover extends HTMLElement {
             this.shadow.style[prop] = rect[prop];
         });
         this.shadow.style.transition = 'all ' + this.shadowAnimationMS + 'ms';
-        console.log('Applied pos: ', rect);
 
     }
 
