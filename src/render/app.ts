@@ -2,17 +2,16 @@ import * as os from 'os';
 import { FileSorter } from './file-sorter';
 import { FolderHandler } from './left-column/folder-handler';
 import { CategoriesHandler } from './right-column/categories-handler';
-import { SmartHover } from './webcomponents/smart-hover';
+import 'smart-hoverjs';
 
 class App {
     private fileSorter: FileSorter = new FileSorter();
     private folderHandler: FolderHandler = new FolderHandler();
     private categoriesHandler: CategoriesHandler = new CategoriesHandler();
     private displayFolder = document.querySelector('.folder-path');
-    private folderListRef: SmartHover | null = document.querySelector('.folder-list');
+    private folderListRef = document.querySelector('.folder-list');
 
     constructor() {
-        window.customElements.define('smart-hover', SmartHover);
         this.applyTitlebarStyles();
         
         this.folderHandler.on('submit', () => {
