@@ -1,4 +1,5 @@
 import { ExtensionsHandler } from './extensions-handler';
+import { TouchBarScrubber } from 'electron';
 
 export class CategoriesHandler {
     elementRef: HTMLElement | null;
@@ -79,6 +80,32 @@ export class CategoriesHandler {
         }
     }
 
+    hideOverlay() {
+        if (this.overlayRef && !this.overlayRef.classList.contains('hiden')) {
+            this.overlayRef.classList.add('hiden');
+        }
+    }
+
+    showOverlay() {
+        if (this.overlayRef && this.overlayRef.classList.contains('hiden')) {
+            this.overlayRef.classList.remove('hiden');
+        }
+    }
+
+    showTip() {
+        let tip = this.listRef?.querySelector('.section-tip');
+        if (tip && !tip.classList.contains('active')) {
+            tip.classList.add('active');
+        }
+    }
+
+    removeTip() {
+        let tip = this.listRef?.querySelector('.section-tip');
+        if (tip && tip.classList.contains('active')) {
+            tip.classList.remove('active');
+        }
+    }
+
     private setupEvents() {
         this.inputRef?.addEventListener('keydown', (event: any) => {
             if (event.which == 13) {
@@ -89,12 +116,6 @@ export class CategoriesHandler {
                 event.target.focus();
             }
         })
-    }
-
-    private hideOverlay() {
-        if (this.overlayRef && !this.overlayRef.classList.contains('hiden')) {
-            this.overlayRef.classList.add('hiden');
-        }
     }
 
     private storeCategory(value: string) {
@@ -139,7 +160,7 @@ export class CategoriesHandler {
         if (this.activeCategoryList.length > 0) {
             setTimeout(() => {
                 this.extensionHandler.inputRef?.focus()
-            }, 200);
+            }, 170);
         }
     }
 
@@ -179,20 +200,6 @@ export class CategoriesHandler {
 
         setTimeout(() => {
             this.extensionHandler.inputRef?.focus();
-        }, 200)
-    }
-
-    private showTip() {
-        let tip = this.listRef?.querySelector('.section-tip');
-        if (tip && !tip.classList.contains('active')) {
-            tip.classList.add('active');
-        }
-    }
-
-    private removeTip() {
-        let tip = this.listRef?.querySelector('.section-tip');
-        if (tip && tip.classList.contains('active')) {
-            tip.classList.remove('active');
-        }
+        }, 170)
     }
 }

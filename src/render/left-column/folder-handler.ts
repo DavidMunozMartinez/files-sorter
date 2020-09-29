@@ -3,7 +3,7 @@ import { remote } from 'electron';
 export class FolderHandler {
     public path: string | null;
     public folders: any;
-    public activeRef!: Element;
+    public activeRef!: Element | null;
     public activeFolder: string | null = null;
     listRef: HTMLElement | null;
 
@@ -46,6 +46,20 @@ export class FolderHandler {
         }
         if (folder == this.activeFolder) {
             this.activeFolder = null;
+        }
+    }
+
+    showTip() {
+        let tip = this.listRef?.querySelector('.section-tip');
+        if (tip && !tip.classList.contains('active')) {
+            tip.classList.add('active');
+        }
+    }
+
+    removeTip() {
+        let tip = this.listRef?.querySelector('.section-tip');
+        if (tip && tip.classList.contains('active')) {
+            tip.classList.remove('active');
         }
     }
 
@@ -94,19 +108,5 @@ export class FolderHandler {
         }
         this.submit(event);
         this.dispatchEvents('change', event);
-    }
-
-    private showTip() {
-        let tip = this.listRef?.querySelector('.section-tip');
-        if (tip && !tip.classList.contains('active')) {
-            tip.classList.add('active');
-        }
-    }
-
-    private removeTip() {
-        let tip = this.listRef?.querySelector('.section-tip');
-        if (tip && tip.classList.contains('active')) {
-            tip.classList.remove('active');
-        }
     }
 }

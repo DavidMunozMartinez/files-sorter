@@ -84,6 +84,14 @@ function createListElement(folder: string): Element {
         if (items && items.length > 0) {
             selectionChanged(items[0]);
         }
+        else {
+            folderHandler.activeFolder = null;
+            categoriesHandler.activeFolder = null;
+            folderHandler.activeRef = null;
+            folderHandler.showTip();
+            categoriesHandler.removeTip();
+            categoriesHandler.showOverlay();
+        }
 
         event.stopImmediatePropagation();
     });
@@ -103,10 +111,12 @@ function selectionChanged (target: any) {
         folderHandler.activeRef.classList.toggle('active');
     }
     folderHandler.activeRef = target;
-    folderHandler.activeRef.classList.toggle('active');
-    let valueElement: HTMLElement | null = folderHandler.activeRef.querySelector('.value-holder');
-    let folder: string | null = valueElement?.innerText || null;
-    categoriesHandler.setActiveFolder(folder);
+    if (folderHandler.activeRef) {
+        folderHandler.activeRef.classList.toggle('active');
+        let valueElement: HTMLElement | null = folderHandler.activeRef.querySelector('.value-holder');
+        let folder: string | null = valueElement?.innerText || null;
+        categoriesHandler.setActiveFolder(folder);
+    }
 }
 
 // Define WebComponents

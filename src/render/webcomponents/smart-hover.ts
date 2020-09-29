@@ -127,7 +127,8 @@ export class SmartHover extends HTMLElement {
     }
 
     /**
-     * returns our container hoverable children
+     * returns our container hoverable children, taking into account the query
+     * selector (this.query) if defined
      */
     private getChildren(): Array<any> {
         return Array.from(this.query ? this.querySelectorAll(this.query) : this.children);
