@@ -1,5 +1,4 @@
 import { ExtensionsHandler } from './extensions-handler';
-import { TouchBarScrubber } from 'electron';
 
 export class CategoriesHandler {
     elementRef: HTMLElement | null;

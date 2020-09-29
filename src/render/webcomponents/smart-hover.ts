@@ -28,12 +28,19 @@ export class SmartHover extends HTMLElement {
         this.contents = this.innerText;
     }
 
+    /**
+     * Applies only the style part to make the shadow visible
+     */
     showShadow() {
         this.shadow.style.opacity = '0';
         this.shadow.style.display = 'block';
         this.shadow.style.opacity = '1';
     }
 
+    /**
+     * Applies only the style part of making the shadow invisible
+     * @param callback Optional function executed once the element is done animating
+     */
     hideShadow(callback?: any) {
         this.shadow.style.opacity = '0';
         setTimeout(() => {
@@ -43,14 +50,22 @@ export class SmartHover extends HTMLElement {
         }, this.shadowAnimationMS);
     }
 
+    /**
+     * Applies the listeners to the container to handle things like updating the visual state
+     * of the shadow, append or remove the shadow or re-apply event listeners to child elements
+     * if the contents of the container has changed
+     */
     private containerListeners() {
         this.addEventListener('mouseenter', (event: any) => this.containerMouseEnter(event));
         this.addEventListener('mouseleave', (event: any) => this.containerMouseLeave(event));
         this.addEventListener('mousemove', (event: any) => this.containerMouseMove(event));
     }
 
+    /**
+     * Triggered when the container triggers mouseenter event
+     * @param event DOM event
+     */
     private containerMouseEnter(event: any) {
-        // Re-apply listeners if the contents has changed
         let children = this.getChildren();
         // If we have no child we remove the shadow, also if we get to this event and we have a defined active element
         // it means that the element was removed on the spot and the mouse enter was triggered on the container
@@ -64,11 +79,19 @@ export class SmartHover extends HTMLElement {
         this.safeAppendShadow();
     }
 
+    /**
+     * Triggered when the container triggers a mouseleave event
+     * @param event DOM event
+     */
     private containerMouseLeave(event: any) {
         this.safeRemoveShadow();
         this.siblingsActive = false;
     }
 
+    /**
+     * Triggered when the container triggers the mousemove event
+     * @param event DOM event
+     */
     private containerMouseMove(event: any) {
         // If the contents changed during our movements, we update our listeners
         if (this.contents != this.innerText) {
@@ -134,6 +157,11 @@ export class SmartHover extends HTMLElement {
         return Array.from(this.query ? this.querySelectorAll(this.query) : this.children);
     }
 
+    /**
+     * Takes a DOM native HTMLELEMENT and returns a rectangle object holding 
+     * the top, left, height, width values
+     * @param element Element that will be used to get the rectangle
+     */
     private getRectangle(element: HTMLElement) {
         return {
             top: element.offsetTop,
@@ -143,6 +171,11 @@ export class SmartHover extends HTMLElement {
         };
     }
 
+    /**
+     * Applies a rectangle position and sizing to the shadow element
+     * @param rect Obejct holding top, left, height, width values
+     * @param animate Determines if the rectangle changes will be animated
+     */
     private applyPosition(rect: any, animate?: boolean) {
         this.shadow.style.transition = animate ? 'all ' + this.shadowAnimationMS + 'ms' : 'unset'; 
         this.props.forEach((prop: any) => {
@@ -152,6 +185,10 @@ export class SmartHover extends HTMLElement {
 
     }
 
+    /**
+     * Created a tangible HTML element that will be the hover shadow for this
+     * container
+     */
     private createShadow() {
         let element: any = document.createElement('div');
         element.classList.add('smart-hover-shadow');
@@ -162,6 +199,10 @@ export class SmartHover extends HTMLElement {
         return element;
     }
 
+    /**
+     * Validates the existance of the shadow element inside the container before
+     * appending it to avoid duplicates or unnecessary logic execution
+     */
     private safeAppendShadow() {
         let shadow = this.querySelector('.smart-hover-shadow');
         if (!shadow) {
@@ -169,6 +210,10 @@ export class SmartHover extends HTMLElement {
         }
     }
 
+    /**
+     * Validates the existance of the shadow element inside the container before
+     * removing it to avoid throw exceptions if it doesn't exists
+     */
     private safeRemoveShadow() {
         let shadow = this.querySelector('.smart-hover-shadow');
         if (shadow) {
