@@ -89,7 +89,10 @@ export class CategoriesHandler {
     showOverlay() {
         if (this.overlayRef && this.overlayRef.classList.contains('hiden')) {
             this.overlayRef.classList.remove('hiden');
+            this.extensionHandler.showOverlay();
+            this.extensionHandler.removeTip();
         }
+
     }
 
     showTip() {

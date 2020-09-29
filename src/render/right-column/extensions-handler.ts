@@ -59,6 +59,32 @@ export class ExtensionsHandler {
         this.subscriptions[event].push(callback);
     }
 
+    showOverlay() {
+        if (this.overlayRef && this.overlayRef.classList.contains('hiden')) {
+            this.overlayRef.classList.remove('hiden');
+        }
+    }
+
+    hideOverlay() {
+        if (this.overlayRef && !this.overlayRef.classList.contains('hiden')) {
+            this.overlayRef.classList.add('hiden');
+        }
+    }
+
+    showTip() {
+        let tip = this.listRef?.querySelector('.section-tip');
+        if (tip && !tip.classList.contains('active')) {
+            tip.classList.add('active');
+        }
+    }
+
+    removeTip() {
+        let tip = this.listRef?.querySelector('.section-tip');
+        if (tip && tip.classList.contains('active')) {
+            tip.classList.remove('active');
+        }
+    }
+
     private renderExtensionList(extensions: Array<string>) {
         if (!this.activeFolder || !this.activeCategory) {
             return;
@@ -130,26 +156,6 @@ export class ExtensionsHandler {
             if (this.inputRef) {
                 this.inputRef.innerText = '';
             }
-        }
-    }
-
-    private hideOverlay() {
-        if (this.overlayRef && !this.overlayRef.classList.contains('hiden')) {
-            this.overlayRef.classList.add('hiden');
-        }
-    }
-
-    private showTip() {
-        let tip = this.listRef?.querySelector('.section-tip');
-        if (tip && !tip.classList.contains('active')) {
-            tip.classList.add('active');
-        }
-    }
-
-    private removeTip() {
-        let tip = this.listRef?.querySelector('.section-tip');
-        if (tip && tip.classList.contains('active')) {
-            tip.classList.remove('active');
         }
     }
 }
