@@ -144,7 +144,6 @@ export class SmartHover extends HTMLElement {
     }
 
     private applyPosition(rect: any, animate?: boolean) {
-        console.log(animate);
         this.shadow.style.transition = animate ? 'all ' + this.shadowAnimationMS + 'ms' : 'unset'; 
         this.props.forEach((prop: any) => {
             this.shadow.style[prop] = rect[prop];
