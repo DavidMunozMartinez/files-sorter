@@ -1,6 +1,7 @@
 export class SmartHover extends HTMLElement {
     private props = ['top', 'left', 'height', 'width'];
     private shadowAnimationMS: number = 180;
+    private transition: string = `all ${this.shadowAnimationMS}ms`;
     // Used to compare and determine if the contents of the container have changed so we can re-apply
     // our children listeners.
     private contents: string = '';
@@ -176,13 +177,17 @@ export class SmartHover extends HTMLElement {
      * @param rect Obejct holding top, left, height, width values
      * @param animate Determines if the rectangle changes will be animated
      */
-    private applyPosition(rect: any, animate?: boolean) {
-        this.shadow.style.transition = animate ? 'all ' + this.shadowAnimationMS + 'ms' : 'unset'; 
+    private applyPosition(rect: any, animate?: boolean) {        
+        this.shadow.style.transition = animate ? this.transition : 'unset';
+
         this.props.forEach((prop: any) => {
             this.shadow.style[prop] = rect[prop];
         });
-        this.shadow.style.transition = 'all ' + this.shadowAnimationMS + 'ms';
-
+        // Request animation frame so the chromium renderer applies our position with the proper transition
+        // property, then we re-apply the transition to its default value
+        window.requestAnimationFrame(() => {
+            this.shadow.style.transition = this.transition;
+        });
     }
 
     /**
@@ -194,7 +199,7 @@ export class SmartHover extends HTMLElement {
         element.classList.add('smart-hover-shadow');
         element.style.position = 'absolute';
         element.style.cursor = 'pointer';
-        element.style.transition = 'all ' + this.shadowAnimationMS + 'ms';
+        element.style.transition = this.transition;
         element.style['z-index'] = -1;
         return element;
     }
