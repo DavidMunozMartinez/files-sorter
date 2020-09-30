@@ -7,11 +7,8 @@ import * as path from 'path';
  * i am
  */
 import chokidar from 'chokidar';
-// Live reload for the render process, this validation makes sure to activate it only in development mode
-if (process && process.mainModule && process.mainModule.filename.indexOf('app.asar') == -1) {
-    require('electron-reload')('dist/app');
-}
 
+let isDevEnv = process && process.mainModule && process.mainModule.filename.indexOf('app.asar') == -1;
 let isQuiting = false;
 let win: BrowserWindow;
 let tray: Tray;
@@ -25,9 +22,14 @@ let trayMenu = [
     }
 ];
 
+// Live reload for the render process, this validation makes sure to activate it only in development mode
+if (isDevEnv) {
+    require('electron-reload')('dist/app');
+}
+
 function init() {
     win = createWindow();
-    tray = createTray();
+    // tray = createTray();
 }
 
 function createWindow(): BrowserWindow {
@@ -38,6 +40,7 @@ function createWindow(): BrowserWindow {
         frame: process.platform == 'darwin',
         maximizable: false,
         webPreferences: {
+            devTools: isDevEnv,
             worldSafeExecuteJavaScript: true,
             nodeIntegration: true,
             enableRemoteModule: true
@@ -47,7 +50,7 @@ function createWindow(): BrowserWindow {
     // Path to index on the dist folder  
     win.loadURL(path.join("file://", __dirname, "./app/index.html"));
     win.webContents.toggleDevTools();
-    win.on('close', onWindowClose);
+    // win.on('close', onWindowClose);
     
     return win;
 }

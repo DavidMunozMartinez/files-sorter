@@ -10,6 +10,9 @@
       "sign": false,
       "title": "File sorter"
     },
+    "win": {
+        "target": "portable"
+    },
     "files": [
       "dist/main.js",
       "dist/app/index.html",
@@ -20,7 +23,7 @@
     ],
     "directories": {
       "output": "release/"
-    } 
+    }
   },
   "scripts": {
     "start": "electron ./dist/main.js",
