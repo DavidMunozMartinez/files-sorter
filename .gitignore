@@ -4,3 +4,5 @@ dist/**/*.map
 dist/app/*.woff
 dist/app/*.woff2
 dist/app/*.ttf
+release
+/**/*.DS_Store

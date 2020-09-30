@@ -3,18 +3,28 @@ const ElectronReloadPlugin = require('webpack-electron-reload')({
   path: path.join(__dirname, './dist/main.js'),
 });
 
-// Remove this plugin for the build process to avoid automatically running the app
-// when we just want to run the build after the npm install
-const plugins = process.argv[2] == '--build' ? [] : [ElectronReloadPlugin()];
+const buildType = process.argv[2];
+const mode = buildType == '--prod' ? 'production' : 'development';
+
+const plugins = [];
+// Only add this plugin when the --watch config is received
+if (buildType == '--watch') {
+  plugins.push(ElectronReloadPlugin());
+}
 
 module.exports = [{
     target: 'electron-main',
     entry: ['./src/main/main.ts'],
+    node: {
+      // Webpack overrides __dirname when compiling, we avoid this by setting
+      // it to false here so it doesn't cause any problem when packaging the app
+      __dirname: false
+    },
     externals: {
       fsevents: "require('fsevents')",
       "electron-reload": "require('electron-reload')"
     },
-    mode: 'development',
+    mode: mode,
     devtool: 'source-map',
     module: {
       rules: [{
@@ -33,7 +43,7 @@ module.exports = [{
   {
     target: 'electron-renderer',
     entry: ['./src/render/app.ts', './src/render/styles.scss'],
-    mode: 'development',
+    mode: mode,
     devtool: 'source-map',
     externals: {
       'electron-titlebar': 'require("electron-titlebar")',

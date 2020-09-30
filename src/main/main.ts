@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Tray, Menu, nativeImage } from 'electron';
+import { app, BrowserWindow, Tray, Menu, nativeImage, dialog } from 'electron';
 import * as path from 'path';
 /**
  * I dont know how, i dont know why, and i dont want to know, its 3:30AM and at this point i don't care
@@ -7,10 +7,11 @@ import * as path from 'path';
  * i am
  */
 import chokidar from 'chokidar';
-// Live reload for the render process
-require('electron-reload')('dist/app');
+// Live reload for the render process, this validation makes sure to activate it only in development mode
+if (process && process.mainModule && process.mainModule.filename.indexOf('app.asar') == -1) {
+    require('electron-reload')('dist/app');
+}
 
-// let win = null;
 let isQuiting = false;
 let win: BrowserWindow;
 let tray: Tray;
@@ -37,13 +38,14 @@ function createWindow(): BrowserWindow {
         frame: process.platform == 'darwin',
         maximizable: false,
         webPreferences: {
+            worldSafeExecuteJavaScript: true,
             nodeIntegration: true,
             enableRemoteModule: true
         }
     });
 
-    // Path to index on the dist folder   
-    win.loadFile('app/index.html');
+    // Path to index on the dist folder  
+    win.loadURL(path.join("file://", __dirname, "./app/index.html"));
     win.webContents.toggleDevTools();
     win.on('close', onWindowClose);
     

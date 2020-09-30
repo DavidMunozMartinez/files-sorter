@@ -2,11 +2,31 @@
   "name": "file-sorter",
   "version": "1.0.0",
   "description": "Automatic file sorter",
-  "main": "src/index.js",
+  "main": "dist/main.js",
+  "build": {
+    "appId": "filesorter",
+    "dmg": {
+      "internetEnabled": true,
+      "sign": false,
+      "title": "File sorter"
+    },
+    "files": [
+      "dist/main.js",
+      "dist/app/index.html",
+      "dist/app/*.woff",
+      "dist/app/*.woff2",
+      "dist/app/*.ttf",
+      "dist/app/app.js"
+    ],
+    "directories": {
+      "output": "release/"
+    } 
+  },
   "scripts": {
     "start": "electron ./dist/main.js",
     "watch": "webpack --watch --config ./webpack.config.js",
     "build": "webpack --build",
+    "package": "webpack --prod && electron-builder",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "npm run build"
   },
@@ -15,6 +35,7 @@
   "devDependencies": {
     "css-loader": "^4.3.0",
     "electron": "^10.1.2",
+    "electron-builder": "^22.8.1",
     "electron-platform": "^1.2.0",
     "electron-reload": "^1.5.0",
     "file-loader": "^6.1.0",
@@ -29,11 +50,9 @@
   },
   "dependencies": {
     "chokidar": "^3.4.2",
-    "electron-builder": "^22.8.1",
     "electron-titlebar": "0.0.3",
     "material-icons": "^0.3.1",
     "material-icons-font": "^2.1.0",
-    "npm": "^6.14.8",
     "smart-hoverjs": "^1.0.1"
   }
 }
