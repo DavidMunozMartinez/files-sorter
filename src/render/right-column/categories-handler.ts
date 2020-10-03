@@ -12,7 +12,7 @@ export class CategoriesHandler {
         stored: []
     }
 
-    private extensionHandler: ExtensionsHandler;
+    extensionHandler: ExtensionsHandler;
 
     constructor() {
         this.elementRef = document.querySelector('div.categories');
@@ -39,6 +39,7 @@ export class CategoriesHandler {
             this.hideOverlay();
             this.activeCategoryList = this.getCategoriesForFolder(folder);
             this.renderCategoryList();
+            // this.extensionHandler
             this.extensionHandler.setActiveFolder(folder);
             if (this.activeCategoryList.length == 0) {
                 setTimeout(() => {
@@ -101,7 +102,7 @@ export class CategoriesHandler {
         }
     }
 
-    removeTip() {
+    hideTip() {
         let tip = this.listRef?.querySelector('.section-tip');
         if (tip && tip.classList.contains('active')) {
             tip.classList.remove('active');
@@ -112,7 +113,7 @@ export class CategoriesHandler {
         this.inputRef?.addEventListener('keydown', (event: any) => {
             if (event.which == 13) {
                 this.addCategory();
-                this.removeTip();
+                this.hideTip();
                 event.preventDefault();
                 event.target.blur();
                 event.target.focus();
@@ -161,8 +162,14 @@ export class CategoriesHandler {
 
         if (this.activeCategoryList.length > 0) {
             setTimeout(() => {
-                this.extensionHandler.inputRef?.focus()
+                this.extensionHandler.inputRef?.focus();
+                this.extensionHandler.hideOverlay();
+                this.extensionHandler.showTip();
             }, 170);
+        }
+        else {
+            this.extensionHandler.showOverlay();
+            this.extensionHandler.removeTip();
         }
     }
 
