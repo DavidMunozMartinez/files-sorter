@@ -56,6 +56,6 @@
     "electron-titlebar": "0.0.3",
     "material-icons": "^0.3.1",
     "material-icons-font": "^2.1.0",
-    "smart-hoverjs": "^1.0.4"
+    "smart-hoverjs": "^1.0.6"
   }
 }

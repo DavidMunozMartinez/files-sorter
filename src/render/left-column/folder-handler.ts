@@ -1,7 +1,8 @@
 import { remote } from 'electron';
 import { CategoriesHandler } from '../right-column/categories-handler';
+import { SectionHandler } from '../sections-handler';
 
-export class FolderHandler {
+export class FolderHandler extends SectionHandler {
     // List item selected/active
     public selectedRef!: Element | null;
     // List element reference
@@ -20,8 +21,9 @@ export class FolderHandler {
     categoriesHandler: CategoriesHandler = new CategoriesHandler();
 
     constructor () {
+        super('.column.left-column', '.folder-list');
         this.addButtonRef = document.querySelector('div.folder-input');
-        this.addButtonRef?.addEventListener('click', (event: any) => this.folderDialog(event));
+        this.addButtonRef?.addEventListener('click', () =>  this.folderDialog() );
         this.listRef = document.querySelector('smart-hover.folder-list');
         let folders = this.getLocalFolders();
         let foldersArr: Array<string> = Object.keys(folders);
@@ -115,26 +117,6 @@ export class FolderHandler {
             delete data[folder];
             localStorage.setItem('folders', JSON.stringify(data));
             this.dispatchEvents('deleted', folder);
-        }
-    }
-
-    /**
-     * Makes the tip for this section visible
-     */
-    showTip() {
-        let tip = this.listRef?.querySelector('.section-tip');
-        if (tip && !tip.classList.contains('active')) {
-            tip.classList.add('active');
-        }
-    }
-
-    /**
-     * Makes the tip for this section invisible
-     */
-    removeTip() {
-        let tip = this.listRef?.querySelector('.section-tip');
-        if (tip && tip.classList.contains('active')) {
-            tip.classList.remove('active');
         }
     }
 
@@ -233,32 +215,8 @@ export class FolderHandler {
     private submit(folder: string) {
         if (this.saveLocalFolder(folder)) {
             this.add(folder, true);
-            this.removeTip();
+            this.hideTip();
             this.dispatchEvents('selected', folder);
         }
-    }
-
-    /**
-     * Creates an HTML element based on an options object
-     * @param tag Tag name
-     * @param opts Options object that define the element
-     */
-    private makeElement(tag: string, opts: any): HTMLElement {
-        let element = document.createElement(tag);
-        if (opts.classList && opts.classList.length && opts.classList.length > 0) {
-            element.classList.add(...opts.classList)
-        }
-        if (opts.click && typeof (opts.click) === 'function') {
-            element.addEventListener('click', (event: any) => {
-                opts.click(event);
-            });
-        }
-        if (opts.innerHTML) {
-            element.innerHTML = opts.innerHTML;
-        }
-        if (opts.children && opts.children.length && opts.children.length > 0) {
-            element.prepend(...opts.children);
-        }
-        return element;
     }
 }

@@ -20,7 +20,9 @@ class App {
         });
     }
 
-    /**Applies title bar styles for window build only */
+    /**
+     * Applies title bar styles for the windows build only.
+     */
     private applyTitlebarStyles() {
         if (os.platform() == 'darwin') {
             return;

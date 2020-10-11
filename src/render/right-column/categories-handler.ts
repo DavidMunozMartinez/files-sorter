@@ -1,8 +1,8 @@
+import { SectionHandler } from '../sections-handler';
 import { ExtensionsHandler } from './extensions-handler';
 
-export class CategoriesHandler {
+export class CategoriesHandler extends SectionHandler {
     elementRef: HTMLElement | null;
-    overlayRef: HTMLElement | null | undefined;
     inputRef: HTMLElement | null | undefined;
     listRef: HTMLElement | null | undefined;
 
@@ -15,10 +15,10 @@ export class CategoriesHandler {
     extensionHandler: ExtensionsHandler;
 
     constructor() {
+        super('div.categories', 'smart-hover.category-list');
         this.elementRef = document.querySelector('div.categories');
         this.inputRef = this.elementRef?.querySelector('div.category-input');
         this.listRef = this.elementRef?.querySelector('smart-hover.category-list');
-        this.overlayRef = this.elementRef?.querySelector('div.inactive-overlay');
         this.activeFolder = null;
         this.extensionHandler = new ExtensionsHandler();
         this.extensionHandler.on('stored', () => {
@@ -39,7 +39,6 @@ export class CategoriesHandler {
             this.hideOverlay();
             this.activeCategoryList = this.getCategoriesForFolder(folder);
             this.renderCategoryList();
-            // this.extensionHandler
             this.extensionHandler.setActiveFolder(folder);
             if (this.activeCategoryList.length == 0) {
                 setTimeout(() => {
@@ -77,35 +76,6 @@ export class CategoriesHandler {
     on(event: string, callback: any) {
         if (this.subscriptions[event]) {
             this.subscriptions[event].push(callback);
-        }
-    }
-
-    hideOverlay() {
-        if (this.overlayRef && !this.overlayRef.classList.contains('hiden')) {
-            this.overlayRef.classList.add('hiden');
-        }
-    }
-
-    showOverlay() {
-        if (this.overlayRef && this.overlayRef.classList.contains('hiden')) {
-            this.overlayRef.classList.remove('hiden');
-            this.extensionHandler.showOverlay();
-            this.extensionHandler.removeTip();
-        }
-
-    }
-
-    showTip() {
-        let tip = this.listRef?.querySelector('.section-tip');
-        if (tip && !tip.classList.contains('active')) {
-            tip.classList.add('active');
-        }
-    }
-
-    hideTip() {
-        let tip = this.listRef?.querySelector('.section-tip');
-        if (tip && tip.classList.contains('active')) {
-            tip.classList.remove('active');
         }
     }
 
@@ -169,7 +139,7 @@ export class CategoriesHandler {
         }
         else {
             this.extensionHandler.showOverlay();
-            this.extensionHandler.removeTip();
+            this.extensionHandler.hideTip();
         }
     }
 

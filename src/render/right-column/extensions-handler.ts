@@ -1,8 +1,9 @@
-export class ExtensionsHandler {
+import { SectionHandler } from "../sections-handler";
+
+export class ExtensionsHandler extends SectionHandler {
     elementRef: HTMLElement | null;
     inputRef: HTMLElement | null | undefined;
     listRef: HTMLElement | null | undefined;
-    overlayRef: HTMLElement | null | undefined;
 
     activeFolder: string | null = null;
     activeCategory: string | null = null;
@@ -11,10 +12,10 @@ export class ExtensionsHandler {
     }
 
     constructor() {
+        super('div.extensions', 'div.extension-list');
         this.elementRef = document.querySelector('div.extensions');
         this.inputRef = this.elementRef?.querySelector('div.extensions-input');
         this.listRef = this.elementRef?.querySelector('div.extension-list');
-        this.overlayRef = this.elementRef?.querySelector('div.inactive-overlay');
         this.inputRef?.addEventListener('keydown', (event) => { this.inputKeydown(event) })
     }
 
@@ -33,7 +34,7 @@ export class ExtensionsHandler {
                 this.showTip();
             }
             else {
-                this.removeTip();
+                this.hideTip();
             }
         }
     }
@@ -59,31 +60,6 @@ export class ExtensionsHandler {
         this.subscriptions[event].push(callback);
     }
 
-    showOverlay() {
-        if (this.overlayRef && this.overlayRef.classList.contains('hiden')) {
-            this.overlayRef.classList.remove('hiden');
-        }
-    }
-
-    hideOverlay() {
-        if (this.overlayRef && !this.overlayRef.classList.contains('hiden')) {
-            this.overlayRef.classList.add('hiden');
-        }
-    }
-
-    showTip() {
-        let tip = this.listRef?.querySelector('.section-tip');
-        if (tip && !tip.classList.contains('active')) {
-            tip.classList.add('active');
-        }
-    }
-
-    removeTip() {
-        let tip = this.listRef?.querySelector('.section-tip');
-        if (tip && tip.classList.contains('active')) {
-            tip.classList.remove('active');
-        }
-    }
 
     private renderExtensionList(extensions: Array<string>) {
         if (!this.activeFolder || !this.activeCategory) {
@@ -152,7 +128,7 @@ export class ExtensionsHandler {
             event.preventDefault();
             target.blur();
             target.focus();
-            this.removeTip();
+            this.hideTip();
             if (this.inputRef) {
                 this.inputRef.innerText = '';
             }
