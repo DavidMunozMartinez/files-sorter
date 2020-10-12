@@ -5,17 +5,16 @@ import { SectionHandler } from '../sections-handler';
 export class FolderHandler extends SectionHandler {
     // List item selected/active
     public selectedRef!: Element | null;
-    // List element reference
-    public listRef: HTMLElement | null;
     // Button that opens the folder selection dialog
     private addButtonRef: Element | null;
 
     // Object that stures different functions that can be executed whenever
     // specific logic of this component is executed
-    private subcriptions: any = {
-        deleted: [],
-        added: []
-    };
+    // private subcriptions: any = {
+    //     deleted: [],
+    //     added: [],
+    //     selected: []
+    // };
 
     // Handles all logic related to the categories section
     categoriesHandler: CategoriesHandler = new CategoriesHandler();
@@ -24,19 +23,36 @@ export class FolderHandler extends SectionHandler {
         super('.column.left-column', '.folder-list');
         this.addButtonRef = document.querySelector('div.folder-input');
         this.addButtonRef?.addEventListener('click', () =>  this.folderDialog() );
-        this.listRef = document.querySelector('smart-hover.folder-list');
-        let folders = this.getLocalFolders();
-        let foldersArr: Array<string> = Object.keys(folders);
-        if (foldersArr && foldersArr.length > 0) {
-            foldersArr.forEach((folder, index) => {
-                this.add(folder, index == foldersArr.length - 1);
-            });
+        let folders = Object.keys(this.getFolders());
+        let items: Array<HTMLElement> = [];
+        folders.forEach((item) => {
+            items.push(this.createListElement(item));
+        });
 
-        }
+        this.renderList(items, folders.length - 1);
 
-        if (foldersArr.length == 0) {
-            this.showTip();
-        }
+        this.on('selected', (item: HTMLElement) => {
+            let folder = item.querySelector('.value-holder');
+            let value = folder?.innerHTML;
+            if (value) {
+                this.categoriesHandler.setActiveFolder(value);
+            }
+        });
+
+        this.on('removed', () => {});
+
+        this.on('added', () => {});
+
+        // if (foldersArr && foldersArr.length > 0) {
+        //     foldersArr.forEach((folder, index) => {
+        //         this.add(folder, index == foldersArr.length - 1);
+        //     });
+
+        // }
+
+        // if (foldersArr.length == 0) {
+        //     this.showTip();
+        // }
     }
 
     /**
@@ -44,41 +60,41 @@ export class FolderHandler extends SectionHandler {
      * @param event Event name to subscribe to 'deleted' | 'added'
      * @param callback Function that will be executed when the even is triggered
      */
-    on(event: string, callback: any) {
-        if (this.subcriptions[event]) {
-            this.subcriptions[event].push(callback);
-        }
-    }
+    // on(event: string, callback: any) {
+    //     if (this.subcriptions[event]) {
+    //         this.subcriptions[event].push(callback);
+    //     }
+    // }
     
     /**
      * Adds a folder to the folder list, and automatically selets it if defined
      * @param folder Folder string path to add
      * @param select Determines if this folder will be automatically selected when added to the DOM
      */
-    add(folder: string, select?: boolean) {
-        if (this.listRef) {
-            let listElement = this.createListElement(folder);
-            this.listRef.append(listElement);
-            this.dispatchEvents('added', folder);
-            if (select) {
-                this.select(listElement, folder);
-            }
-        }
-    }
+    // add(folder: string, select?: boolean) {
+    //     if (this.listRef) {
+    //         let listElement = this.createListElement(folder);
+    //         this.listRef.append(listElement);
+    //         this.dispatchEvents('added', folder);
+    //         if (select) {
+    //             this.select(listElement, folder);
+    //         }
+    //     }
+    // }
 
     /**
      * Sets a list element as active
      * @param item List item HTML reference to select
      * @param folder Folder string path to select
      */
-    select(item: HTMLElement | Element, folder: string) {
-        if (this.selectedRef) {
-            this.selectedRef.classList.toggle('active');
-        }
-        item.classList.toggle('active');
-        this.categoriesHandler.setActiveFolder(folder);
-        this.selectedRef = item;
-    }
+    // select(item: HTMLElement) {
+    //     // if (this.selectedRef) {
+    //     //     this.selectedRef.classList.toggle('active');
+    //     // }
+    //     // item.classList.toggle('active');
+    //     // this.categoriesHandler.setActiveFolder(folder);
+    //     // this.selectedRef = item;
+    // }
 
     /**
      * Removes a list item from the list ref, it also makes sure to clean up the categories section 
@@ -102,7 +118,7 @@ export class FolderHandler extends SectionHandler {
             let folder = item.querySelector('.value-holder');
 
             if (folder) {
-                this.select(item, folder.innerHTML);
+                // this.select(item, folder.innerHTML);
             }
         }
     }
@@ -112,11 +128,11 @@ export class FolderHandler extends SectionHandler {
      * @param folder Folder string path to delete from storage
      */
     deleteData(folder: string) {
-        let data: any = this.getLocalFolders();
+        let data: any = this.getFolders();
         if (data[folder]) {
             delete data[folder];
             localStorage.setItem('folders', JSON.stringify(data));
-            this.dispatchEvents('deleted', folder);
+            // this.dispatchEvents('deleted', folder);
         }
     }
 
@@ -125,32 +141,20 @@ export class FolderHandler extends SectionHandler {
      * @param event Event name to be dispatched
      * @param data Data that will be sent to the event subscriptions
      */
-    private dispatchEvents(event: string, data: any) {
-        if (this.subcriptions[event] && this.subcriptions[event].length > 0) {
-            this.subcriptions[event].forEach((callback: any) => {
-                callback(data);
-            });
-        }
-    }
-
-    /**
-     * Retreives all sotred folders data
-     */
-    private getLocalFolders() {
-        let data = {};
-        let raw: string | null = localStorage.getItem('folders');
-        if (raw) {
-            data = JSON.parse(raw);
-        }
-        return data;
-    }
+    // private dispatchEvents(event: string, data: any) {
+    //     if (this.subcriptions[event] && this.subcriptions[event].length > 0) {
+    //         this.subcriptions[event].forEach((callback: any) => {
+    //             callback(data);
+    //         });
+    //     }
+    // }
 
     /**
      * Stores folder path in local storage, onlu if its not already there
      * @param folder Folder path string to store
      */
     private saveLocalFolder(folder: string): boolean {
-        let data: any = this.getLocalFolders();
+        let data: any = this.getFolders();
         let success = false;
         if (!data[folder]) {
             data[folder] = {
@@ -185,10 +189,7 @@ export class FolderHandler extends SectionHandler {
 
         let listItem = this.makeElement('div', {
             classList: ['folder-list-item'],
-            click: () => {
-                this.select(listItem, folder);
-            },
-            children: [valueElement, removeIcon]
+            children: [valueElement]
         });
 
         return listItem;
@@ -214,9 +215,9 @@ export class FolderHandler extends SectionHandler {
      */
     private submit(folder: string) {
         if (this.saveLocalFolder(folder)) {
-            this.add(folder, true);
+            // this.add(folder, true);
             this.hideTip();
-            this.dispatchEvents('selected', folder);
+            // this.dispatchEvents('selected', folder);
         }
     }
 }

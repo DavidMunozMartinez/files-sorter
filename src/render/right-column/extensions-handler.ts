@@ -3,19 +3,19 @@ import { SectionHandler } from "../sections-handler";
 export class ExtensionsHandler extends SectionHandler {
     elementRef: HTMLElement | null;
     inputRef: HTMLElement | null | undefined;
-    listRef: HTMLElement | null | undefined;
+    // listRef: HTMLElement | null | undefined;
 
     activeFolder: string | null = null;
     activeCategory: string | null = null;
-    subscriptions: any = {
-        stored: []
-    }
+    // subscriptions: any = {
+    //     stored: []
+    // }
 
     constructor() {
         super('div.extensions', 'div.extension-list');
         this.elementRef = document.querySelector('div.extensions');
         this.inputRef = this.elementRef?.querySelector('div.extensions-input');
-        this.listRef = this.elementRef?.querySelector('div.extension-list');
+        // this.listRef = this.elementRef?.querySelector('div.extension-list');
         this.inputRef?.addEventListener('keydown', (event) => { this.inputKeydown(event) })
     }
 
@@ -27,7 +27,7 @@ export class ExtensionsHandler extends SectionHandler {
     setActiveCategory(category: string) {
         if (this.activeCategory != category && this.activeFolder) {
             this.activeCategory = category;
-            let extensions = this.getExtensionsForCategory(this.activeFolder, this.activeCategory);
+            let extensions = this.getExtensions(this.activeFolder, this.activeCategory);
             this.renderExtensionList(extensions);
             this.hideOverlay();
             if (extensions.length == 0) {
@@ -52,13 +52,13 @@ export class ExtensionsHandler extends SectionHandler {
         }
     }
 
-    on(event: string, callback: any) {
-        if (!this.subscriptions[event]) {
-            return;
-        }
+    // on(event: string, callback: any) {
+    //     if (!this.subscriptions[event]) {
+    //         return;
+    //     }
 
-        this.subscriptions[event].push(callback);
-    }
+    //     this.subscriptions[event].push(callback);
+    // }
 
 
     private renderExtensionList(extensions: Array<string>) {
@@ -74,21 +74,21 @@ export class ExtensionsHandler extends SectionHandler {
         });
     }
 
-    private getExtensionsForCategory(folder: string, category: string): Array<string> {
-        let extensions: Array<string> = []
-        let raw = localStorage.getItem('folders');
-        if (!raw) {
-            return extensions;
-        }
+    // private getExtensionsForCategory(folder: string, category: string): Array<string> {
+    //     let extensions: Array<string> = []
+    //     let raw = localStorage.getItem('folders');
+    //     if (!raw) {
+    //         return extensions;
+    //     }
 
-        let data = JSON.parse(raw);
-        let folderData = data[folder];
-        if (folderData && folderData.categories && folderData.categories[category]) {
-            extensions = folderData.categories[category];
-        }
+    //     let data = JSON.parse(raw);
+    //     let folderData = data[folder];
+    //     if (folderData && folderData.categories && folderData.categories[category]) {
+    //         extensions = folderData.categories[category];
+    //     }
 
-        return extensions;
-    }
+    //     return extensions;
+    // }
 
     private appendToList(extension: string) {
         if (!this.listRef) {
@@ -112,9 +112,9 @@ export class ExtensionsHandler extends SectionHandler {
         if (folderData && folderData.categories && folderData.categories[this.activeCategory]) {
             folderData.categories[this.activeCategory].push(value);
             localStorage.setItem('folders', JSON.stringify(data));
-            this.subscriptions['stored'].forEach((fn: any) => {
-                fn();
-            });
+            // this.subscriptions['stored'].forEach((fn: any) => {
+            //     fn();
+            // });
         }
 
     }

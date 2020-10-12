@@ -4,13 +4,13 @@ import { ExtensionsHandler } from './extensions-handler';
 export class CategoriesHandler extends SectionHandler {
     elementRef: HTMLElement | null;
     inputRef: HTMLElement | null | undefined;
-    listRef: HTMLElement | null | undefined;
+    // listRef: HTMLElement | null | undefined;
 
     activeFolder: string | null;
     activeCategoryList!: Array<string>;
-    subscriptions: any = {
-        stored: []
-    }
+    // subscriptions: any = {
+    //     stored: []
+    // }
 
     extensionHandler: ExtensionsHandler;
 
@@ -18,14 +18,14 @@ export class CategoriesHandler extends SectionHandler {
         super('div.categories', 'smart-hover.category-list');
         this.elementRef = document.querySelector('div.categories');
         this.inputRef = this.elementRef?.querySelector('div.category-input');
-        this.listRef = this.elementRef?.querySelector('smart-hover.category-list');
+        // this.listRef = this.elementRef?.querySelector('smart-hover.category-list');
         this.activeFolder = null;
         this.extensionHandler = new ExtensionsHandler();
-        this.extensionHandler.on('stored', () => {
-            this.subscriptions['stored'].forEach((fn: any) => {
-                fn();
-            });
-        })
+        // this.extensionHandler.on('stored', () => {
+        //     this.subscriptions['stored'].forEach((fn: any) => {
+        //         fn();
+        //     });
+        // })
 
         this.setupEvents();
     }
@@ -37,7 +37,7 @@ export class CategoriesHandler extends SectionHandler {
         if (this.activeFolder != folder) {
             this.activeFolder = folder;
             this.hideOverlay();
-            this.activeCategoryList = this.getCategoriesForFolder(folder);
+            this.activeCategoryList = Object.keys(this.getCategories(folder));
             this.renderCategoryList();
             this.extensionHandler.setActiveFolder(folder);
             if (this.activeCategoryList.length == 0) {
@@ -73,11 +73,11 @@ export class CategoriesHandler extends SectionHandler {
         this.extensionHandler.clearExtensionList();
     }
 
-    on(event: string, callback: any) {
-        if (this.subscriptions[event]) {
-            this.subscriptions[event].push(callback);
-        }
-    }
+    // on(event: string, callback: any) {
+    //     if (this.subscriptions[event]) {
+    //         this.subscriptions[event].push(callback);
+    //     }
+    // }
 
     private setupEvents() {
         this.inputRef?.addEventListener('keydown', (event: any) => {
@@ -104,21 +104,21 @@ export class CategoriesHandler extends SectionHandler {
             }
 
             localStorage.setItem('folders', JSON.stringify(data));
-            this.subscriptions['stored'].forEach((fn: any) => {
-                fn();
-            });
+            // this.subscriptions['stored'].forEach((fn: any) => {
+            //     fn();
+            // });
         }
     }
 
-    private getCategoriesForFolder(folder: string): Array<string> {
-        let categories: Array<string> = [];
-        let raw = localStorage.getItem('folders');
-        if (raw) {
-            let data = JSON.parse(raw);
-            categories = Object.keys(data[folder].categories);
-        }
-        return categories;
-    }
+    // private getCategoriesForFolder(folder: string): Array<string> {
+    //     let folders = this.getFolders();
+    //     let categories: Array<string> = [];
+    //     let data = folders[folder]; 
+    //     if (data && data.categories && data.categories.length && data.categories.length > 0) {
+    //         categories = folders[folder].categories;
+    //     }
+    //     return categories;
+    // }
 
     private renderCategoryList() {
         if (this.listRef) {
