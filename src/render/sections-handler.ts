@@ -1,3 +1,5 @@
+import { opendirSync } from "fs";
+
 export class SectionHandler {
 
     contentRef: HTMLElement | null;
@@ -5,6 +7,7 @@ export class SectionHandler {
     overlayRef: HTMLElement | null;
     tipRef: HTMLElement | null;
     selected: HTMLElement | null = null;
+    listItemSelector: string;
 
     private subscriptions: any = {
         added: [],
@@ -12,13 +15,19 @@ export class SectionHandler {
         selected: []
     }
 
-    constructor(containerQuerySelector: string, listQuerySelector: string) {
+    constructor(containerQuerySelector: string, listQuerySelector: string, itemSelector: string) {
         this.contentRef = document.querySelector(containerQuerySelector);
         this.listRef = this.contentRef?.querySelector(listQuerySelector) || null;
         this.overlayRef = this.contentRef?.querySelector('.inactive-overlay') || null;
         this.tipRef = this.contentRef?.querySelector('.section-tip') || null;
+        this.listItemSelector = itemSelector;
     }
 
+    /**
+     * Subscribes a callback function to specific section events
+     * @param eventName Event name to subscribe
+     * @param callback call back function that will be executed when the event is triggered
+     */
     on(eventName: string, callback: any) {
         if (this.subscriptions[eventName]) {
             this.subscriptions[eventName].push(callback);
@@ -35,6 +44,16 @@ export class SectionHandler {
         if (opts.classList && opts.classList.length && opts.classList.length > 0) {
             element.classList.add(...opts.classList)
         }
+
+        if (opts.attrs && opts.attrs.length && opts.attrs.length > 0) {
+            opts.attrs.forEach((attr: string) => {
+                let split = attr.split(':');
+                let key = split[0];
+                let value = split[1];
+                element.setAttribute(key, value);
+            });
+        }
+
         if (opts.click && typeof (opts.click) === 'function') {
             element.addEventListener('click', (event: any) => {
                 opts.click(event);
@@ -55,9 +74,10 @@ export class SectionHandler {
      * @param selectIndex Optional index number to select an item once the list is rendered
      */
     renderList(items: Array<HTMLElement>, selectIndex?: number) {
-        let animation = 300
+        let animation = 150
         items.forEach((item, index) => {
-            this.renderItem(item, animation * index);
+            let delay = (animation * index) - (index * 100);
+            this.renderItem(item, delay);
         });
 
         if (selectIndex) {
@@ -67,25 +87,68 @@ export class SectionHandler {
         }
     }
 
-    renderItem(item: HTMLElement, delay: number) {
+    /**
+     * Takes an HTML element and renders it into the section list with an animation
+     * @param item HTML element to render in the list
+     * @param delay Delay time in ms to render given item
+     */
+    renderItem(item: HTMLElement, delay?: number | 0) {
+        let removeIcon = this.makeElement('i', {
+            classList: ['material-icons'],
+            innerHTML: 'close',
+            click: (event: any) => {
+                console.log('close');
+                this.clearItem(item);
+                event.stopImmediatePropagation();
+            }
+        });
+
+        removeIcon.style.position = 'relative';
+        removeIcon.style.float = 'right';
+
         item.style.opacity = '0';
         item.style.transform = 'translateX(-10px)';
         item.style.transition = 'all 200ms ease-out';
-        item.onclick = () => {
+        item.append(removeIcon);
+        item.addEventListener('click', () => {
             this.select(item);
-        };
+        });
         setTimeout(() => {
             item.style.transform = 'translateX(0px)';
             item.style.opacity = '1';
         }, delay)
         this.listRef?.append(item);
+
+        this.subscriptions['added'].forEach((callback: any) => {
+            let items = this.listRef?.querySelectorAll(this.listItemSelector);
+            callback(item, items);
+        });
     }
 
     clearList() {
-
+        let items = this.listRef?.querySelectorAll(this.listItemSelector);
+        if (items && items.length > 0) {
+            items.forEach((item) => {
+                this.listRef?.removeChild(item);
+            })
+        }
     }
 
-    clearItem() {}
+    /**
+     * Removed a given html element from the section list
+     * @param item HTML element that will be removed from the list
+     */
+    clearItem(item: HTMLElement) {
+        item.style.opacity = '0';
+        setTimeout(() => {
+            this.listRef?.removeChild(item);
+        }, 150);
+
+        this.subscriptions['removed'].forEach((callback: any) => {
+            let items = this.listRef?.querySelectorAll(this.listItemSelector);
+            callback(item, items);
+        });
+    }
 
     /**
      * Sets a list element as active

@@ -7,12 +7,9 @@ export class ExtensionsHandler extends SectionHandler {
 
     activeFolder: string | null = null;
     activeCategory: string | null = null;
-    // subscriptions: any = {
-    //     stored: []
-    // }
 
     constructor() {
-        super('div.extensions', 'div.extension-list');
+        super('div.extensions', 'div.extension-list', '.extension-list-item');
         this.elementRef = document.querySelector('div.extensions');
         this.inputRef = this.elementRef?.querySelector('div.extensions-input');
         // this.listRef = this.elementRef?.querySelector('div.extension-list');
@@ -51,14 +48,6 @@ export class ExtensionsHandler extends SectionHandler {
             this.listRef.removeChild(child);
         }
     }
-
-    // on(event: string, callback: any) {
-    //     if (!this.subscriptions[event]) {
-    //         return;
-    //     }
-
-    //     this.subscriptions[event].push(callback);
-    // }
 
 
     private renderExtensionList(extensions: Array<string>) {
@@ -112,9 +101,6 @@ export class ExtensionsHandler extends SectionHandler {
         if (folderData && folderData.categories && folderData.categories[this.activeCategory]) {
             folderData.categories[this.activeCategory].push(value);
             localStorage.setItem('folders', JSON.stringify(data));
-            // this.subscriptions['stored'].forEach((fn: any) => {
-            //     fn();
-            // });
         }
 
     }

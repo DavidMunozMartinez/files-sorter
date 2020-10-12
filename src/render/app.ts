@@ -15,8 +15,8 @@ class App {
             this.fileSorter.deleteWatcher(folder);
         });
 
-        this.folderHandler.on('added', (folder: string) => {
-            this.fileSorter.addWatcher(folder);
+        this.folderHandler.on('added', (item: HTMLElement) => {
+            // this.fileSorter.addWatcher(folder);
         });
     }
 

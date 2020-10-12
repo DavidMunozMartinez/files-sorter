@@ -8,7 +8,7 @@
         width: 100%;
         position: absolute;
         height: calc(100% - 110px);
-        overflow-y: auto;
+        overflow-y: scroll;
         top: 50px;
         display: block;
         .folder-list-item {
