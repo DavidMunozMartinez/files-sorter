@@ -71,17 +71,20 @@ export class ExtensionsHandler extends SectionHandler {
 
     private save(extension: string) {
         if (!this.folder || !this.category) {
-            return;
+            return false;
         }
 
+        let success = false
         let data = this.getFolders();
         let folder = data[this.folder];
         let extensions = folder.categories[this.category];
 
         if (extensions.indexOf(extension) == -1) {
             extensions.push(extension);
+            localStorage.setItem('folders', JSON.stringify(data));
+            success = true;
         }
-        localStorage.setItem('folders', JSON.stringify(data));
+        return success
     }
 
     private delete (extension: string) {
@@ -108,10 +111,12 @@ export class ExtensionsHandler extends SectionHandler {
             attrs: ['value:' + value]
         });
 
-        this.renderItem(item);
-        this.save(value);
+        if (this.save(value)) {
+            this.renderItem(item);
+            event.target.innerText = '';
+        }
+        // this.save(value);
         event.preventDefault();
 
-        event.target.innerText = '';
     }
 }
