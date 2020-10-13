@@ -135,8 +135,8 @@ export class CategoriesHandler extends SectionHandler {
         let folders = this.getFolders();
         let folder = folders[this.folder];
 
-        if (folder[category]) {
-            delete folder[category];
+        if (folder.categories && folder.categories[category]) {
+            delete folder.categories[category];
             localStorage.setItem('folders', JSON.stringify(folders));
         }
     }

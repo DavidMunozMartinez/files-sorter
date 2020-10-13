@@ -9,13 +9,28 @@ export class ExtensionsHandler extends SectionHandler {
     constructor() {
         super('div.extensions', 'div.extension-list', '.extension-list-item');
         this.inputRef = this.contentRef?.querySelector('div.extensions-input');
-        this.inputRef?.addEventListener('keydown', (event) => { this.inputKeydown(event) });
+        this.inputRef?.addEventListener('keydown', (event: any) => { 
+            if (event.which == 13) {
+                this.onEnter(event)
+            }
+        });
 
         this.on('removed', (item: HTMLElement, items: NodeList) => {
+            let value = item.getAttribute('value');
+            if (value) {
+                this.delete(value);
+            }
             if (items.length == 1) {
                 this.showTip();
             }
         });
+
+        this.on('added', (item: HTMLElement, items: NodeList) => {
+            if (items.length > 0) {
+                this.hideTip();
+                this.hideOverlay();
+            }
+        })
     }
 
     enable(folder: string, category: string) {
@@ -54,7 +69,7 @@ export class ExtensionsHandler extends SectionHandler {
         this.category = null;
     }
 
-    private storeExtension(value: string) {
+    private save(extension: string) {
         if (!this.folder || !this.category) {
             return;
         }
@@ -63,31 +78,40 @@ export class ExtensionsHandler extends SectionHandler {
         let folder = data[this.folder];
         let extensions = folder.categories[this.category];
 
-        if (extensions.indexOf(value) == -1) {
-            extensions.push(value);
+        if (extensions.indexOf(extension) == -1) {
+            extensions.push(extension);
         }
         localStorage.setItem('folders', JSON.stringify(data));
     }
 
-    private inputKeydown(event: any) {
-        if (event.which != 13) {
+    private delete (extension: string) {
+        if (!this.folder || !this.category) {
             return;
         }
-        let target = event.target;
+
+        let data = this.getFolders();
+        let folder = data[this.folder];
+        let extensions: Array<string> = folder.categories[this.category];
+
+        if (extensions.indexOf(extension) > -1) {
+            extensions.splice(extensions.indexOf(extension), 1);
+        }
+
+        localStorage.setItem('folders', JSON.stringify(data));
+    }
+
+    private onEnter(event: any) {
         let value = event.target.innerText;
         let item = this.makeElement('div', {
             classList: ['extension-list-item'],
-            innerHTML: value
+            innerHTML: value,
+            attrs: ['value:' + value]
         });
 
         this.renderItem(item);
-        this.storeExtension(value);
+        this.save(value);
         event.preventDefault();
-        target.blur();
-        target.focus();
-        this.hideTip();
-        if (this.inputRef) {
-            this.inputRef.innerText = '';
-        }
+
+        event.target.innerText = '';
     }
 }
