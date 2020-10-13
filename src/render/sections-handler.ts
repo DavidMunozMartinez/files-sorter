@@ -1,5 +1,3 @@
-import { opendirSync } from "fs";
-
 export class SectionHandler {
 
     contentRef: HTMLElement | null;
@@ -12,7 +10,8 @@ export class SectionHandler {
     private subscriptions: any = {
         added: [],
         removed: [],
-        selected: []
+        selected: [],
+        cleared: []
     }
 
     constructor(containerQuerySelector: string, listQuerySelector: string, itemSelector: string) {
@@ -125,13 +124,20 @@ export class SectionHandler {
         });
     }
 
+    /**
+     * Clears the section list items
+     */
     clearList() {
         let items = this.listRef?.querySelectorAll(this.listItemSelector);
         if (items && items.length > 0) {
             items.forEach((item) => {
                 this.listRef?.removeChild(item);
-            })
+            });
+
         }
+        this.subscriptions['cleared'].forEach((callback: any) => {
+            callback();
+        });
     }
 
     /**

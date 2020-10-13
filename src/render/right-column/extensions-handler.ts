@@ -1,123 +1,93 @@
 import { SectionHandler } from "../sections-handler";
 
 export class ExtensionsHandler extends SectionHandler {
-    elementRef: HTMLElement | null;
     inputRef: HTMLElement | null | undefined;
-    // listRef: HTMLElement | null | undefined;
 
-    activeFolder: string | null = null;
-    activeCategory: string | null = null;
+    folder: string | null = null;
+    category: string | null = null;
 
     constructor() {
         super('div.extensions', 'div.extension-list', '.extension-list-item');
-        this.elementRef = document.querySelector('div.extensions');
-        this.inputRef = this.elementRef?.querySelector('div.extensions-input');
-        // this.listRef = this.elementRef?.querySelector('div.extension-list');
-        this.inputRef?.addEventListener('keydown', (event) => { this.inputKeydown(event) })
-    }
+        this.inputRef = this.contentRef?.querySelector('div.extensions-input');
+        this.inputRef?.addEventListener('keydown', (event) => { this.inputKeydown(event) });
 
-
-    setActiveFolder(folder: string) {
-        this.activeFolder = folder;
-    }
-
-    setActiveCategory(category: string) {
-        if (this.activeCategory != category && this.activeFolder) {
-            this.activeCategory = category;
-            let extensions = this.getExtensions(this.activeFolder, this.activeCategory);
-            this.renderExtensionList(extensions);
-            this.hideOverlay();
-            if (extensions.length == 0) {
+        this.on('removed', (item: HTMLElement, items: NodeList) => {
+            if (items.length == 1) {
                 this.showTip();
             }
-            else {
-                this.hideTip();
-            }
-        }
-    }
-
-    clearExtensionList() {
-        if (!this.listRef) {
-            return;
-        }
-
-        let items = this.listRef.querySelectorAll('.extension-list-item');
-
-        for (let i = 0; i < items.length; i++) {
-            let child = items[i];
-            this.listRef.removeChild(child);
-        }
-    }
-
-
-    private renderExtensionList(extensions: Array<string>) {
-        if (!this.activeFolder || !this.activeCategory) {
-            return;
-        }
-        if (this.listRef) {
-            this.clearExtensionList()
-        }
-
-        extensions.map((extension) => {
-            this.appendToList(extension);
         });
     }
 
-    // private getExtensionsForCategory(folder: string, category: string): Array<string> {
-    //     let extensions: Array<string> = []
-    //     let raw = localStorage.getItem('folders');
-    //     if (!raw) {
-    //         return extensions;
-    //     }
-
-    //     let data = JSON.parse(raw);
-    //     let folderData = data[folder];
-    //     if (folderData && folderData.categories && folderData.categories[category]) {
-    //         extensions = folderData.categories[category];
-    //     }
-
-    //     return extensions;
-    // }
-
-    private appendToList(extension: string) {
-        if (!this.listRef) {
+    enable(folder: string, category: string) {
+        if (this.category == category) {
             return;
         }
+        this.hideOverlay();
+        this.folder = folder;
+        this.category = category;
+        this.clearList();
 
-        let item = document.createElement('div');
-        item.classList.add('extension-list-item');
-        item.innerText = extension;
-        this.listRef.append(item);
+        let extensions = this.getExtensions(this.folder, this.category);
+        if (extensions.length > 0) {
+            let items = extensions.map((extension: any) => {
+                return this.makeElement('div', {
+                    classList: ['extension-list-item'],
+                    innerHTML: extension
+                });
+            });
+            this.hideTip();
+            this.renderList(items);
+        }
+
+        else {
+            this.inputRef?.focus();
+            this.showTip();
+            this.hideOverlay();
+        }
+    }
+
+    disable() {
+        this.showOverlay();
+        this.hideTip();
+
+        this.folder = null;
+        this.category = null;
     }
 
     private storeExtension(value: string) {
-        let raw = localStorage.getItem('folders');
-        if (!this.activeFolder || !this.activeCategory || !raw) {
+        if (!this.folder || !this.category) {
             return;
         }
 
-        let data = JSON.parse(raw);
-        let folderData = data[this.activeFolder];
-        if (folderData && folderData.categories && folderData.categories[this.activeCategory]) {
-            folderData.categories[this.activeCategory].push(value);
-            localStorage.setItem('folders', JSON.stringify(data));
-        }
+        let data = this.getFolders();
+        let folder = data[this.folder];
+        let extensions = folder.categories[this.category];
 
+        if (extensions.indexOf(value) == -1) {
+            extensions.push(value);
+        }
+        localStorage.setItem('folders', JSON.stringify(data));
     }
 
     private inputKeydown(event: any) {
-        if (event.which == 13) {
-            let target = event.target;
-            let value = event.target.innerText;
-            this.appendToList(value);
-            this.storeExtension(value);
-            event.preventDefault();
-            target.blur();
-            target.focus();
-            this.hideTip();
-            if (this.inputRef) {
-                this.inputRef.innerText = '';
-            }
+        if (event.which != 13) {
+            return;
+        }
+        let target = event.target;
+        let value = event.target.innerText;
+        let item = this.makeElement('div', {
+            classList: ['extension-list-item'],
+            innerHTML: value
+        });
+
+        this.renderItem(item);
+        this.storeExtension(value);
+        event.preventDefault();
+        target.blur();
+        target.focus();
+        this.hideTip();
+        if (this.inputRef) {
+            this.inputRef.innerText = '';
         }
     }
 }

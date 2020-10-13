@@ -11,8 +11,21 @@ class App {
 
     constructor() {
         this.applyTitlebarStyles();
-        this.folderHandler.on('deleted', (folder: string) => {
-            this.fileSorter.deleteWatcher(folder);
+
+        let folders = Object.keys(this.folderHandler.getFolders());
+        let items: Array<HTMLElement> = folders.map((folder) => {
+            return this.folderHandler.createListElement(folder);
+        });
+
+        if (items.length > 0) {
+            this.folderHandler.renderList(items, 0);
+        }
+        else {
+            this.folderHandler.showTip();
+        }
+
+        this.folderHandler.on('removed', (folder: string) => {
+            // this.fileSorter.deleteWatcher(folder);
         });
 
         this.folderHandler.on('added', (item: HTMLElement) => {

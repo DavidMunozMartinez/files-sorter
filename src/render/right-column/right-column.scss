@@ -56,7 +56,6 @@
                 pointer-events: none;
             }
             i {
-                // pointer-events: none;
                 position: absolute;
                 top: 7px;
             }
@@ -73,6 +72,12 @@
             border: 1px solid $secondary-background-highlight;
             height: 30px;
             padding: 8px;
+            min-width: 60px;
+            i {
+                top: -4px;
+                right: -4px;
+                font-size: 20px;
+            }
         }
     }
 

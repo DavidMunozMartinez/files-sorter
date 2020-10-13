@@ -3,21 +3,19 @@ import { ExtensionsHandler } from './extensions-handler';
 
 export class CategoriesHandler extends SectionHandler {
     inputRef: HTMLElement | null | undefined;
-
-    activeFolder: string | null;
-    // activeCategoryList!: Array<string>;
-
-    extensionHandler: ExtensionsHandler;
+    folder: string | null = null;
+    extensionHandler: ExtensionsHandler = new ExtensionsHandler();
 
     constructor() {
         super('div.categories', 'smart-hover.category-list', '.category-list-item');
         this.inputRef = this.contentRef?.querySelector('div.category-input');
-        this.activeFolder = null;
-        this.extensionHandler = new ExtensionsHandler();
+        this.inputRef?.addEventListener('keydown', (event: any) => {
+            if (event.which == 13) {
+                this.onEnter(event);
+            }
+        })
 
-
-        this.setupEvents();
-
+        // Executed when a new item is added to the section list
         this.on('added', (item: HTMLElement, items: NodeList) => {
             if (items.length == 1) {
                 this.hideTip();
@@ -25,92 +23,122 @@ export class CategoriesHandler extends SectionHandler {
             }
         });
 
+        // Executed when a list item is selected
         this.on('selected', (item: HTMLElement) => {
             let category = item.getAttribute('value');
-            if (category) {
-                this.extensionHandler.setActiveCategory(category);
+            if (this.folder && category) {
+                this.extensionHandler.enable(this.folder, category);
+                this.hideOverlay();
             }
         });
 
+        // Executed when an item weill be removed from the sectin list
         this.on('removed', (item: HTMLElement, items: NodeList) => {
+            let category = item.getAttribute('value');
             if (items.length == 1) {
                 this.showTip();
+                this.extensionHandler.clearList();
+                this.extensionHandler.showOverlay();
+                this.extensionHandler.hideTip();
+            }
+
+            if (category == this.extensionHandler.category) {
+                this.extensionHandler.clearList();
+            }
+
+            if (category) {
+                this.delete(category);
             }
         });
     }
 
-    setActiveFolder(folder: string) {
-        if (this.activeFolder == folder) {
+    /**
+     * Enables the category section with the given folder string
+     * @param folder Folder string path
+     */
+    enable (folder: string) {
+        if (this.folder == folder) {
             return;
         }
-
-        this.extensionHandler.setActiveFolder(folder);
-        this.activeFolder = folder;
-        this.clearList();
         this.hideOverlay();
+
+        this.folder = folder;
+        this.clearList();
         let categories = this.getCategories(folder);
         let categoryList = Object.keys(categories);
 
+        // If the category list is greater than 0 we render it and remove the section tip
         if (categoryList.length > 0) {
-            let items: Array<HTMLElement> = [];
-            categoryList.forEach(category => {
-                items.push(this.createListElement(category));
+            let items: Array<HTMLElement> = categoryList.map((category) => {
+                return this.createListElement(category);
             });
+
             this.renderList(items);
             this.hideTip();
         }
+        // If not, the section is enabled but we show the tip
         else {
             this.inputRef?.focus();
             this.showTip();
+            this.hideOverlay();
+            this.extensionHandler.clearList();
+            this.extensionHandler.disable();
         }
-
     }
 
-    clearCategoryList() {
-        if (!this.listRef) {
+    disable() {
+        this.showOverlay();
+        this.hideTip();
+        this.folder = null;
+
+        this.extensionHandler.clearList()
+        this.extensionHandler.disable();
+    }
+
+    private onEnter(event: any) {
+        if (!this.inputRef) {
             return;
         }
 
-        let items = this.listRef.querySelectorAll('.category-list-item');
-
-        for (let i = 0; i < items.length; i++) {
-            let child = items[i];
-            this.listRef.removeChild(child);
+        let value = this.inputRef.innerText;
+        if (this.save(value)) {
+            let item = this.createListElement(value);
+            this.renderItem(item);
+            this.inputRef.innerText = '';
         }
-
-        this.extensionHandler.clearExtensionList();
+        event.preventDefault();
     }
 
-    private setupEvents() {
-        this.inputRef?.addEventListener('keydown', (event: any) => {
-            if (event.which == 13 && this.inputRef) {
-                let value = this.inputRef.innerText;
-                if (this.storeCategory(value)) {
-                    let item = this.createListElement(value);
-                    this.renderItem(item);
-                    this.inputRef.innerText = '';
-                }
-                event.preventDefault();
-            }
-        })
-    }
-
-    private storeCategory(value: string) {
-        if (!this.activeFolder || value == '') {
+    private save(category: string) {
+        if (!this.folder || category == '') {
             return false;
         }
         let success = false;
         let folders = this.getFolders();
-        let folder = folders[this.activeFolder];
+        let folder = folders[this.folder];
         let categories = folder.categories;
 
-        if (!categories[value]) {
-            categories[value] = [];
-            success = true;
+        if (!categories[category]) {
+            categories[category] = [];
             localStorage.setItem('folders', JSON.stringify(folders));
+            success = true;
         }
 
         return success;
+    }
+
+    private delete(category: string) {
+        if (!this.folder) {
+            return;
+        }
+
+        let folders = this.getFolders();
+        let folder = folders[this.folder];
+
+        if (folder[category]) {
+            delete folder[category];
+            localStorage.setItem('folders', JSON.stringify(folders));
+        }
     }
 
     private createListElement (value: string): HTMLElement {
