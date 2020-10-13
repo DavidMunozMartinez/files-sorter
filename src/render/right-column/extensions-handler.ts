@@ -33,6 +33,11 @@ export class ExtensionsHandler extends SectionHandler {
         })
     }
 
+    /**
+     * Enables this section with the given folder and category string
+     * @param folder Active folder string
+     * @param category Active category string
+     */
     enable(folder: string, category: string) {
         if (this.category == category) {
             return;
@@ -61,6 +66,10 @@ export class ExtensionsHandler extends SectionHandler {
         }
     }
 
+    /**
+     * Disables the section by showing the overlay and hiding the section tip, it also
+     * sets some global values to null
+     */
     disable() {
         this.showOverlay();
         this.hideTip();
@@ -69,6 +78,11 @@ export class ExtensionsHandler extends SectionHandler {
         this.category = null;
     }
 
+    /**
+     * Saves in local storage an extension string into the active folder and 
+     * category, also returns a boolean indicating that it was saved succesfully
+     * @param extension Extensoin string to save
+     */
     private save(extension: string) {
         if (!this.folder || !this.category) {
             return false;
@@ -87,6 +101,10 @@ export class ExtensionsHandler extends SectionHandler {
         return success
     }
 
+    /**
+     * Deletes the given extension string from local storage if it exists
+     * @param extension Extension string to delete
+     */
     private delete (extension: string) {
         if (!this.folder || !this.category) {
             return;
@@ -103,6 +121,10 @@ export class ExtensionsHandler extends SectionHandler {
         localStorage.setItem('folders', JSON.stringify(data));
     }
 
+    /**
+     * Executed when the section input trigger the enter key event
+     * @param event Native DOM event
+     */
     private onEnter(event: any) {
         let value = event.target.innerText;
         let item = this.makeElement('div', {
@@ -115,7 +137,6 @@ export class ExtensionsHandler extends SectionHandler {
             this.renderItem(item);
             event.target.innerText = '';
         }
-        // this.save(value);
         event.preventDefault();
 
     }

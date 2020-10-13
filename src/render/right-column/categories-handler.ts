@@ -44,6 +44,8 @@ export class CategoriesHandler extends SectionHandler {
 
             if (category == this.extensionHandler.category) {
                 this.extensionHandler.clearList();
+                this.extensionHandler.showOverlay();
+                this.extensionHandler.hideTip();
             }
 
             if (category) {
@@ -86,6 +88,10 @@ export class CategoriesHandler extends SectionHandler {
         }
     }
 
+    /**
+     * Disables the categories section by showing the overlay and hiding the tip
+     * it also sets folder to null and clears and disables the extensions section
+     */
     disable() {
         this.showOverlay();
         this.hideTip();
@@ -95,6 +101,10 @@ export class CategoriesHandler extends SectionHandler {
         this.extensionHandler.disable();
     }
 
+    /**
+     * Executed when the enter key is pressed on the section input
+     * @param event Native DOM event
+     */
     private onEnter(event: any) {
         if (!this.inputRef) {
             return;
@@ -109,6 +119,10 @@ export class CategoriesHandler extends SectionHandler {
         event.preventDefault();
     }
 
+    /**
+     * Saves in local storage a category string on the current active folder
+     * @param category Category string to save
+     */
     private save(category: string) {
         if (!this.folder || category == '') {
             return false;
@@ -127,6 +141,10 @@ export class CategoriesHandler extends SectionHandler {
         return success;
     }
 
+    /**
+     * Deletes the category and its data from local storage
+     * @param category Category string to delete
+     */
     private delete(category: string) {
         if (!this.folder) {
             return;
@@ -141,6 +159,10 @@ export class CategoriesHandler extends SectionHandler {
         }
     }
 
+    /**
+     * Creates an HTML element that will be rendered in the section list
+     * @param value Category string value
+     */
     private createListElement (value: string): HTMLElement {
         let icon = this.makeElement('i', {
             classList: ['material-icons'],

@@ -32,7 +32,7 @@
         bottom: 0;
         padding: 10px;
         box-sizing: border-box;
-        overflow-y: auto;
+        overflow-y: scroll;
         .category-list-item,
         .extension-list-item {
             transition: background-color 0.2s;
