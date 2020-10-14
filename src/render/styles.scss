@@ -3,6 +3,7 @@ $secondary-background: rgb(66, 66, 66);
 $secondary-background-highlight: rgb(112, 112, 112);
 $text: rgb(214, 214, 214);
 $primary: rgb(68, 165, 128);
+$primary-tint: rgb(101, 196, 159);
 $secondary: rgb(77, 126, 199);
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 @import '../../node_modules/material-icons-font/material-icons-font.css';
@@ -173,4 +174,36 @@ div[style="position: relative;"] + .main-content {
     bottom: 2px;
     left: 2px;
     font-size: 11px;
+}
+
+i.close-icon,
+i.sort-icon {
+    transition: color 0.2s;
+    font-weight: bold;
+}
+i.close-icon:hover {
+    color: rgb(182, 50, 50);
+}
+i.sort-icon:hover {
+    color: $primary;
+}
+
+i.sort-icon.sorting {
+    color: $primary;
+    animation-timing-function: cubic-bezier(.47,.11,.43,.98);
+    animation-name: pulse;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes pulse {
+    0% {
+        color: $primary
+    }
+    50% {
+        color: $primary-tint;
+    }
+    100% {
+        color: $primary
+    }
 }

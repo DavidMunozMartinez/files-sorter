@@ -17,7 +17,7 @@ class App {
             let valueHolder = item.querySelector('.value-holder');
             let folder = valueHolder?.innerHTML;
             if (folder) {
-                // this.fileSorter.deleteWatcher(folder);
+                this.fileSorter.deleteWatcher(folder);
             }
         });
 
@@ -25,7 +25,7 @@ class App {
             let valueHolder = item.querySelector('.value-holder');
             let folder = valueHolder?.innerHTML;
             if (folder) {
-                // this.fileSorter.addWatcher(folder);
+                this.fileSorter.addWatcher(folder);
             }
         });
 

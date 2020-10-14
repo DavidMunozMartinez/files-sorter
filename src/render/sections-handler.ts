@@ -62,7 +62,7 @@ export class SectionHandler {
             element.innerHTML = opts.innerHTML;
         }
         if (opts.children && opts.children.length && opts.children.length > 0) {
-            element.prepend(...opts.children);
+            element.append(...opts.children);
         }
         return element;
     }
@@ -93,7 +93,7 @@ export class SectionHandler {
      */
     renderItem(item: HTMLElement, delay?: number | 0) {
         let removeIcon = this.makeElement('i', {
-            classList: ['material-icons'],
+            classList: ['material-icons', 'close-icon'],
             innerHTML: 'close',
             click: (event: any) => {
                 console.log('close');
@@ -108,7 +108,7 @@ export class SectionHandler {
         item.style.opacity = '0';
         item.style.transform = 'translateX(-10px)';
         item.style.transition = 'all 200ms ease-out';
-        item.append(removeIcon);
+        item.prepend(removeIcon);
         item.addEventListener('click', () => {
             this.select(item);
         });

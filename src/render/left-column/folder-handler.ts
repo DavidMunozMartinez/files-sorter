@@ -104,9 +104,22 @@ export class FolderHandler extends SectionHandler {
             innerHTML: folder
         });
 
-        let sortIcon = this.makeElement('div', {
-            classList: ['material-icons', 'sort'],
-            innerHTML: 'sync'
+        let sortIcon = this.makeElement('i', {
+            classList: ['material-icons', 'sort-icon'],
+            innerHTML: 'sync',
+            click: (event: any)  => {
+                let sorting = event.target.classList.contains('sorting');
+                if (!sorting) {
+                    event.target.classList.add('sorting');
+                    this.fileSorter.sortFolder(folder).finally(() => {
+                        console.log('Done');
+                        event.target.classList.remove('sorting');
+                    }).catch(() => {
+                        // Notify that something went wrogn when sorting
+                        event.target.classList.remove('sorting');
+                    });
+                }
+            }
         });
 
         let listItem = this.makeElement('div', {

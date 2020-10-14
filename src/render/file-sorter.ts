@@ -6,7 +6,7 @@ export class FileSorter {
     private paths: any;
     private defaultConfig = {
         persistent: true,
-        depth: 1,
+        depth: 0,
         awaitWriteFinish: {
             stabilityThreshold: 100,
             pollInterval: 100
@@ -34,7 +34,7 @@ export class FileSorter {
     addWatcher(folder: string) {
         let watcher = chokidar.watch(folder, this.defaultConfig);
         watcher.on('add', (location: any) => {
-            this.newFile(folder, location)
+            this.sort(folder, location)
         });
         this.watchers[folder] = watcher;
     }
@@ -48,15 +48,15 @@ export class FileSorter {
         delete this.watchers[folder];
     } 
 
-    sortFolder (folder: string) {
-        fs.readdir(folder, (err, files) => {
+    async sortFolder (folder: string) {
+        await fs.readdir(folder, (err, files) => {
             if (err) {
                 return;
             }
 
-            files.forEach((file) => {
-                console.log(file);
-            })
+            files.forEach(async (file) => {
+                await this.sort(folder, path.resolve(folder, file));
+            });
         });
     }
 
@@ -93,7 +93,7 @@ export class FileSorter {
         });
     }
 
-    private newFile(folder: string, location: string) {
+    private async sort(folder: string, location: string) {
         let data = this.paths[folder];
         let name: any = path.basename(location)	
         let extension = name.split('.').pop().toLocaleLowerCase();
@@ -111,13 +111,12 @@ export class FileSorter {
         }
 
         if (!fs.existsSync(destination)) {
-            fs.mkdirSync(destination);
+            await fs.mkdirSync(destination);
         }
 
         destination = path.resolve(destination, name);
-        if (destination.toLocaleLowerCase() != location.toLocaleLowerCase()) {
-            console.log('renaming: ' + location + ' to: ' + destination);
-            fs.renameSync(location, destination);
+        if (fs.existsSync(location) && destination.toLocaleLowerCase() != location.toLocaleLowerCase()) {
+            await fs.renameSync(location, destination);
         }
     }
 }
