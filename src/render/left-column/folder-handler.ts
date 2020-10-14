@@ -104,9 +104,14 @@ export class FolderHandler extends SectionHandler {
             innerHTML: folder
         });
 
+        let sortIcon = this.makeElement('div', {
+            classList: ['material-icons', 'sort'],
+            innerHTML: 'sync'
+        });
+
         let listItem = this.makeElement('div', {
             classList: ['folder-list-item'],
-            children: [valueElement]
+            children: [valueElement, sortIcon]
         });
 
         return listItem;

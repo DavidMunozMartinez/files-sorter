@@ -6,7 +6,7 @@ export class FileSorter {
     private paths: any;
     private defaultConfig = {
         persistent: true,
-        depth: 2,
+        depth: 1,
         awaitWriteFinish: {
             stabilityThreshold: 100,
             pollInterval: 100
@@ -17,8 +17,8 @@ export class FileSorter {
     watchers: any = {};
 
     constructor () {
-        // this.updateFoldersData();
-        // this.defineWatchers(this.paths);
+        this.updateFoldersData();
+        this.defineWatchers(this.paths);
     }
 
     updateFoldersData() {
@@ -47,6 +47,18 @@ export class FileSorter {
         this.watchers[folder].close();
         delete this.watchers[folder];
     } 
+
+    sortFolder (folder: string) {
+        fs.readdir(folder, (err, files) => {
+            if (err) {
+                return;
+            }
+
+            files.forEach((file) => {
+                console.log(file);
+            })
+        });
+    }
 
     private mapFolders(folders: any) {
         let keys = Object.keys(folders);
