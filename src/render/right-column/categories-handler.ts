@@ -1,13 +1,17 @@
+import { Extension } from 'electron/main';
+import { FileSorter } from '../file-sorter';
 import { SectionHandler } from '../sections-handler';
 import { ExtensionsHandler } from './extensions-handler';
 
 export class CategoriesHandler extends SectionHandler {
     inputRef: HTMLElement | null | undefined;
     folder: string | null = null;
-    extensionHandler: ExtensionsHandler = new ExtensionsHandler();
-
-    constructor() {
+    extensionHandler: ExtensionsHandler;
+    fileSorter: FileSorter;
+    constructor(fileSorter: FileSorter) {
         super('div.categories', 'smart-hover.category-list', '.category-list-item');
+        this.fileSorter = fileSorter;
+        this.extensionHandler = new ExtensionsHandler(fileSorter);
         this.inputRef = this.contentRef?.querySelector('div.category-input');
         this.inputRef?.addEventListener('keydown', (event: any) => {
             if (event.which == 13) {
@@ -35,7 +39,7 @@ export class CategoriesHandler extends SectionHandler {
         // Executed when an item weill be removed from the sectin list
         this.on('removed', (item: HTMLElement, items: NodeList) => {
             let category = item.getAttribute('value');
-            if (items.length == 1) {
+            if (items.length == 0) {
                 this.showTip();
                 this.extensionHandler.clearList();
                 this.extensionHandler.showOverlay();
@@ -135,6 +139,7 @@ export class CategoriesHandler extends SectionHandler {
         if (!categories[category]) {
             categories[category] = [];
             localStorage.setItem('folders', JSON.stringify(folders));
+            this.fileSorter.updateFoldersData();
             success = true;
         }
 
@@ -156,6 +161,8 @@ export class CategoriesHandler extends SectionHandler {
         if (folder.categories && folder.categories[category]) {
             delete folder.categories[category];
             localStorage.setItem('folders', JSON.stringify(folders));
+            this.fileSorter.updateFoldersData();
+
         }
     }
 

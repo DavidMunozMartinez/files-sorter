@@ -1,13 +1,18 @@
+import { FileSorter } from "../file-sorter";
 import { SectionHandler } from "../sections-handler";
 
 export class ExtensionsHandler extends SectionHandler {
     inputRef: HTMLElement | null | undefined;
-
     folder: string | null = null;
     category: string | null = null;
 
-    constructor() {
+    fileSorter: FileSorter;
+
+    constructor(fileSorter: FileSorter) {
         super('div.extensions', 'div.extension-list', '.extension-list-item');
+
+        this.fileSorter = fileSorter;
+
         this.inputRef = this.contentRef?.querySelector('div.extensions-input');
         this.inputRef?.addEventListener('keydown', (event: any) => { 
             if (event.which == 13) {
@@ -20,7 +25,7 @@ export class ExtensionsHandler extends SectionHandler {
             if (value) {
                 this.delete(value);
             }
-            if (items.length == 1) {
+            if (items.length == 0) {
                 this.showTip();
             }
         });
@@ -96,6 +101,7 @@ export class ExtensionsHandler extends SectionHandler {
         if (extensions.indexOf(extension) == -1) {
             extensions.push(extension);
             localStorage.setItem('folders', JSON.stringify(data));
+            this.fileSorter.updateFoldersData();
             success = true;
         }
         return success
@@ -119,6 +125,7 @@ export class ExtensionsHandler extends SectionHandler {
         }
 
         localStorage.setItem('folders', JSON.stringify(data));
+        this.fileSorter.updateFoldersData();
     }
 
     /**

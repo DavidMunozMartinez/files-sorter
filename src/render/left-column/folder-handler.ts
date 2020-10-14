@@ -1,13 +1,18 @@
 import { remote } from 'electron';
+import { FileSorter } from '../file-sorter';
 import { CategoriesHandler } from '../right-column/categories-handler';
 import { SectionHandler } from '../sections-handler';
 
 export class FolderHandler extends SectionHandler {
-    // Handles all logic related to the categories section
-    categoriesHandler: CategoriesHandler = new CategoriesHandler();
 
-    constructor () {
+    categoriesHandler: CategoriesHandler;
+    fileSorter: FileSorter;
+
+    constructor (fileSorter: FileSorter) {
         super('.column.left-column', '.folder-list', '.folder-list-item');
+        // Handles all logic related to the categories section
+        this.categoriesHandler = new CategoriesHandler(fileSorter);
+        this.fileSorter = fileSorter;
         let addButtonRef = document.querySelector('div.folder-input');
         addButtonRef?.addEventListener('click', () =>  this.folderDialog());
 
@@ -25,9 +30,7 @@ export class FolderHandler extends SectionHandler {
             if (value) {
                 this.delete(value);
             }
-            // The event is triggered before the element is removed from DOM, so we can consider the list
-            // as empty if the items length is 1
-            if (items.length == 1) {
+            if (items.length == 0) {
                 this.showTip();
                 this.categoriesHandler.clearList();
                 this.categoriesHandler.disable()
@@ -69,6 +72,7 @@ export class FolderHandler extends SectionHandler {
         if (data && data[folder]) {
             delete data[folder];
             localStorage.setItem('folders', JSON.stringify(data));
+            this.fileSorter.updateFoldersData();
         }
     }
 
@@ -84,6 +88,7 @@ export class FolderHandler extends SectionHandler {
                 categories: {}
             }
             localStorage.setItem('folders', JSON.stringify(data));
+            this.fileSorter.updateFoldersData();
             success = true;
         }
         return success;

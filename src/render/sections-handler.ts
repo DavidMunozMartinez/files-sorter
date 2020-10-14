@@ -147,13 +147,13 @@ export class SectionHandler {
     clearItem(item: HTMLElement) {
         item.style.opacity = '0';
         setTimeout(() => {
-            this.listRef?.removeChild(item);
+            let oldRef = this.listRef?.removeChild(item);
+            this.subscriptions['removed'].forEach((callback: any) => {
+                let items = this.listRef?.querySelectorAll(this.listItemSelector);
+                callback(oldRef, items);
+            });
         }, 150);
 
-        this.subscriptions['removed'].forEach((callback: any) => {
-            let items = this.listRef?.querySelectorAll(this.listItemSelector);
-            callback(item, items);
-        });
     }
 
     /**
