@@ -21,6 +21,10 @@ export class FileSorter {
         this.defineWatchers(this.paths);
     }
 
+    /**
+     * Updates local variable (this.paths) holding pre-processed folder data, data is pre-processed
+     * and constantly updated to avoid lookup times when searching the right location for a new file
+     */
     updateFoldersData() {
         let data = {};
         let raw: string | null = localStorage.getItem('folders');
@@ -31,6 +35,10 @@ export class FileSorter {
         this.mapFolders(this.paths);
     }
 
+    /**
+     * Adds a new chokidar watcher to the watchers object, each watcher triggers an event when a new file is detected
+     * @param folder folder that will be observer
+     */
     addWatcher(folder: string) {
         let watcher = chokidar.watch(folder, this.defaultConfig);
         watcher.on('add', (location: any) => {
@@ -41,6 +49,10 @@ export class FileSorter {
         this.watchers[folder] = watcher;
     }
 
+    /**
+     * Closes the chokidar watcher and deletes it from the watchers object
+     * @param folder folder that will be deleted
+     */
     deleteWatcher(folder: string) {
         if (!this.watchers[folder]) {
             return;
@@ -50,10 +62,11 @@ export class FileSorter {
         delete this.watchers[folder];
     }
 
+    /**
+     * Reads all contents of a given folder path and applies its sorting rules to each file
+     * @param folder Folder that will be sorted
+     */
     async sortFolder (folder: string) {
-        if (!this.paths[folder] || !this.paths[folder].active) {
-            return;
-        }
         await fs.readdir(folder, (err, files) => {
             if (err) {
                 return;
@@ -65,6 +78,11 @@ export class FileSorter {
         });
     }
 
+    /**
+     * For each folder data, it creates a different object structure used to avoid lookup times when
+     * trying to sort file types
+     * @param folders Folders object from local storage
+     */
     private mapFolders(folders: any) {
         let keys = Object.keys(folders);
         keys.forEach((folder) => {
@@ -91,6 +109,11 @@ export class FileSorter {
         return map;
     }
 
+    /**
+     * Each folder path will be created as a chokidar watch instanse to detect new files
+     * in the path
+     * @param paths Folder paths to watch
+     */
     private defineWatchers(paths: any) {
         let folders = Object.keys(paths);
         folders.map((folder) => {
@@ -98,6 +121,13 @@ export class FileSorter {
         });
     }
 
+    /**
+     * Executed when a new file is detected by a watcher, it makes sure to pick the right
+     * plae for the new detected file and moves it to a constructed location based on the
+     * folder rules
+     * @param folder Path that triggered the sort action
+     * @param location Absolute location for the new file
+     */
     private async sort(folder: string, location: string) {
         let data = this.paths[folder];
         let name: any = path.basename(location)	
@@ -119,9 +149,55 @@ export class FileSorter {
             await fs.mkdirSync(destination);
         }
 
-        destination = path.resolve(destination, name);
+        destination = await this.validateDestination(destination, name);
+
         if (fs.existsSync(location) && destination.toLocaleLowerCase() != location.toLocaleLowerCase()) {
             await fs.renameSync(location, destination);
         }
+    }
+
+    /**
+     * Makes sure, if the file name already exists in the destination, renames the new file by adding
+     * a number (starting from 1) and incrementally do this until the file name is unique to its destination
+     * @param destination Destination to move the file
+     * @param name File name (including extension)
+     */
+    private async validateDestination(destination: string, name: string): Promise<string> {
+        let split = this.splitExtension(name);
+        let fileName = split[0];
+        let extension = split[1];
+
+        let posible = path.resolve(destination, name);
+        let exists = await fs.existsSync(posible);
+        let increment = 1;
+        while (exists) {
+            let newName =`${fileName} (${increment}).${extension}`;
+            posible = path.resolve(destination, newName);
+            exists = await fs.existsSync(posible);
+            increment += 1;
+        }
+        return posible;
+    }
+
+    /**
+     * Splits the file into name and extension, taking into account scenarios where files contain dots in
+     * their names
+     * @param fileName File name (including extension)
+     */
+    private splitExtension (fileName: string): Array<string> {
+        let split = fileName.split('.');
+        let name = '';
+        let extension = '';
+        
+        for (let i = 0; i <= split.length - 2; i++) {
+            name += split[i];
+            if (i + 1 <= split.length - 2) {
+                name += '.';
+            }
+        }
+
+        extension = split[split.length - 1];
+
+        return [name, extension];
     }
 }

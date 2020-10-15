@@ -26,8 +26,8 @@
     }
   },
   "scripts": {
-    "start": "electron ./dist/main.js",
-    "watch": "webpack --watch --config ./webpack.config.js",
+    "start": "npm run build && electron ./dist/main.js",
+    "watch": "webpack --watch",
     "build": "webpack --build",
     "package": "webpack --prod && electron-builder",
     "test": "echo \"Error: no test specified\" && exit 1",

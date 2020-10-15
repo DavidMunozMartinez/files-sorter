@@ -12,7 +12,7 @@ class App {
     private folderHandler: FolderHandler = new FolderHandler(this.fileSorter);
 
     constructor() {
-        // this.applyTitlebarStyles();
+        this.applyTitlebarStyles();
         this.folderHandler.on('removed', (item: HTMLElement) => {
             let valueHolder = item.querySelector('.value-holder');
             let folder = valueHolder?.innerHTML;
@@ -46,17 +46,17 @@ class App {
      * Applies title bar styles for the windows build only.
      */
     private applyTitlebarStyles() {
-        if (os.platform() == 'darwin') {
-            return;
-        }
-        let titlebar = document.createElement('div');
-        let title = document.createElement('div');
-        titlebar.id = 'electron-titlebar';
-        titlebar.classList.add('drag');
-        title.innerHTML = 'File Sorter';
-        title.setAttribute('style', 'top: 5px; left: 5px; position: absolute');
-        titlebar.append(title);
-        document.body.prepend(titlebar);
+        // if (os.platform() == 'darwin') {
+        //     return;
+        // }
+        // let titlebar = document.createElement('div');
+        // let title = document.createElement('div');
+        // titlebar.id = 'electron-titlebar';
+        // titlebar.classList.add('drag');
+        // title.innerHTML = 'File Sorter';
+        // title.setAttribute('style', 'top: 5px; left: 5px; position: absolute');
+        // titlebar.append(title);
+        // document.body.prepend(titlebar);
         require('electron-titlebar');
     }
 } new App();

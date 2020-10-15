@@ -1,6 +1,6 @@
 $primary-background: rgb(37, 37, 37);
 $secondary-background: rgb(66, 66, 66);
-$secondary-background-highlight: rgb(112, 112, 112);
+$secondary-background-highlight: rgb(134, 134, 134);
 $text: rgb(214, 214, 214);
 $primary: rgb(68, 165, 128);
 $primary-tint: rgb(101, 196, 159);
@@ -114,6 +114,7 @@ body {
 
         .section-tip {
             color: $secondary-background-highlight;
+            font-size: 15px;
             pointer-events: none;
             z-index: -1;
             opacity: 0;

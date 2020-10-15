@@ -1,12 +1,5 @@
 import { app, BrowserWindow, Tray, Menu, nativeImage, dialog } from 'electron';
 import * as path from 'path';
-/**
- * I dont know how, i dont know why, and i dont want to know, its 3:30AM and at this point i don't care
- * for some god damn reason, chokidar needs to be imported in the main process so that it works properly
- * in the render process, i am leaving this here as a reminder that i am not as good developer as i think
- * i am
- */
-import chokidar from 'chokidar';
 
 let isDevEnv = process && process.mainModule && process.mainModule.filename.indexOf('app.asar') == -1;
 let isQuiting = false;
@@ -24,12 +17,15 @@ let trayMenu = [
 
 // Live reload for the render process, this validation makes sure to activate it only in development mode
 if (isDevEnv) {
-    require('electron-reload')('dist/app');
+    // require('electron-reload')('dist/app');
 }
 
 function init() {
     win = createWindow();
-    // tray = createTray();
+    setTimeout(() => {
+        win.show()
+    }, 1000);
+    tray = createTray();
 }
 
 function createWindow(): BrowserWindow {
@@ -37,6 +33,7 @@ function createWindow(): BrowserWindow {
     win = new BrowserWindow({
         width: 910,
         height: 600,
+        show: false,
         // frame: process.platform == 'darwin',
         maximizable: false,
         webPreferences: {
@@ -51,7 +48,7 @@ function createWindow(): BrowserWindow {
     // Path to index on the dist folder  
     win.loadURL(path.join("file://", __dirname, "./app/index.html"));
     win.webContents.toggleDevTools();
-    // win.on('close', onWindowClose);
+    win.on('close', onWindowClose);
     
     return win;
 }
