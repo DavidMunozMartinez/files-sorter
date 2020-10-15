@@ -95,21 +95,20 @@ body {
 
         div.category-input:hover,
         div.extensions-input:hover,
-        div.folder-input:hover,
-        div.category-input:focus,
-        div.extensions-input:focus {
+        div.folder-input:hover {
             border-radius: 10px;
         }
 
         div.category-input:hover,
         div.extensions-input:hover,
         div.folder-input:hover {
-            transform: scale(1.2);
+            transform: scale(1.15);
         }
         
         div.category-input:hover:focus,
         div.extensions-input:hover:focus,
         div.folder-input:hover:focus {
+            border-radius: 4px;
             transform: scale(1);
         }
 
@@ -139,7 +138,7 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: $primary-background;
+    // background: $primary-background;
     border-radius: 5px;
   }
    
@@ -175,7 +174,9 @@ div[style="position: relative;"] + .main-content {
     left: 2px;
     font-size: 11px;
 }
-
+i.disabled {
+    opacity: 0.3;
+}
 i.close-icon,
 i.sort-icon {
     transition: color 0.2s;

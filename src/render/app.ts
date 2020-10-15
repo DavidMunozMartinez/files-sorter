@@ -12,7 +12,7 @@ class App {
     private folderHandler: FolderHandler = new FolderHandler(this.fileSorter);
 
     constructor() {
-        this.applyTitlebarStyles();
+        // this.applyTitlebarStyles();
         this.folderHandler.on('removed', (item: HTMLElement) => {
             let valueHolder = item.querySelector('.value-holder');
             let folder = valueHolder?.innerHTML;

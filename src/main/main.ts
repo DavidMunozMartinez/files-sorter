@@ -35,9 +35,9 @@ function init() {
 function createWindow(): BrowserWindow {
     // Create the browser window.
     win = new BrowserWindow({
-        width: 810,
+        width: 910,
         height: 600,
-        frame: process.platform == 'darwin',
+        // frame: process.platform == 'darwin',
         maximizable: false,
         webPreferences: {
             devTools: isDevEnv,
@@ -46,6 +46,7 @@ function createWindow(): BrowserWindow {
             enableRemoteModule: true
         }
     });
+    win.removeMenu();
 
     // Path to index on the dist folder  
     win.loadURL(path.join("file://", __dirname, "./app/index.html"));

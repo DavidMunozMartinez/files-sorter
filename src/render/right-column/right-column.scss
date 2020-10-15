@@ -4,20 +4,23 @@
     .categories,
     .extensions {
         border-radius: 5px;
-        border: 1px solid $secondary-background;
+        // border-left: 1px solid $secondary-background;
+        background: rgba(0,0,0,0.1);
         position: relative;
     }
     .categories {
         flex: 5;
         margin-bottom: 15px;
+        // border-bottom: 1px solid $secondary-background;
     }
     .extensions {
         flex: 3;
+        // border-top: 1px solid $secondary-background;
     }
 
     div.category-input:focus,
     div.extensions-input:focus {
-        border-radius: 5px;
+        border-radius: 3px;
         border: 1px solid #535353;
         width: 130px;
         height: 30px;

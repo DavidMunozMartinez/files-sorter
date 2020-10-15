@@ -1,8 +1,9 @@
 .left-column {
     box-sizing: border-box;
     margin-right: 15px;
-    border-radius: 5px;
-    border: 1px solid #424242;
+    // border-radius: 5px;
+    // border: 1px solid #424242;
+    // border-right: 1px solid #424242;
     .folder-list {
         box-sizing: border-box;
         width: 100%;
@@ -29,7 +30,7 @@
                 position: relative;
                 top: -3px;
                 float: right;
-                margin-left: 5px;
+                margin-left: 15px;
             }
         }
         .folder-list-item.active {

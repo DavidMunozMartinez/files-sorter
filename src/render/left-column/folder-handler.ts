@@ -85,7 +85,8 @@ export class FolderHandler extends SectionHandler {
         let success = false;
         if (!data[folder]) {
             data[folder] = {
-                categories: {}
+                categories: {},
+                active: false,
             }
             localStorage.setItem('folders', JSON.stringify(data));
             this.fileSorter.updateFoldersData();
@@ -106,6 +107,7 @@ export class FolderHandler extends SectionHandler {
 
         let sortIcon = this.makeElement('i', {
             classList: ['material-icons', 'sort-icon'],
+            attrs: ['title: Apply sort configuration'],
             innerHTML: 'sync',
             click: (event: any)  => {
                 let sorting = event.target.classList.contains('sorting');
@@ -122,9 +124,30 @@ export class FolderHandler extends SectionHandler {
             }
         });
 
+        let data = this.getFolders();
+        let active = data[folder].active || false;
+
+        let watchIcon = this.makeElement('i', {
+            classList: ['material-icons', 'watch-icon', (active ? 'enabled' : 'disabled')],
+            attrs: ['title:Watch and sort new files added to this path'],
+            innerHTML: active ? 'visibility' : 'visibility_off',
+            click: (event: any) => {
+                let active = event.target.innerHTML == 'visibility';
+                let data = this.getFolders();
+                if (data[folder]) {
+                    data[folder].active = !active;
+                    event.target.innerHTML = active ? 'visibility_off' : 'visibility';
+                    event.target.classList.toggle('disabled');
+                    localStorage.setItem('folders', JSON.stringify(data));
+                    this.fileSorter.updateFoldersData();
+                }
+                event.stopImmediatePropagation();
+            }
+        });
+
         let listItem = this.makeElement('div', {
             classList: ['folder-list-item'],
-            children: [valueElement, sortIcon]
+            children: [valueElement, sortIcon, watchIcon]
         });
 
         return listItem;

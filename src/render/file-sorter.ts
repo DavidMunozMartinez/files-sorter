@@ -34,7 +34,9 @@ export class FileSorter {
     addWatcher(folder: string) {
         let watcher = chokidar.watch(folder, this.defaultConfig);
         watcher.on('add', (location: any) => {
-            this.sort(folder, location)
+            if(this.paths[folder].active) {
+                this.sort(folder, location)
+            }
         });
         this.watchers[folder] = watcher;
     }
@@ -46,9 +48,12 @@ export class FileSorter {
 
         this.watchers[folder].close();
         delete this.watchers[folder];
-    } 
+    }
 
     async sortFolder (folder: string) {
+        if (!this.paths[folder] || !this.paths[folder].active) {
+            return;
+        }
         await fs.readdir(folder, (err, files) => {
             if (err) {
                 return;
