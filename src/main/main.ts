@@ -56,10 +56,12 @@ function createWindow(): BrowserWindow {
     win.on('close', onWindowClose);
 
     if (process.platform == 'darwin') {
-        let iconPath = isDevEnv ?
-            path.join('dist/app', 'favicon.ico') : path.join(__dirname, '../../', 'favicon.ico')
-        const image = nativeImage.createFromPath(iconPath);
-        app.dock.setIcon(image);
+        app.dock.hide();
+        // let iconPath = isDevEnv ?
+        //     path.join(__dirname, '../', 'win-icon.png') : path.join(__dirname, '../../', 'win-icon.png');;
+        // const image = nativeImage.createFromPath(iconPath);
+        // app.dock.setIcon(image);
+        
     }
 
     return win;
@@ -68,7 +70,7 @@ function createWindow(): BrowserWindow {
 
 function onWindowClose(event: any) {
     // For testing porpuses we allow the close for OSX
-    if (!isQuiting && process.platform != 'darwin') {
+    if (!isQuiting) {
         event.preventDefault();
         win.hide();
         return false;
@@ -76,9 +78,15 @@ function onWindowClose(event: any) {
 }
 
 function createTray(): Tray {
-
-    let iconPath = isDevEnv ?
-        path.join('dist/app', 'favicon.ico') : path.join(__dirname, '../../', 'favicon.ico');
+    let iconPath = '';
+    if (process.platform == 'darwin') {
+        iconPath = isDevEnv ? 
+            path.join(__dirname, '../', 'icon-16x.png') : path.join(__dirname, '../../', 'icon-16x.png');
+    }
+    else {
+        iconPath = isDevEnv ?
+            path.join('dist/app', 'favicon.ico') : path.join(__dirname, '../../', 'favicon.ico');
+    }
 
     console.log(iconPath);
     let tray = new Tray(iconPath);

@@ -6,9 +6,14 @@
     "build": {
         "appId": "filesorter",
         "dmg": {
+            "backgroundColor": "#252a30",
             "internetEnabled": true,
-            "sign": false,
-            "title": "File sorter"
+            "sign": false
+        },
+        "mac": {
+            "title": "File sorter",
+            "icon": "./icon-512x.png",
+            "target": "dmg"
         },
         "win": {
             "icon": "./win-icon.png",
@@ -26,7 +31,9 @@
             "dist/app/app.js"
         ],
         "extraResources": [
-            "favicon.ico"
+            "favicon.ico",
+            "icon-16x.png",
+            "win-icon.png"
         ]
     },
     "scripts": {
