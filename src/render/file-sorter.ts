@@ -18,7 +18,7 @@ export class FileSorter {
 
     constructor () {
         this.updateFoldersData();
-        this.defineWatchers(this.paths);
+        // this.defineWatchers(this.paths);
     }
 
     /**
@@ -32,7 +32,7 @@ export class FileSorter {
             data = JSON.parse(raw);
         }
         this.paths = data;
-        this.mapFolders(this.paths);
+        // this.mapFolders(this.paths);
     }
 
     /**
@@ -67,13 +67,14 @@ export class FileSorter {
      * @param folder Folder that will be sorted
      */
     async sortFolder (folder: string) {
-        await fs.readdir(folder, (err, files) => {
+        await fs.readdir(folder, { withFileTypes: true }, (err, dirents) => {
             if (err) {
                 return;
             }
-
-            files.forEach(async (file) => {
-                await this.sort(folder, path.resolve(folder, file));
+            dirents.map(async dirent => {
+                if (dirent.isFile()) {
+                    await this.sort(folder, dirent.name);
+                }
             });
         });
     }
@@ -131,15 +132,20 @@ export class FileSorter {
     private async sort(folder: string, location: string) {
         let data = this.paths[folder];
         let name: any = path.basename(location)	
-        let extension = name.split('.').pop().toLocaleLowerCase();
+        // let extension = name.split('.').pop().toLocaleLowerCase();
 
-        if (!data.mappedCategories[extension]) {
+        // if (!data.mappedCategories[extension]) {
+        //     return;
+        // }
+
+        let categories = data.categories;
+        let category = this.getCategory(categories, name);
+
+        if (!category) {
             return;
         }
-
-        let category = data.mappedCategories[extension];
+        // let category = data.mappedCategories[extension];
         let destination = path.resolve(folder, category);
-        
 
         if (!destination) {
             return
@@ -199,5 +205,47 @@ export class FileSorter {
         extension = split[split.length - 1];
 
         return [name, extension];
+    }
+
+    private getCategory(categories: any, name: string): string | null {
+        let array = Object.keys(categories);
+        let found = false;
+        let category = null;
+        for (let i = 0; i < array.length; i++) {
+            let rules = categories[array[i]];
+            for (let j = 0; j < rules.length; j++) {
+                let rule = rules[j];
+                if (this.checkRule(rule, name)) {
+                    found = true;
+                    category = array[i];
+                    continue;
+                }
+            }
+            if (found) {
+                continue;
+            }
+        }
+        return category;
+    }
+
+    private checkRule(rule: string, name: string) {
+        let result = false;
+        let split = rule.split(':');
+        let condition = split[0];
+        let value = split[1];
+
+        switch (condition) {
+            case 'starts_with':
+                result = name.indexOf(value) == 0;
+                break;
+            case 'contains':
+                result = name.indexOf(value) > -1;
+                break;
+            case 'ends_with':
+                result = name.indexOf(value) == name.length - value.length
+                break;
+        }
+        
+        return result;
     }
 }
