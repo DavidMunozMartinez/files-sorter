@@ -81,8 +81,7 @@ const electronReder = {
     output: {
         path: __dirname + '/dist/app',
         filename: 'app.js'
-    },
-    plugins: plugins
+    }
 }
 
 module.exports = [

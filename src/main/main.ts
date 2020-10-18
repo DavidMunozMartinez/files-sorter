@@ -17,7 +17,7 @@ let trayMenu = [
 
 // Live reload for the render process, this validation makes sure to activate it only in development mode
 if (isDevEnv) {
-    // require('electron-reload')('dist/app');
+    require('electron-reload')('dist/app');
 }
 
 function init() {
@@ -42,6 +42,7 @@ function createWindow(): BrowserWindow {
             nodeIntegration: true,
             enableRemoteModule: true
         },
+        skipTaskbar: true,
         icon: getIcon(512)
     });
     win.removeMenu();
@@ -55,7 +56,8 @@ function createWindow(): BrowserWindow {
 
     if (process.platform == 'darwin') {
         app.dock.hide();
-        app.dock.setIcon(getIcon(512));
+        app.dock.setIcon(getIcon(256));
+        
     }
 
     return win;
@@ -71,7 +73,7 @@ function onWindowClose(event: any) {
 }
 
 function createTray(): Tray {
-    let tray = new Tray(getIcon(32));
+    let tray = new Tray(getIcon(16));
     const contextMenu = Menu.buildFromTemplate(trayMenu);
     tray.setToolTip('Files sorter');
     tray.setContextMenu(contextMenu);
