@@ -4,27 +4,79 @@
     .categories,
     .extensions {
         border-radius: 5px;
-        // border-left: 1px solid $secondary-background;
         background: rgba(0,0,0,0.1);
         position: relative;
     }
     .categories {
         flex: 5;
         margin-bottom: 15px;
-        // border-bottom: 1px solid $secondary-background;
     }
     .extensions {
         flex: 3;
-        // border-top: 1px solid $secondary-background;
+        div.input-container {
+            width: 100%;
+        }
+        div.extensions-input {
+            display: inline-block;
+            position: absolute;
+            height: 30px;
+            width: 90px;
+            margin-left: 5px;
+            background-color: unset;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            height: 30px;
+            width: 130px;
+            outline: none;
+            border-radius: 5px 5px 5px 5px;
+            box-sizing: border-box;
+            cursor: pointer;
+            .value {
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                padding: 7px;
+                padding-left: 30px;
+                box-sizing: border-box;
+                pointer-events: none;
+            }
+            .options {
+                top: 100%;
+                width: 100%;
+                position: absolute;
+                background: rgb(73, 73, 73);
+                z-index: 1;
+                border-radius: 0 0 5px 5px;
+                height: 0px;
+                overflow: hidden;
+                transition: all 0.2s;
+                max-height: 0px;
+                span {
+                    display: block;
+                    padding: 10px;
+                    padding-left: 15px;
+                }
+            }
+        }
+        .dropdown:focus {
+            .options {
+                max-height: 110px;
+                height: auto;
+            }
+        }
     }
 
     div.category-input:focus,
-    div.extensions-input:focus {
+    div.extensions-input,
+    div.dropdown {
         border-radius: 3px;
         border: 1px solid #535353;
         width: 130px;
         height: 30px;
         background: unset;
+        cursor: text;
     }
 
     .category-list,

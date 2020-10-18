@@ -3,6 +3,8 @@ import { SectionHandler } from "../sections-handler";
 
 export class ExtensionsHandler extends SectionHandler {
     inputRef: HTMLElement | null | undefined;
+    dropdownRef: HTMLElement | null | undefined;
+
     folder: string | null = null;
     category: string | null = null;
 
@@ -20,6 +22,26 @@ export class ExtensionsHandler extends SectionHandler {
             }
         });
 
+        this.dropdownRef = this.contentRef?.querySelector('div.dropdown');
+        this.dropdownRef?.addEventListener('click', (event: any) => {
+            if (event.target.classList.contains('dropdown')) {
+                event.target.classList.toggle('expanded');
+                console.log('clicked', event.target);
+            }
+            else if (event.target.nodeName == 'SPAN') {
+                let key = event.target.getAttribute('value');
+                if (this.dropdownRef) {
+                    this.dropdownRef.setAttribute('value', key);
+                    let valueHolder = this.dropdownRef.querySelector('.value');
+                    if (valueHolder) {
+                        valueHolder.innerHTML = event.target.innerHTML;
+                    }
+
+                    this.dropdownRef.blur()
+                }
+            }
+            
+        }, false);
         this.on('removed', (item: HTMLElement, items: NodeList) => {
             let value = item.getAttribute('value');
             if (value) {

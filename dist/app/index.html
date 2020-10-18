@@ -1,9 +1,11 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Files sorter</title>
 </head>
+
 <body>
     <!-- Titlebar is prepended here on windows-->
     <div class="main-content">
@@ -19,8 +21,10 @@
             <smart-hover class="folder-list" query-selector=".folder-list-item" override-styles="true">
             </smart-hover>
             <span class="section-tip">
-                Click the icon <i class="material-icons" style="font-size: 16px;">create_new_folder</i> to select a folder to sort.</br></br>
-                You can decide how to sort your folders by categories/subfolders, you can also turn on automation so that when a new file is added to the folder, it will be sorted with your defined rules
+                Click the icon <i class="material-icons" style="font-size: 16px;">create_new_folder</i> to select a
+                folder to sort.</br></br>
+                You can decide how to sort your folders by categories/subfolders, you can also turn on automation so
+                that when a new file is added to the folder, it will be sorted with your defined rules
                 </br></br>
                 <!-- PLEASE BE CAREFUL WITH THE FOLDERS YOU SELECT -->
             </span>
@@ -36,7 +40,7 @@
                     Apply
                 </div>
             </div> -->
-            
+
         </div>
         <div class="column right-column">
             <div class="categories">
@@ -53,28 +57,46 @@
 
                 <smart-hover class="category-list" query-selector=".category-list-item" override-styles="true">
                 </smart-hover>
-                <span class="section-tip">Categories are subfolders that will hold your organized files. You can create as many categories as you want.</span>
+                <span class="section-tip">Categories are subfolders that will hold your organized files. You can create
+                    as many categories as you want.</span>
             </div>
             <div class="extensions">
                 <div class="inactive-overlay">
                 </div>
                 <div class="column-title">
-                    <p>File extensions</p>
+                    <p>Rules</p>
                 </div>
 
                 <div class="input-container">
+                    <div class="dropdown" tabindex="0">
+                        <span class="value">
+                            condition
+                        </span>
+                        <smart-hover class="options" query-selector="span">
+                            <span value="starts_with">Starts with</span>
+                            <span value="containes">Contains</span>
+                            <span value="ends_with">Ends with</span>
+                        </smart-hover>
+                        <i class="material-icons">keyboard_arrow_down</i>
+                    </div>
+
                     <div class="extensions-input" contenteditable="true"></div>
-                    <i class="material-icons">add</i>
                 </div>
+
 
                 <div class="extension-list">
                 </div>
-                <span class="section-tip">Here you decide which files go into your category by extensions, extensions are what you find after the dot in your file names, IE. *.doc, *.png, there is no need to include the dot.</span>
+                <span class="section-tip">
+                    Here you decide which files go into your category by extensions, extensions
+                    are what you find after the dot in your file names, IE. *.doc, *.png, there is no need to include
+                    the dot.
+                </span>
             </div>
-        </div> 
+        </div>
     </div>
 
-    <div class="footer">Thanks for using our app <3</div>
-    <script src="app.js"></script>
+    <div class="footer">Thanks for using our app <3 </div>
+            <script src="app.js"></script>
 </body>
+
 </html>

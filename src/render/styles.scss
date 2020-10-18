@@ -2,9 +2,9 @@ $primary-background: rgb(37, 37, 37);
 $secondary-background: rgb(66, 66, 66);
 $secondary-background-highlight: rgb(134, 134, 134);
 $text: rgb(214, 214, 214);
-$primary: rgb(68, 165, 128);
-$primary-tint: rgb(101, 196, 159);
-$secondary: rgb(20, 111, 171);
+$primary: rgb(70, 194, 132);
+$primary-tint: rgb(85, 192, 142);
+$secondary: rgb(45, 136, 197);
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 @import '../../node_modules/material-icons-font/material-icons-font.css';
 
@@ -93,20 +93,17 @@ body {
             box-sizing: border-box;
         }
 
-        div.category-input:hover,
-        div.extensions-input:hover,
+        div.category-input:hover
         div.folder-input:hover {
             border-radius: 10px;
         }
 
-        div.category-input:hover,
-        div.extensions-input:hover,
+        div.category-input:hover
         div.folder-input:hover {
             transform: scale(1.15);
         }
         
-        div.category-input:hover:focus,
-        div.extensions-input:hover:focus,
+        div.category-input:hover:focus
         div.folder-input:hover:focus {
             border-radius: 4px;
             transform: scale(1);
