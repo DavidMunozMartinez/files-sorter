@@ -53,6 +53,7 @@
                 overflow: hidden;
                 transition: all 0.2s;
                 max-height: 0px;
+                z-index: 3;
                 span {
                     display: block;
                     padding: 10px;

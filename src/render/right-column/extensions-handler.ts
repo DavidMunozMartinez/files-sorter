@@ -7,6 +7,7 @@ export class ExtensionsHandler extends SectionHandler {
 
     folder: string | null = null;
     category: string | null = null;
+    condition: string | null = null;
 
     fileSorter: FileSorter;
 
@@ -33,6 +34,7 @@ export class ExtensionsHandler extends SectionHandler {
                 if (this.dropdownRef && this.inputRef) {
                     this.dropdownRef.setAttribute('value', key);
                     let valueHolder = this.dropdownRef.querySelector('.value');
+                    this.condition = key;
                     if (valueHolder) {
                         valueHolder.innerHTML = event.target.innerHTML;
                         this.inputRef.focus();
@@ -74,9 +76,13 @@ export class ExtensionsHandler extends SectionHandler {
         this.clearList();
 
         let extensions = this.getExtensions(this.folder, this.category);
+
         if (extensions.length > 0) {
             let items = extensions.map((extension: any) => {
-                return this.createListItem(extension);
+                let split = extension.split(':');
+                let condition = split[0];
+                let text = split[1];
+                return this.createListItem(text, condition);
             });
             this.hideTip();
             this.renderList(items);
@@ -106,18 +112,18 @@ export class ExtensionsHandler extends SectionHandler {
      * category, also returns a boolean indicating that it was saved succesfully
      * @param extension Extensoin string to save
      */
-    private save(extension: string) {
+    private save(text: string, condition: string) {
         if (!this.folder || !this.category) {
             return false;
         }
-
+        let value = `${condition}:${text}`
         let success = false
         let data = this.getFolders();
         let folder = data[this.folder];
         let extensions = folder.categories[this.category];
 
-        if (extensions.indexOf(extension) == -1) {
-            extensions.push(extension);
+        if (extensions.indexOf(value) == -1) {
+            extensions.push(value);
             localStorage.setItem('folders', JSON.stringify(data));
             this.fileSorter.updateFoldersData();
             success = true;
@@ -152,9 +158,19 @@ export class ExtensionsHandler extends SectionHandler {
      */
     private onEnter(event: any) {
         let value = event.target.innerText;
-        let item = this.createListItem(value);
 
-        if (this.save(value)) {
+        if (!this.condition) {
+            this.dropdownRef?.focus();
+            event.preventDefault();
+            return;
+        }
+        if (!value) {
+            return;
+        }
+
+        let item = this.createListItem(value, this.condition);
+
+        if (this.save(value, this.condition)) {
             this.renderItem(item);
             event.target.innerText = '';
         }
@@ -162,11 +178,25 @@ export class ExtensionsHandler extends SectionHandler {
 
     }
 
-    private createListItem(value: string): HTMLElement {
+    private createListItem(value: string, condition?: string): HTMLElement {
+
+        let conditions: any = {
+            starts_with: 'Starts with',
+            contains: 'Contains',
+            ends_with: 'Ends with'
+        };
+
+        let innerText = value;
+        let valueText = value;
+        if (condition && conditions[condition]) {
+            innerText = conditions[condition] + ': ' + innerText;
+            valueText = condition + ':' + value;
+        }
+
         let item = this.makeElement('div', {
             classList: ['extension-list-item'],
-            innerHTML: value,
-            attrs: ['value:' + value]
+            innerHTML: innerText,
+            attrs: ['value:' + valueText]
         });
 
         return item;
