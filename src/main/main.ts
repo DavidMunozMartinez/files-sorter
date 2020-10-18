@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Tray, Menu, nativeImage } from 'electron';
+import { app, BrowserWindow, Tray, Menu } from 'electron';
 import * as path from 'path';
 
 let isDevEnv = process && process.mainModule && process.mainModule.filename.indexOf('app.asar') == -1;
@@ -35,7 +35,6 @@ function createWindow(): BrowserWindow {
         width: 910,
         height: 600,
         show: false,
-        // frame: process.platform == 'darwin',
         maximizable: false,
         webPreferences: {
             devTools: isDevEnv,
@@ -43,7 +42,7 @@ function createWindow(): BrowserWindow {
             nodeIntegration: true,
             enableRemoteModule: true
         },
-        icon: path.join(__dirname, '../', getIcon(512))
+        icon: getIcon(512)
     });
     win.removeMenu();
 
@@ -56,9 +55,7 @@ function createWindow(): BrowserWindow {
 
     if (process.platform == 'darwin') {
         app.dock.hide();
-        let skips = isDevEnv ? '../' : '../../';
-        let iconPath = path.join(__dirname, skips, getIcon(512))
-        app.dock.setIcon(iconPath);
+        app.dock.setIcon(getIcon(512));
     }
 
     return win;
@@ -74,16 +71,7 @@ function onWindowClose(event: any) {
 }
 
 function createTray(): Tray {
-    let iconPath = '';
-    if (isDevEnv) {
-        iconPath = path.join(__dirname, '../', getIcon(32))
-    }
-    else {
-        iconPath = path.join(__dirname, '../../', getIcon(32));
-    }
-
-    console.log(iconPath);
-    let tray = new Tray(iconPath);
+    let tray = new Tray(getIcon(32));
     const contextMenu = Menu.buildFromTemplate(trayMenu);
     tray.setToolTip('Files sorter');
     tray.setContextMenu(contextMenu);
@@ -96,7 +84,8 @@ function onTrayClick() {
 }
 
 function getIcon(res: number) {
-    return `icons/icon-fs-@${res}px.png`;
+    let skips = isDevEnv ? '../' : '../../';
+    return path.join(__dirname, skips, `icons/icon-fs-@${res}px.png`);
 }
 
 app.on('ready', init);
