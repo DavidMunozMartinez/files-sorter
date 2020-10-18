@@ -30,14 +30,13 @@ export class ExtensionsHandler extends SectionHandler {
             }
             else if (event.target.nodeName == 'SPAN') {
                 let key = event.target.getAttribute('value');
-                if (this.dropdownRef) {
+                if (this.dropdownRef && this.inputRef) {
                     this.dropdownRef.setAttribute('value', key);
                     let valueHolder = this.dropdownRef.querySelector('.value');
                     if (valueHolder) {
                         valueHolder.innerHTML = event.target.innerHTML;
+                        this.inputRef.focus();
                     }
-
-                    this.dropdownRef.blur()
                 }
             }
             
@@ -77,10 +76,7 @@ export class ExtensionsHandler extends SectionHandler {
         let extensions = this.getExtensions(this.folder, this.category);
         if (extensions.length > 0) {
             let items = extensions.map((extension: any) => {
-                return this.makeElement('div', {
-                    classList: ['extension-list-item'],
-                    innerHTML: extension
-                });
+                return this.createListItem(extension);
             });
             this.hideTip();
             this.renderList(items);
@@ -156,11 +152,7 @@ export class ExtensionsHandler extends SectionHandler {
      */
     private onEnter(event: any) {
         let value = event.target.innerText;
-        let item = this.makeElement('div', {
-            classList: ['extension-list-item'],
-            innerHTML: value,
-            attrs: ['value:' + value]
-        });
+        let item = this.createListItem(value);
 
         if (this.save(value)) {
             this.renderItem(item);
@@ -168,5 +160,15 @@ export class ExtensionsHandler extends SectionHandler {
         }
         event.preventDefault();
 
+    }
+
+    private createListItem(value: string): HTMLElement {
+        let item = this.makeElement('div', {
+            classList: ['extension-list-item'],
+            innerHTML: value,
+            attrs: ['value:' + value]
+        });
+
+        return item;
     }
 }

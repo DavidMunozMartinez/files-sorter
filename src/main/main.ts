@@ -55,7 +55,7 @@ function createWindow(): BrowserWindow {
     win.on('close', onWindowClose);
 
     if (process.platform == 'darwin') {
-        app.dock.hide();
+        // app.dock.hide();
         app.dock.setIcon(getIcon(256));
         
     }
