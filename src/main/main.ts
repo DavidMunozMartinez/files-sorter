@@ -1,5 +1,4 @@
-import { app, BrowserWindow, Tray, Menu, nativeImage, dialog } from 'electron';
-import { MessageBoxOptions } from 'electron/main';
+import { app, BrowserWindow, Tray, Menu, nativeImage } from 'electron';
 import * as path from 'path';
 
 let isDevEnv = process && process.mainModule && process.mainModule.filename.indexOf('app.asar') == -1;
@@ -44,7 +43,7 @@ function createWindow(): BrowserWindow {
             nodeIntegration: true,
             enableRemoteModule: true
         },
-        icon: path.join('favicon.ico')
+        icon: path.join(__dirname, '../', getIcon(512))
     });
     win.removeMenu();
 
@@ -57,11 +56,9 @@ function createWindow(): BrowserWindow {
 
     if (process.platform == 'darwin') {
         app.dock.hide();
-        // let iconPath = isDevEnv ?
-        //     path.join(__dirname, '../', 'win-icon.png') : path.join(__dirname, '../../', 'win-icon.png');;
-        // const image = nativeImage.createFromPath(iconPath);
-        // app.dock.setIcon(image);
-        
+        let skips = isDevEnv ? '../' : '../../';
+        let iconPath = path.join(__dirname, skips, getIcon(512))
+        app.dock.setIcon(iconPath);
     }
 
     return win;
@@ -69,7 +66,6 @@ function createWindow(): BrowserWindow {
 
 
 function onWindowClose(event: any) {
-    // For testing porpuses we allow the close for OSX
     if (!isQuiting) {
         event.preventDefault();
         win.hide();
@@ -79,13 +75,11 @@ function onWindowClose(event: any) {
 
 function createTray(): Tray {
     let iconPath = '';
-    if (process.platform == 'darwin') {
-        iconPath = isDevEnv ? 
-            path.join(__dirname, '../', 'icon-16x.png') : path.join(__dirname, '../../', 'icon-16x.png');
+    if (isDevEnv) {
+        iconPath = path.join(__dirname, '../', getIcon(32))
     }
     else {
-        iconPath = isDevEnv ?
-            path.join('dist/app', 'favicon.ico') : path.join(__dirname, '../../', 'favicon.ico');
+        iconPath = path.join(__dirname, '../../', getIcon(32));
     }
 
     console.log(iconPath);
@@ -99,6 +93,10 @@ function createTray(): Tray {
 
 function onTrayClick() {
     win.show();
+}
+
+function getIcon(res: number) {
+    return `icons/icon-fs-@${res}px.png`;
 }
 
 app.on('ready', init);

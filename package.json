@@ -11,12 +11,11 @@
             "sign": false
         },
         "mac": {
-            "title": "File sorter",
-            "icon": "./icon-512x.png",
+            "icon": "./icons/icon-fs-@512px.png",
             "target": "dmg"
         },
         "win": {
-            "icon": "./win-icon.png",
+            "icon": "./icons/icon-fs-@512px.png",
             "target": "portable"
         },
         "directories": {
@@ -31,9 +30,7 @@
             "dist/app/app.js"
         ],
         "extraResources": [
-            "favicon.ico",
-            "icon-16x.png",
-            "win-icon.png"
+            "icons/*"
         ]
     },
     "scripts": {
