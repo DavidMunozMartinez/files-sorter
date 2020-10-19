@@ -218,11 +218,11 @@ export class FileSorter {
                 if (this.checkRule(rule, name)) {
                     found = true;
                     category = array[i];
-                    continue;
+                    break;
                 }
             }
             if (found) {
-                continue;
+                break;
             }
         }
         return category;

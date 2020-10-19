@@ -23,6 +23,10 @@ export class ExtensionsHandler extends SectionHandler {
             }
         });
 
+        this.inputRef?.addEventListener('blur', (event: any) => {
+            event.target.innerText = '';
+        });
+
         this.dropdownRef = this.contentRef?.querySelector('div.dropdown');
         this.dropdownRef?.addEventListener('click', (event: any) => {
             if (event.target.classList.contains('dropdown')) {
@@ -179,7 +183,6 @@ export class ExtensionsHandler extends SectionHandler {
     }
 
     private createListItem(value: string, condition?: string): HTMLElement {
-
         let conditions: any = {
             starts_with: 'Starts with',
             contains: 'Contains',
@@ -196,7 +199,7 @@ export class ExtensionsHandler extends SectionHandler {
         let item = this.makeElement('div', {
             classList: ['extension-list-item'],
             innerHTML: innerText,
-            attrs: ['value:' + valueText]
+            attrs: ['value=' + valueText]
         });
 
         return item;

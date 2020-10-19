@@ -1,14 +1,11 @@
 .left-column {
     box-sizing: border-box;
     margin-right: 15px;
-    // border-radius: 5px;
-    // border: 1px solid #424242;
-    // border-right: 1px solid #424242;
     .folder-list {
         box-sizing: border-box;
         width: 100%;
         position: absolute;
-        height: calc(100% - 110px);
+        height: calc(100% - 50px);
         overflow-y: scroll;
         top: 50px;
         display: block;

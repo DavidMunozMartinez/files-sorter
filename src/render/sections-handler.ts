@@ -46,7 +46,7 @@ export class SectionHandler {
 
         if (opts.attrs && opts.attrs.length && opts.attrs.length > 0) {
             opts.attrs.forEach((attr: string) => {
-                let split = attr.split(':');
+                let split = attr.split('=');
                 let key = split[0];
                 let value = split[1];
                 element.setAttribute(key, value);
@@ -107,13 +107,13 @@ export class SectionHandler {
 
         item.style.opacity = '0';
         item.style.transform = 'translateX(-10px)';
-        item.style.transition = 'all 200ms ease-out';
+        item.style.transition = 'opacity 200ms ease-out, background-color 200ms ease-out';
         item.prepend(removeIcon);
-        item.addEventListener('click', () => {
-            this.select(item);
+        item.addEventListener('mousedown', () => {
+            // this.select(item);
         });
         setTimeout(() => {
-            item.style.transform = 'translateX(0px)';
+            item.style.transform = '';
             item.style.opacity = '1';
         }, delay)
         this.listRef?.append(item);

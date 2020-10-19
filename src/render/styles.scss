@@ -93,17 +93,17 @@ body {
             box-sizing: border-box;
         }
 
-        div.category-input:hover
+        div.category-input:hover,
         div.folder-input:hover {
             border-radius: 10px;
         }
 
-        div.category-input:hover
+        div.category-input:hover,
         div.folder-input:hover {
             transform: scale(1.15);
         }
         
-        div.category-input:hover:focus
+        div.category-input:hover:focus,
         div.folder-input:hover:focus {
             border-radius: 4px;
             transform: scale(1);

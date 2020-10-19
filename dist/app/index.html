@@ -21,26 +21,10 @@
             <smart-hover class="folder-list" query-selector=".folder-list-item" override-styles="true">
             </smart-hover>
             <span class="section-tip">
-                Click the icon <i class="material-icons" style="font-size: 16px;">create_new_folder</i> to select a
-                folder to sort.</br></br>
-                You can decide how to sort your folders by categories/subfolders, you can also turn on automation so
-                that when a new file is added to the folder, it will be sorted with your defined rules
+                Click the icon <i class="material-icons" style="font-size: 24px; vertical-align: middle; margin: 5px;">create_new_folder</i> to select a
+                folder and start organizing!</br></br>
                 </br></br>
-                <!-- PLEASE BE CAREFUL WITH THE FOLDERS YOU SELECT -->
             </span>
-
-            <!-- <div class="folder-options">
-                <div class='option-button'>
-                    Remove
-                </div>
-                <div class="option-button">
-                    Active
-                </div>
-                <div class="option-button">
-                    Apply
-                </div>
-            </div> -->
-
         </div>
         <div class="column right-column">
             <div class="categories">
@@ -57,8 +41,10 @@
 
                 <smart-hover class="category-list" query-selector=".category-list-item" override-styles="true">
                 </smart-hover>
-                <span class="section-tip">Categories are subfolders that will hold your organized files. You can create
-                    as many categories as you want.</span>
+                <span class="section-tip">
+                    Categories are subfolders that will hold your organized files. You can create
+                    as many categories as you want.
+                </span>
             </div>
             <div class="extensions">
                 <div class="inactive-overlay">
@@ -72,7 +58,7 @@
                         <span class="value">
                             condition
                         </span>
-                        <smart-hover class="options" query-selector="span">
+                        <smart-hover class="options">
                             <span value="starts_with">Starts with</span>
                             <span value="contains">Contains</span>
                             <span value="ends_with">Ends with</span>
@@ -83,13 +69,11 @@
                     <div class="extensions-input" contenteditable="true"></div>
                 </div>
 
-
                 <div class="extension-list">
                 </div>
                 <span class="section-tip">
-                    Here you decide which files go into your category by extensions, extensions
-                    are what you find after the dot in your file names, IE. *.doc, *.png, there is no need to include
-                    the dot.
+                    Here you define file rules for this category.</br></br>
+                    Files names (including file extension) will be checked against each category rules in order
                 </span>
             </div>
         </div>

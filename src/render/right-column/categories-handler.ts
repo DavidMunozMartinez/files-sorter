@@ -1,4 +1,3 @@
-import { Extension } from 'electron/main';
 import { FileSorter } from '../file-sorter';
 import { SectionHandler } from '../sections-handler';
 import { ExtensionsHandler } from './extensions-handler';
@@ -17,6 +16,10 @@ export class CategoriesHandler extends SectionHandler {
             if (event.which == 13) {
                 this.onEnter(event);
             }
+        });
+
+        this.inputRef?.addEventListener('blur', (event: any) => {
+            event.target.innerText = '';
         })
 
         // Executed when a new item is added to the section list
@@ -171,7 +174,7 @@ export class CategoriesHandler extends SectionHandler {
      * @param value Category string value
      */
     private createListElement (value: string): HTMLElement {
-        let icon = this.makeElement('i', {
+        let folderIcon = this.makeElement('i', {
             classList: ['material-icons'],
             innerHTML: 'folder'
         });
@@ -182,9 +185,140 @@ export class CategoriesHandler extends SectionHandler {
 
         let item = this.makeElement('div', {
             classList: ['category-list-item'],
-            attrs: ['value:' + value],
-            children: [icon, valueHolder],
+            attrs: ['value=' + value],
+            children: [folderIcon, valueHolder],
         });
+
+        this.dragHandle(item);
+
         return item;
+    }
+
+    private dragHandle(item: HTMLElement) {
+        let mousedown = false;
+        let startY = 0;
+        let steps: { top: any; step: any; }[] = [];
+
+        let prev: any = {
+            step: 0,
+            element: null,
+            index: 0
+        };
+
+        let currentStep = 0;
+
+        let next: any = {
+            step: 0,
+            element: null,
+            index: 0
+        };
+
+        let dropPos = 0;
+        let current = 0;
+
+        let siblings: any = [];
+
+        item.addEventListener('mousedown', (event: any) => {
+            this.select(item);
+            mousedown = true;
+            startY = event.clientY;
+            dropPos = event.target.offsetTop;
+            currentStep = dropPos + event.target.clientHeight/2;
+
+            defineSteps();
+
+            console.log(currentStep);
+            console.log(steps);
+        });
+
+        item.addEventListener('mousemove', (event: any) => {
+            if (mousedown) {
+                // return;
+                let y = (event.clientY - startY);
+                current = currentStep + y;
+
+                item.style.zIndex = '5';
+                item.style.transform = `translateY(${y}px)`;
+
+                if (next.step && current > next.step) {
+                    this.swapNodes(item, next.element);
+                }
+
+                if (prev.step && current < prev.step) {
+                    this.swapNodes(item, prev.element);
+                }
+            }
+
+        });
+
+        item.addEventListener('mouseup', () => {
+            drop()
+        });
+
+        item.addEventListener('mouseleave', () => {
+            drop();
+        });
+        
+        function drop() {
+            item.style.transform = `translateY(${0}px)`;
+            mousedown = false;
+            item.style.zIndex = '0';
+        }
+
+        const defineSteps = () => {
+            steps = [];
+            let stepIndex = 0;
+            siblings = this.listRef?.querySelectorAll(this.listItemSelector);
+            siblings?.forEach((sibling: any, index: any) => {
+                let step = {
+                    top: sibling.offsetTop,
+                    step: sibling.offsetTop + (sibling.clientHeight/2) 
+                }
+
+                if (dropPos == step.top) {
+                    stepIndex = index;
+                }
+
+                steps.push(step);
+            });
+
+            prev = {};
+            next = {};
+
+            if (steps[stepIndex - 1]) {
+                prev.step = steps[stepIndex - 1].step;
+                prev.index = stepIndex - 1;
+                prev.element = siblings[stepIndex - 1];
+            }
+            if (steps[stepIndex + 1]) {
+                next.step = steps[stepIndex + 1].step;
+                next.index = stepIndex + 1
+                next.element = siblings[stepIndex + 1];
+            }
+        }
+    }
+
+    private swapNodes(n1: HTMLElement, n2: HTMLElement) {
+        var p1 = n1.parentNode;
+        var p2 = n2.parentNode;
+        let i1: number = 0, i2: number = 0;
+        if ( !p1 || !p2 || p1.isEqualNode(n2) || p2.isEqualNode(n1) ) return;
+    
+        for (var i = 0; i < p1.children.length; i++) {
+            if (p1.children[i].isEqualNode(n1)) {
+                i1 = i;
+            }
+        }
+        for (var i = 0; i < p2.children.length; i++) {
+            if (p2.children[i].isEqualNode(n2)) {
+                i2 = i;
+            }
+        }
+    
+        if ( p1.isEqualNode(p2) && i1 < i2 ) {
+            i2++;
+        }
+        p1.insertBefore(n2, p1.children[i1]);
+        p2.insertBefore(n1, p2.children[i2]);
     }
 }

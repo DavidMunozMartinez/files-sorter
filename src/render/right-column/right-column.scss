@@ -10,6 +10,7 @@
     .categories {
         flex: 5;
         margin-bottom: 15px;
+        user-select: none;
     }
     .extensions {
         flex: 3;
@@ -30,7 +31,7 @@
             height: 30px;
             width: 130px;
             outline: none;
-            border-radius: 5px 5px 5px 5px;
+            border-radius: 5px;
             box-sizing: border-box;
             cursor: pointer;
             .value {
@@ -41,6 +42,10 @@
                 padding-left: 30px;
                 box-sizing: border-box;
                 pointer-events: none;
+            }
+            smart-hover.options > div.smart-hover-shadow {
+                border-left: 4px solid rgb(199, 199, 199);
+                border-radius: 0px;
             }
             .options {
                 top: 100%;
@@ -138,11 +143,12 @@
     }
 
     .inactive-overlay {
+        border-radius: 5px;
         position: absolute;
         height: 100%;
         width: 100%;
-        z-index: 3;
-        background: rgba(0,0,0,0.3);
+        z-index: 4;
+        background: rgba(63, 63, 63, 0.31);
         opacity: 1;
         transition: all 0.2s;
         color: $secondary-background-highlight;

@@ -107,7 +107,7 @@ export class FolderHandler extends SectionHandler {
 
         let sortIcon = this.makeElement('i', {
             classList: ['material-icons', 'sort-icon'],
-            attrs: ['title: Apply sort configuration'],
+            attrs: ['title=Apply sort configuration'],
             innerHTML: 'low_priority',
             click: (event: any)  => {
                 let sorting = event.target.classList.contains('sorting');
@@ -129,7 +129,7 @@ export class FolderHandler extends SectionHandler {
 
         let watchIcon = this.makeElement('i', {
             classList: ['material-icons', 'watch-icon', (active ? 'enabled' : 'disabled')],
-            attrs: ['title:On/Off automatically sort new files'],
+            attrs: ['title=On/Off automatically sort new files'],
             innerHTML: active ? 'visibility' : 'visibility_off',
             click: (event: any) => {
                 let active = event.target.innerHTML == 'visibility';
