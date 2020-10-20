@@ -107,10 +107,10 @@ export class SectionHandler {
 
         item.style.opacity = '0';
         item.style.transform = 'translateX(-10px)';
-        item.style.transition = 'opacity 200ms ease-out, background-color 200ms ease-out';
+        item.style.transition = 'all 200ms ease-out';
         item.prepend(removeIcon);
         item.addEventListener('mousedown', () => {
-            // this.select(item);
+            this.select(item);
         });
         setTimeout(() => {
             item.style.transform = '';

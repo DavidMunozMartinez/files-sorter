@@ -18,21 +18,18 @@ export class FileSorter {
 
     constructor () {
         this.updateFoldersData();
-        // this.defineWatchers(this.paths);
     }
 
     /**
      * Updates local variable (this.paths) holding pre-processed folder data, data is pre-processed
      * and constantly updated to avoid lookup times when searching the right location for a new file
      */
-    updateFoldersData() {
-        let data = {};
-        let raw: string | null = localStorage.getItem('folders');
-        if (raw) {
-            data = JSON.parse(raw);
+    updateFoldersData(data?: any) {
+        if (!data) {
+            let raw: string | null = localStorage.getItem('folders');
+            if (raw) data = JSON.parse(raw);
         }
         this.paths = data;
-        // this.mapFolders(this.paths);
     }
 
     /**
@@ -73,52 +70,9 @@ export class FileSorter {
             }
             dirents.map(async dirent => {
                 if (dirent.isFile()) {
-                    await this.sort(folder, dirent.name);
+                    await this.sort(folder, path.resolve(folder, dirent.name));
                 }
             });
-        });
-    }
-
-    /**
-     * For each folder data, it creates a different object structure used to avoid lookup times when
-     * trying to sort file types
-     * @param folders Folders object from local storage
-     */
-    private mapFolders(folders: any) {
-        let keys = Object.keys(folders);
-        keys.forEach((folder) => {
-            let data = this.paths[folder];
-            if (data.categories && this.paths[folder]) {
-                this.paths[folder].mappedCategories = this.mapCategories(data.categories);
-            }
-        });
-    }
-
-    /**
-     * Takes the defined categories and maps them so that we can easily know which extension file goes to which folder,
-     * creates some data redundancy but gets rid of any lookup time if we want to know where a file should go
-     */
-    private mapCategories(categories: any) {
-        let keys = Object.keys(categories)
-        let map: any = {};
-        keys.forEach((category: any) => {
-            let extensions = categories[category];
-            extensions.forEach((extension: any) => {
-                map[extension.toLocaleLowerCase()] = category;
-            });
-        });
-        return map;
-    }
-
-    /**
-     * Each folder path will be created as a chokidar watch instanse to detect new files
-     * in the path
-     * @param paths Folder paths to watch
-     */
-    private defineWatchers(paths: any) {
-        let folders = Object.keys(paths);
-        folders.map((folder) => {
-            this.addWatcher(folder);
         });
     }
 
@@ -132,14 +86,8 @@ export class FileSorter {
     private async sort(folder: string, location: string) {
         let data = this.paths[folder];
         let name: any = path.basename(location)	
-        // let extension = name.split('.').pop().toLocaleLowerCase();
 
-        // if (!data.mappedCategories[extension]) {
-        //     return;
-        // }
-
-        let categories = data.categories;
-        let category = this.getCategory(categories, name);
+        let category = this.getCategory(data, name);
 
         if (!category) {
             return;
@@ -207,17 +155,19 @@ export class FileSorter {
         return [name, extension];
     }
 
-    private getCategory(categories: any, name: string): string | null {
-        let array = Object.keys(categories);
+    private getCategory(data: any, name: string): string | null {
+        let categories = data.categories;
+        let order = data.order;
         let found = false;
         let category = null;
-        for (let i = 0; i < array.length; i++) {
-            let rules = categories[array[i]];
+
+        for (let i = 0; i < order.length; i++) {
+            let rules = categories[order[i]];
             for (let j = 0; j < rules.length; j++) {
                 let rule = rules[j];
                 if (this.checkRule(rule, name)) {
                     found = true;
-                    category = array[i];
+                    category = order[i];
                     break;
                 }
             }
@@ -228,7 +178,7 @@ export class FileSorter {
         return category;
     }
 
-    private checkRule(rule: string, name: string) {
+    private checkRule(rule: string, name: string): boolean {
         let result = false;
         let split = rule.split(':');
         let condition = split[0];

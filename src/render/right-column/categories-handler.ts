@@ -1,6 +1,7 @@
 import { FileSorter } from '../file-sorter';
 import { SectionHandler } from '../sections-handler';
 import { ExtensionsHandler } from './extensions-handler';
+import Sortable from "sortablejs";
 
 export class CategoriesHandler extends SectionHandler {
     inputRef: HTMLElement | null | undefined;
@@ -12,6 +13,17 @@ export class CategoriesHandler extends SectionHandler {
         this.fileSorter = fileSorter;
         this.extensionHandler = new ExtensionsHandler(fileSorter);
         this.inputRef = this.contentRef?.querySelector('div.category-input');
+
+        if (this.listRef) {
+            new Sortable(this.listRef, {
+                animation: 200,
+                draggable: '.category-list-item',
+                ghostClass: 'sortable-ghost',
+                onEnd: () => {
+                    this.reorderCategories();
+                }
+            });
+        }
         this.inputRef?.addEventListener('keydown', (event: any) => {
             if (event.which == 13) {
                 this.onEnter(event);
@@ -73,12 +85,12 @@ export class CategoriesHandler extends SectionHandler {
 
         this.folder = folder;
         this.clearList();
-        let categories = this.getCategories(folder);
-        let categoryList = Object.keys(categories);
+        let data = this.getFolders();
+        let order: Array<string> = data[this.folder].order;
 
         // If the category list is greater than 0 we render it and remove the section tip
-        if (categoryList.length > 0) {
-            let items: Array<HTMLElement> = categoryList.map((category) => {
+        if (order.length > 0) {
+            let items: Array<HTMLElement> = order.map((category) => {
                 return this.createListElement(category);
             });
 
@@ -141,6 +153,7 @@ export class CategoriesHandler extends SectionHandler {
 
         if (!categories[category]) {
             categories[category] = [];
+            folder.order.push(category);
             localStorage.setItem('folders', JSON.stringify(folders));
             this.fileSorter.updateFoldersData();
             success = true;
@@ -159,14 +172,22 @@ export class CategoriesHandler extends SectionHandler {
         }
 
         let folders = this.getFolders();
-        let folder = folders[this.folder];
+        let folder: {
+            order: Array<string>,
+            categories :any
+        } = folders[this.folder];
 
         if (folder.categories && folder.categories[category]) {
             delete folder.categories[category];
-            localStorage.setItem('folders', JSON.stringify(folders));
-            this.fileSorter.updateFoldersData();
-
         }
+        
+        let orderIndex = folder.order.indexOf(category); 
+        if (folder.order && folder.order.length > 0 && orderIndex > -1) {
+            folder.order.splice(orderIndex, 1);
+        }
+        
+        localStorage.setItem('folders', JSON.stringify(folders));
+        this.fileSorter.updateFoldersData();
     }
 
     /**
@@ -189,136 +210,28 @@ export class CategoriesHandler extends SectionHandler {
             children: [folderIcon, valueHolder],
         });
 
-        this.dragHandle(item);
-
         return item;
     }
 
-    private dragHandle(item: HTMLElement) {
-        let mousedown = false;
-        let startY = 0;
-        let steps: { top: any; step: any; }[] = [];
+    private reorderCategories() {
+        let items = this.listRef?.querySelectorAll(this.listItemSelector);
+        let data = this.getFolders();
+        if (!items || !this.folder || !data[this.folder]) {
+            return;
+        }
 
-        let prev: any = {
-            step: 0,
-            element: null,
-            index: 0
-        };
+        let order: Array<string> = [];
+        data[this.folder].order = [];
 
-        let currentStep = 0;
-
-        let next: any = {
-            step: 0,
-            element: null,
-            index: 0
-        };
-
-        let dropPos = 0;
-        let current = 0;
-
-        let siblings: any = [];
-
-        item.addEventListener('mousedown', (event: any) => {
-            this.select(item);
-            mousedown = true;
-            startY = event.clientY;
-            dropPos = event.target.offsetTop;
-            currentStep = dropPos + event.target.clientHeight/2;
-
-            defineSteps();
-
-            console.log(currentStep);
-            console.log(steps);
+        items.forEach((item) => {
+            let value = item.getAttribute('value');
+            if (value) {
+                order.push(value);
+            }
         });
 
-        item.addEventListener('mousemove', (event: any) => {
-            if (mousedown) {
-                // return;
-                let y = (event.clientY - startY);
-                current = currentStep + y;
-
-                item.style.zIndex = '5';
-                item.style.transform = `translateY(${y}px)`;
-
-                if (next.step && current > next.step) {
-                    this.swapNodes(item, next.element);
-                }
-
-                if (prev.step && current < prev.step) {
-                    this.swapNodes(item, prev.element);
-                }
-            }
-
-        });
-
-        item.addEventListener('mouseup', () => {
-            drop()
-        });
-
-        item.addEventListener('mouseleave', () => {
-            drop();
-        });
-        
-        function drop() {
-            item.style.transform = `translateY(${0}px)`;
-            mousedown = false;
-            item.style.zIndex = '0';
-        }
-
-        const defineSteps = () => {
-            steps = [];
-            let stepIndex = 0;
-            siblings = this.listRef?.querySelectorAll(this.listItemSelector);
-            siblings?.forEach((sibling: any, index: any) => {
-                let step = {
-                    top: sibling.offsetTop,
-                    step: sibling.offsetTop + (sibling.clientHeight/2) 
-                }
-
-                if (dropPos == step.top) {
-                    stepIndex = index;
-                }
-
-                steps.push(step);
-            });
-
-            prev = {};
-            next = {};
-
-            if (steps[stepIndex - 1]) {
-                prev.step = steps[stepIndex - 1].step;
-                prev.index = stepIndex - 1;
-                prev.element = siblings[stepIndex - 1];
-            }
-            if (steps[stepIndex + 1]) {
-                next.step = steps[stepIndex + 1].step;
-                next.index = stepIndex + 1
-                next.element = siblings[stepIndex + 1];
-            }
-        }
-    }
-
-    private swapNodes(n1: HTMLElement, n2: HTMLElement) {
-        var p1 = n1.parentNode;
-        var p2 = n2.parentNode;
-        let i1: number = 0, i2: number = 0;
-        if ( !p1 || !p2 || p1.isEqualNode(n2) || p2.isEqualNode(n1) ) return;
-    
-        for (var i = 0; i < p1.children.length; i++) {
-            if (p1.children[i].isEqualNode(n1)) {
-                i1 = i;
-            }
-        }
-        for (var i = 0; i < p2.children.length; i++) {
-            if (p2.children[i].isEqualNode(n2)) {
-                i2 = i;
-            }
-        }
-    
-        if ( p1.isEqualNode(p2) && i1 < i2 ) {
-            i2++;
-        }
-        p1.insertBefore(n2, p1.children[i1]);
-        p2.insertBefore(n1, p2.children[i2]);
+        data[this.folder].order = order;
+        localStorage.setItem('folders', JSON.stringify(data));
+        this.fileSorter.updateFoldersData();
     }
 }

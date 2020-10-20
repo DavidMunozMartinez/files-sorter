@@ -87,6 +87,7 @@ export class FolderHandler extends SectionHandler {
             data[folder] = {
                 categories: {},
                 active: false,
+                order: []
             }
             localStorage.setItem('folders', JSON.stringify(data));
             this.fileSorter.updateFoldersData();

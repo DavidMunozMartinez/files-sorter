@@ -44,6 +44,7 @@
     "author": "Damuz",
     "license": "ISC",
     "devDependencies": {
+        "@types/sortablejs": "^1.10.6",
         "css-loader": "^4.3.0",
         "electron": "^10.1.2",
         "electron-builder": "^22.8.1",
@@ -64,6 +65,7 @@
         "electron-titlebar": "0.0.3",
         "material-icons": "^0.3.1",
         "material-icons-font": "^2.1.0",
-        "smart-hoverjs": "^1.0.6"
+        "smart-hoverjs": "^1.0.6",
+        "sortablejs": "^1.12.0"
     }
 }
