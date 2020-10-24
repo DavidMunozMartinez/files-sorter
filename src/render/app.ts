@@ -44,6 +44,6 @@ class App {
      * Applies title bar styles for the windows build only.
      */
     private applyTitlebarStyles() {
-        require('electron-titlebar');
+        // require('electron-titlebar');
     }
 } new App();

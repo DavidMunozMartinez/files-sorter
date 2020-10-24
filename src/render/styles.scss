@@ -44,11 +44,11 @@ body {
     flex-direction: row;
     div.left-column,
     div.right-column {
-        flex: 2;
+        flex: 4;
         position: relative;
     }
     div.left-column {
-        flex: 3;
+        flex: 5;
     }
 
     .column {

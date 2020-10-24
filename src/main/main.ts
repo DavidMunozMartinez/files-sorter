@@ -12,6 +12,12 @@ let trayMenu = [
             isQuiting = true;
             app.quit();
         }
+    },
+    {
+        label: 'Open',
+        click: () => {
+            win.show();
+        }
     }
 ];
 
@@ -26,14 +32,19 @@ function init() {
         win.show()
         win.focus();
     }, 1000);
-    tray = createTray();
+
+    // Avoid creating the tray for dev env because it causes problems when auto reloading,
+    // Its not necessary for debbugging, hence not worth trying to fix.
+    if (!isDevEnv) {
+        tray = createTray();
+    }
 }
 
 function createWindow(): BrowserWindow {
     // Create the browser window.
     win = new BrowserWindow({
         width: 910,
-        height: 600,
+        height: 700,
         show: false,
         maximizable: false,
         webPreferences: {
@@ -53,11 +64,8 @@ function createWindow(): BrowserWindow {
         win.webContents.toggleDevTools();
     }
     win.on('close', onWindowClose);
-
     if (process.platform == 'darwin') {
-        // app.dock.hide();
-        app.dock.setIcon(getIcon(256));
-        
+        app.dock.hide();
     }
 
     return win;
@@ -77,12 +85,7 @@ function createTray(): Tray {
     const contextMenu = Menu.buildFromTemplate(trayMenu);
     tray.setToolTip('Files sorter');
     tray.setContextMenu(contextMenu);
-    tray.on('click', onTrayClick);
     return tray;
-}
-
-function onTrayClick() {
-    win.show();
 }
 
 function getIcon(res: number) {

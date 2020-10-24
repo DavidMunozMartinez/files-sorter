@@ -16,7 +16,7 @@
         user-select: none;
     }
     .extensions {
-        flex: 3;
+        flex: 4;
         div.input-container {
             width: 100%;
         }
@@ -37,12 +37,16 @@
             border-radius: 5px;
             box-sizing: border-box;
             cursor: pointer;
+            i.material-icons {
+                left: unset;
+                right: 3px;
+            }
             .value {
                 height: 100%;
                 width: 100%;
                 position: absolute;
                 padding: 7px;
-                padding-left: 30px;
+                padding-right: 30px;
                 box-sizing: border-box;
                 pointer-events: none;
             }
@@ -54,7 +58,7 @@
                 top: 100%;
                 width: 100%;
                 position: absolute;
-                background: rgb(73, 73, 73);
+                background: rgb(58, 58, 58);
                 z-index: 1;
                 border-radius: 0 0 5px 5px;
                 height: 0px;
