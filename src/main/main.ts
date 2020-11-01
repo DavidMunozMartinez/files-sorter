@@ -1,11 +1,11 @@
 import { app, BrowserWindow, Tray, Menu } from 'electron';
 import * as path from 'path';
 
-let isDevEnv = process && process.mainModule && process.mainModule.filename.indexOf('app.asar') == -1;
+const isDevEnv = process && process.mainModule && process.mainModule.filename.indexOf('app.asar') === -1;
 let isQuiting = false;
 let win: BrowserWindow;
-let tray: Tray;
-let trayMenu = [
+let appTray: Tray;
+const trayMenu = [
     {
         label: 'Quit',
         click: () => {
@@ -36,7 +36,7 @@ function init() {
     // Avoid creating the tray for dev env because it causes problems when auto reloading,
     // Its not necessary for debbugging, hence not worth trying to fix.
     if (!isDevEnv) {
-        tray = createTray();
+        appTray = createTray();
     }
 }
 
@@ -58,13 +58,13 @@ function createWindow(): BrowserWindow {
     });
     win.removeMenu();
 
-    // Path to index on the dist folder  
+    // Path to index on the dist folder
     win.loadURL(path.join("file://", __dirname, "./app/index.html"));
     if (isDevEnv) {
         win.webContents.toggleDevTools();
     }
     win.on('close', onWindowClose);
-    if (process.platform == 'darwin') {
+    if (process.platform === 'darwin') {
         app.dock.hide();
     }
 
@@ -75,13 +75,13 @@ function createWindow(): BrowserWindow {
 function onWindowClose(event: any) {
     if (!isQuiting) {
         event.preventDefault();
-        win.hide();
+        // win.hide();
         return false;
     }
 }
 
 function createTray(): Tray {
-    let tray = new Tray(getIcon(16));
+    const tray = new Tray(getIcon(16));
     const contextMenu = Menu.buildFromTemplate(trayMenu);
     tray.setToolTip('Files sorter');
     tray.setContextMenu(contextMenu);
@@ -89,7 +89,7 @@ function createTray(): Tray {
 }
 
 function getIcon(res: number) {
-    let skips = isDevEnv ? '../' : '../../';
+    const skips = isDevEnv ? '../' : '../../';
     return path.join(__dirname, skips, `icons/icon-fs-@${res}px.png`);
 }
 

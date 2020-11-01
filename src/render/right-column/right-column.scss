@@ -1,6 +1,19 @@
 .right-column {
     display: flex;
     flex-direction: column;
+    .active-folder {
+        width: 100%;
+        height: 50px;
+        background: rgba(0,0,0,0.1);
+        box-sizing: border-box;
+        padding: 10px;
+        &.disabled {
+            opacity: 0;
+        }
+        .active-folder-value {
+            display: inline;
+        }
+    }
     .categories,
     .extensions {
         border-radius: 5px;
@@ -94,11 +107,11 @@
 
     .category-list,
     .extension-list {
-        height: calc(100% - 55px);
+        height: calc(100% - 90px);
         width: 100%;
         position: absolute;
         bottom: 0;
-        padding: 10px;
+        padding: 20px;
         box-sizing: border-box;
         overflow-y: scroll;
         .category-list-item,

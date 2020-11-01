@@ -1,5 +1,5 @@
 export class Utils {
-    constructor () {}
+    // constructor () {}
 
     closest(element: HTMLElement, selector: string): HTMLElement | null {
         let match = null;
@@ -23,13 +23,12 @@ export class Utils {
         const onClick = (event: any) => {
             if (event.target.classList.contains('dropdown')) {
                 event.target.classList.toggle('expanded');
-                console.log('clicked', event.target);
             }
-            else if (event.target.nodeName == 'SPAN') {
-                let container = this.closest(event.target, '.dropdown');
-                let key = event.target.getAttribute('value');
+            else if (event.target.nodeName === 'SPAN') {
+                const container = this.closest(event.target, '.dropdown');
+                const key = event.target.getAttribute('value');
                 if (container) {
-                    let valueHolder = container?.querySelector('.value');
+                    const valueHolder = container?.querySelector('.value');
                     container.setAttribute('value', key);
                     if (valueHolder) {
                         valueHolder.innerHTML = event.target.innerHTML;

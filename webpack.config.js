@@ -72,6 +72,10 @@ const electronReder = {
         {
             test: /\.(ttf|eot|svg|gif|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
             use: ['file-loader']
+        },
+        {
+            test: /\.html$/i,
+            loader: 'html-loader',
         }
         ]
     },
