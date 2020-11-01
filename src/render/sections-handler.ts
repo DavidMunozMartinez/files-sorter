@@ -76,7 +76,9 @@ export class SectionHandler {
         let animation = 150
         items.forEach((item, index) => {
             let delay = (animation * index) - (index * 100);
-            this.renderItem(item, delay);
+            this.renderItem(item, {
+                delay: delay
+            });
         });
 
         if (selectIndex) {
@@ -89,39 +91,52 @@ export class SectionHandler {
     /**
      * Takes an HTML element and renders it into the section list with an animation
      * @param item HTML element to render in the list
-     * @param delay Delay time in ms to render given item
+     * @param opts Options object for rendering the item
      */
-    renderItem(item: HTMLElement, delay?: number | 0) {
-        let removeIcon = this.makeElement('i', {
-            classList: ['material-icons', 'close-icon'],
-            innerHTML: 'close',
-            click: (event: any) => {
-                console.log('close');
-                this.clearItem(item);
-                event.stopImmediatePropagation();
-            }
-        });
+    renderItem(item: HTMLElement, opts?: any | {}) {
+        if (opts === undefined) opts = {};
+        if (opts.delay === undefined) opts.delay = 0;
+        if (opts.silent === undefined) opts.silent = false;
+        if (opts.removable === undefined) opts.removable = true;
+        if (opts.selectable === undefined) opts.selectable = true;
 
-        removeIcon.style.position = 'relative';
-        removeIcon.style.float = 'right';
+        if (opts.removable) {
+            let removeIcon = this.makeElement('i', {
+                classList: ['material-icons', 'close-icon'],
+                innerHTML: 'close',
+                click: (event: any) => {
+                    this.clearItem(item);
+                    event.stopImmediatePropagation();
+                }
+            });
+    
+            removeIcon.style.position = 'relative';
+            removeIcon.style.float = 'right';
+            item.prepend(removeIcon);
+        }
 
         item.style.opacity = '0';
         item.style.transform = 'translateX(-10px)';
         item.style.transition = 'all 200ms ease-out';
-        item.prepend(removeIcon);
-        item.addEventListener('mousedown', () => {
-            this.select(item);
-        });
+
+        if (opts.selectable) {
+            item.addEventListener('mousedown', () => {
+                this.select(item);
+            });
+        }
+
         setTimeout(() => {
             item.style.transform = '';
             item.style.opacity = '1';
-        }, delay)
+        }, opts.delay)
         this.listRef?.append(item);
 
-        this.subscriptions['added'].forEach((callback: any) => {
-            let items = this.listRef?.querySelectorAll(this.listItemSelector);
-            callback(item, items);
-        });
+        if (!opts.silent) {
+            this.subscriptions['added'].forEach((callback: any) => {
+                let items = this.listRef?.querySelectorAll(this.listItemSelector);
+                callback(item, items);
+            });
+        }
     }
 
     /**

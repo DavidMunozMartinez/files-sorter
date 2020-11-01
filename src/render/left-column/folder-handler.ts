@@ -2,16 +2,17 @@ import { remote } from 'electron';
 import { FileSorter } from '../file-sorter';
 import { CategoriesHandler } from '../right-column/categories-handler';
 import { SectionHandler } from '../sections-handler';
+import { Utils } from '../utils';
 
 export class FolderHandler extends SectionHandler {
 
     categoriesHandler: CategoriesHandler;
     fileSorter: FileSorter;
 
-    constructor (fileSorter: FileSorter) {
+    constructor (fileSorter: FileSorter, utils: Utils) {
         super('.column.left-column', '.folder-list', '.folder-list-item');
         // Handles all logic related to the categories section
-        this.categoriesHandler = new CategoriesHandler(fileSorter);
+        this.categoriesHandler = new CategoriesHandler(fileSorter, utils);
         this.fileSorter = fileSorter;
         let addButtonRef = document.querySelector('div.folder-input');
         addButtonRef?.addEventListener('click', () =>  this.folderDialog());

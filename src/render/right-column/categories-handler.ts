@@ -2,16 +2,17 @@ import { FileSorter } from '../file-sorter';
 import { SectionHandler } from '../sections-handler';
 import { ExtensionsHandler } from './extensions-handler';
 import Sortable from "sortablejs";
+import { Utils } from '../utils';
 
 export class CategoriesHandler extends SectionHandler {
     inputRef: HTMLElement | null | undefined;
     folder: string | null = null;
     extensionHandler: ExtensionsHandler;
     fileSorter: FileSorter;
-    constructor(fileSorter: FileSorter) {
+    constructor(fileSorter: FileSorter, utils: Utils) {
         super('div.categories', 'smart-hover.category-list', '.category-list-item');
         this.fileSorter = fileSorter;
-        this.extensionHandler = new ExtensionsHandler(fileSorter);
+        this.extensionHandler = new ExtensionsHandler(fileSorter, utils);
         this.inputRef = this.contentRef?.querySelector('div.category-input');
 
         if (this.listRef) {

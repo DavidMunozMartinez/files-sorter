@@ -1,20 +1,23 @@
 import { FileSorter } from "../file-sorter";
 import { SectionHandler } from "../sections-handler";
+import { Utils } from "../utils";
 
 export class ExtensionsHandler extends SectionHandler {
     inputRef: HTMLElement | null | undefined;
-    dropdownRef: HTMLElement | null | undefined;
+    conditionRef: HTMLElement | null | undefined;
 
     folder: string | null = null;
     category: string | null = null;
     condition: string | null = null;
 
     fileSorter: FileSorter;
+    utils: Utils;
 
-    constructor(fileSorter: FileSorter) {
+    constructor(fileSorter: FileSorter, utils: Utils) {
         super('div.extensions', 'div.extension-list', '.extension-list-item');
 
         this.fileSorter = fileSorter;
+        this.utils = utils;
 
         this.inputRef = this.contentRef?.querySelector('div.extensions-input');
         this.inputRef?.addEventListener('keydown', (event: any) => { 
@@ -27,26 +30,11 @@ export class ExtensionsHandler extends SectionHandler {
             event.target.innerText = '';
         });
 
-        this.dropdownRef = this.contentRef?.querySelector('div.dropdown');
-        this.dropdownRef?.addEventListener('click', (event: any) => {
-            if (event.target.classList.contains('dropdown')) {
-                event.target.classList.toggle('expanded');
-                console.log('clicked', event.target);
-            }
-            else if (event.target.nodeName == 'SPAN') {
-                let key = event.target.getAttribute('value');
-                if (this.dropdownRef && this.inputRef) {
-                    this.dropdownRef.setAttribute('value', key);
-                    let valueHolder = this.dropdownRef.querySelector('.value');
-                    this.condition = key;
-                    if (valueHolder) {
-                        valueHolder.innerHTML = event.target.innerHTML;
-                        this.inputRef.focus();
-                    }
-                }
-            }
-            
-        }, false);
+        this.conditionRef = this.contentRef?.querySelector('div.dropdown');
+        if (this.conditionRef) {
+            this.utils.fsDropdown(this.conditionRef);
+        }
+
         this.on('removed', (item: HTMLElement, items: NodeList) => {
             let value = item.getAttribute('value');
             if (value) {
@@ -61,6 +49,16 @@ export class ExtensionsHandler extends SectionHandler {
             if (items.length > 0) {
                 this.hideTip();
                 this.hideOverlay();
+
+                let index = Array.prototype.indexOf.call(items, item);
+                if (index < items.length - 1) {
+                    let operand = this.createOperandItem();
+                    this.renderItem(operand, {
+                        silent: true,
+                        removable: false,
+                        selectable: false
+                    });
+                }
             }
         })
     }
@@ -162,19 +160,19 @@ export class ExtensionsHandler extends SectionHandler {
      */
     private onEnter(event: any) {
         let value = event.target.innerText;
-
-        if (!this.condition) {
-            this.dropdownRef?.focus();
+        let condition = this.conditionRef?.getAttribute('value');
+        if (!condition) {
             event.preventDefault();
             return;
         }
+
         if (!value) {
             return;
         }
 
-        let item = this.createListItem(value, this.condition);
+        let item = this.createListItem(value, condition);
 
-        if (this.save(value, this.condition)) {
+        if (this.save(value, condition)) {
             this.renderItem(item);
             event.target.innerText = '';
         }
@@ -200,6 +198,19 @@ export class ExtensionsHandler extends SectionHandler {
             classList: ['extension-list-item'],
             innerHTML: innerText,
             attrs: ['value=' + valueText]
+        });
+
+        return item;
+    }
+
+    private createOperandItem() {
+        let item = this.makeElement('div', {
+            classList: ['extension-list-item', 'operand'],
+            innerHTML: 'or',
+            attrs: ['value=or'],
+            click: () => {
+                console.log('clicked');
+            }
         });
 
         return item;

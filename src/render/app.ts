@@ -1,13 +1,16 @@
 import { FileSorter } from './file-sorter';
 import { FolderHandler } from './left-column/folder-handler';
+import { Utils } from './utils';
 import 'smart-hoverjs';
 import 'chokidar';
 
 class App {
+    // Utilities instance
+    private utils: Utils = new Utils();
     // Handles all logic to actually sort and move files arounf
     private fileSorter: FileSorter = new FileSorter();
     // Handles all logic around storing data and renedring the folders in the view
-    private folderHandler: FolderHandler = new FolderHandler(this.fileSorter);
+    private folderHandler: FolderHandler = new FolderHandler(this.fileSorter, this.utils);
 
     constructor() {
         this.applyTitlebarStyles();
