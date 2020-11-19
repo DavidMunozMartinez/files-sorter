@@ -1,10 +1,11 @@
 import { FileSorter } from "../file-sorter";
 import { SectionHandler } from "../sections-handler";
 import { Utils } from "../utils";
+// import { AddRulesView } from './add-rules-modal/add-rules.component';
 
 export class ExtensionsHandler extends SectionHandler {
-    inputRef: HTMLElement | null | undefined;
-    conditionRef: HTMLElement | null | undefined;
+    inputRef: HTMLElement | null;
+    conditionRef: HTMLElement | null;
 
     folder: string | null = null;
     category: string | null = null;
@@ -20,8 +21,8 @@ export class ExtensionsHandler extends SectionHandler {
         this.utils = utils;
 
         this.inputRef = this.contentRef?.querySelector('div.extensions-input');
-        this.inputRef?.addEventListener('keydown', (event: any) => { 
-            if (event.which == 13) {
+        this.inputRef?.addEventListener('keydown', (event: any) => {
+            if (event.which === 13) {
                 this.onEnter(event)
             }
         });
@@ -30,17 +31,17 @@ export class ExtensionsHandler extends SectionHandler {
             event.target.innerText = '';
         });
 
-        this.conditionRef = this.contentRef?.querySelector('div.dropdown');
+        this.conditionRef = this.contentRef.querySelector('div.dropdown');
         if (this.conditionRef) {
             this.utils.fsDropdown(this.conditionRef);
         }
 
         this.on('removed', (item: HTMLElement, items: NodeList) => {
-            let value = item.getAttribute('value');
+            const value = item.getAttribute('value');
             if (value) {
                 this.delete(value);
             }
-            if (items.length == 0) {
+            if (items.length === 0) {
                 this.showTip();
             }
         });
@@ -50,9 +51,9 @@ export class ExtensionsHandler extends SectionHandler {
                 this.hideTip();
                 this.hideOverlay();
 
-                let index = Array.prototype.indexOf.call(items, item);
+                const index = Array.prototype.indexOf.call(items, item);
                 if (index < items.length - 1) {
-                    let operand = this.createOperandItem();
+                    const operand = this.createOperandItem();
                     this.renderItem(operand, {
                         silent: true,
                         removable: false,
@@ -69,7 +70,7 @@ export class ExtensionsHandler extends SectionHandler {
      * @param category Active category string
      */
     enable(folder: string, category: string) {
-        if (this.category == category) {
+        if (this.category === category) {
             return;
         }
         this.hideOverlay();
@@ -77,13 +78,13 @@ export class ExtensionsHandler extends SectionHandler {
         this.category = category;
         this.clearList();
 
-        let extensions = this.getExtensions(this.folder, this.category);
+        const extensions = this.getExtensions(this.folder, this.category);
 
         if (extensions.length > 0) {
-            let items = extensions.map((extension: any) => {
-                let split = extension.split(':');
-                let condition = split[0];
-                let text = split[1];
+            const items = extensions.map((extension: any) => {
+                const split = extension.split(':');
+                const condition = split[0];
+                const text = split[1];
                 return this.createListItem(text, condition);
             });
             this.hideTip();
@@ -110,7 +111,7 @@ export class ExtensionsHandler extends SectionHandler {
     }
 
     /**
-     * Saves in local storage an extension string into the active folder and 
+     * Saves in local storage an extension string into the active folder and
      * category, also returns a boolean indicating that it was saved succesfully
      * @param extension Extensoin string to save
      */
@@ -118,13 +119,13 @@ export class ExtensionsHandler extends SectionHandler {
         if (!this.folder || !this.category) {
             return false;
         }
-        let value = `${condition}:${text}`
-        let success = false
-        let data = this.getFolders();
-        let folder = data[this.folder];
-        let extensions = folder.categories[this.category];
+        const value = `${condition}:${text}`;
+        let success = false;
+        const data = this.getFolders();
+        const folder = data[this.folder];
+        const extensions = folder.categories[this.category];
 
-        if (extensions.indexOf(value) == -1) {
+        if (extensions.indexOf(value) === -1) {
             extensions.push(value);
             localStorage.setItem('folders', JSON.stringify(data));
             this.fileSorter.updateFoldersData();
@@ -142,9 +143,9 @@ export class ExtensionsHandler extends SectionHandler {
             return;
         }
 
-        let data = this.getFolders();
-        let folder = data[this.folder];
-        let extensions: Array<string> = folder.categories[this.category];
+        const data = this.getFolders();
+        const folder = data[this.folder];
+        const extensions: string[] = folder.categories[this.category];
 
         if (extensions.indexOf(extension) > -1) {
             extensions.splice(extensions.indexOf(extension), 1);
@@ -159,8 +160,8 @@ export class ExtensionsHandler extends SectionHandler {
      * @param event Native DOM event
      */
     private onEnter(event: any) {
-        let value = event.target.innerText;
-        let condition = this.conditionRef?.getAttribute('value');
+        const value = event.target.innerText;
+        const condition = this.conditionRef?.getAttribute('value');
         if (!condition) {
             event.preventDefault();
             return;
@@ -170,7 +171,7 @@ export class ExtensionsHandler extends SectionHandler {
             return;
         }
 
-        let item = this.createListItem(value, condition);
+        const item = this.createListItem(value, condition);
 
         if (this.save(value, condition)) {
             this.renderItem(item);
@@ -181,7 +182,7 @@ export class ExtensionsHandler extends SectionHandler {
     }
 
     private createListItem(value: string, condition?: string): HTMLElement {
-        let conditions: any = {
+        const conditions: any = {
             starts_with: 'Starts with',
             contains: 'Contains',
             ends_with: 'Ends with'
@@ -194,23 +195,26 @@ export class ExtensionsHandler extends SectionHandler {
             valueText = condition + ':' + value;
         }
 
-        let item = this.makeElement('div', {
+        const item = this.makeElement('div', {
             classList: ['extension-list-item'],
             innerHTML: innerText,
-            attrs: ['value=' + valueText]
+            attrs: ['value=' + valueText],
+            click: () => {
+                // const modal = new AddRulesView(document.body);
+            }
         });
 
         return item;
     }
 
     private createOperandItem() {
-        let item = this.makeElement('div', {
+        const item = this.makeElement('div', {
             classList: ['extension-list-item', 'operand'],
             innerHTML: 'or',
-            attrs: ['value=or'],
-            click: () => {
-                console.log('clicked');
-            }
+            attrs: ['value=or']
+            // click: () => {
+            //     console.log('clicked');
+            // }
         });
 
         return item;

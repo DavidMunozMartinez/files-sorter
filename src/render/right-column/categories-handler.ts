@@ -1,23 +1,28 @@
 import { FileSorter } from '../file-sorter';
 import { SectionHandler } from '../sections-handler';
-import { ExtensionsHandler } from './extensions-handler';
-import Sortable from "sortablejs";
+import { RulesHandler } from './rules-handler';
+// import { ExtensionsHandler } from './extensions-handler';
 import { Utils } from '../utils';
 
+import Sortable from "sortablejs";
+
 export class CategoriesHandler extends SectionHandler {
-    inputRef: HTMLElement | null | undefined;
+    inputRef: HTMLElement | null;
     folder: string | null = null;
-    extensionHandler: ExtensionsHandler;
+    // extensionHandler: ExtensionsHandler;
     fileSorter: FileSorter;
+    rulesHandler: RulesHandler;
+
     constructor(fileSorter: FileSorter, utils: Utils) {
         super('div.categories', 'smart-hover.category-list', '.category-list-item');
         this.fileSorter = fileSorter;
-        this.extensionHandler = new ExtensionsHandler(fileSorter, utils);
-        this.inputRef = this.contentRef?.querySelector('div.category-input');
+        this.rulesHandler = new RulesHandler('.rules-view-container');
+        // this.extensionHandler = new ExtensionsHandler(fileSorter, utils);
+        this.inputRef = this.contentRef.querySelector('div.category-input');
 
         if (this.listRef) {
-            new Sortable(this.listRef, {
-                animation: 200,
+            const sortable = new Sortable(this.listRef, {
+                animation: 180,
                 draggable: '.category-list-item',
                 ghostClass: 'sortable-ghost',
                 onEnd: () => {
@@ -26,7 +31,7 @@ export class CategoriesHandler extends SectionHandler {
             });
         }
         this.inputRef?.addEventListener('keydown', (event: any) => {
-            if (event.which == 13) {
+            if (event.which === 13) {
                 this.onEnter(event);
             }
         });
@@ -37,7 +42,7 @@ export class CategoriesHandler extends SectionHandler {
 
         // Executed when a new item is added to the section list
         this.on('added', (item: HTMLElement, items: NodeList) => {
-            if (items.length == 1) {
+            if (items.length === 1) {
                 this.hideTip();
                 this.select(item);
             }
@@ -45,28 +50,28 @@ export class CategoriesHandler extends SectionHandler {
 
         // Executed when a list item is selected
         this.on('selected', (item: HTMLElement) => {
-            let category = item.getAttribute('value');
+            const category = item.getAttribute('value');
             if (this.folder && category) {
-                this.extensionHandler.enable(this.folder, category);
+                // this.extensionHandler.enable(this.folder, category);
                 this.hideOverlay();
             }
         });
 
         // Executed when an item weill be removed from the sectin list
         this.on('removed', (item: HTMLElement, items: NodeList) => {
-            let category = item.getAttribute('value');
-            if (items.length == 0) {
+            const category = item.getAttribute('value');
+            if (items.length === 0) {
                 this.showTip();
-                this.extensionHandler.clearList();
-                this.extensionHandler.showOverlay();
-                this.extensionHandler.hideTip();
+                // this.extensionHandler.clearList();
+                // this.extensionHandler.showOverlay();
+                // this.extensionHandler.hideTip();
             }
 
-            if (category == this.extensionHandler.category) {
-                this.extensionHandler.clearList();
-                this.extensionHandler.showOverlay();
-                this.extensionHandler.hideTip();
-            }
+            // if (category == this.extensionHandler.category) {
+            //     this.extensionHandler.clearList();
+            //     this.extensionHandler.showOverlay();
+            //     this.extensionHandler.hideTip();
+            // }
 
             if (category) {
                 this.delete(category);
@@ -79,19 +84,25 @@ export class CategoriesHandler extends SectionHandler {
      * @param folder Folder string path
      */
     enable (folder: string) {
-        if (this.folder == folder) {
+        if (this.folder === folder) {
             return;
         }
         this.hideOverlay();
 
         this.folder = folder;
         this.clearList();
-        let data = this.getFolders();
-        let order: Array<string> = data[this.folder].order;
+        const data = this.getFolders();
+        const order: string[] = data[this.folder].order;
+
+        const activeRef = this.contentRef.querySelector('.active-folder');
+        if (activeRef) {
+            activeRef.classList.remove('disabled');
+            activeRef.children[1].innerHTML = folder;
+        }
 
         // If the category list is greater than 0 we render it and remove the section tip
         if (order.length > 0) {
-            let items: Array<HTMLElement> = order.map((category) => {
+            const items: HTMLElement[] = order.map((category) => {
                 return this.createListElement(category);
             });
 
@@ -103,8 +114,8 @@ export class CategoriesHandler extends SectionHandler {
             this.inputRef?.focus();
             this.showTip();
             this.hideOverlay();
-            this.extensionHandler.clearList();
-            this.extensionHandler.disable();
+            // this.extensionHandler.clearList();
+            // this.extensionHandler.disable();
         }
     }
 
@@ -116,9 +127,15 @@ export class CategoriesHandler extends SectionHandler {
         this.showOverlay();
         this.hideTip();
         this.folder = null;
+        // this.extensionHandler.clearList()
+        // this.extensionHandler.disable();
 
-        this.extensionHandler.clearList()
-        this.extensionHandler.disable();
+        const activeRef = this.contentRef.querySelector('.active-folder');
+        if (activeRef) {
+            if (!activeRef.classList.contains('diabled')) {
+                activeRef.classList.add('disabled')
+            }
+        }
     }
 
     /**
@@ -130,9 +147,9 @@ export class CategoriesHandler extends SectionHandler {
             return;
         }
 
-        let value = this.inputRef.innerText;
+        const value = this.inputRef.innerText;
         if (this.save(value)) {
-            let item = this.createListElement(value);
+            const item = this.createListElement(value);
             this.renderItem(item);
             this.inputRef.innerText = '';
         }
@@ -144,13 +161,13 @@ export class CategoriesHandler extends SectionHandler {
      * @param category Category string to save
      */
     private save(category: string) {
-        if (!this.folder || category == '') {
+        if (!this.folder || category === '') {
             return false;
         }
         let success = false;
-        let folders = this.getFolders();
-        let folder = folders[this.folder];
-        let categories = folder.categories;
+        const folders = this.getFolders();
+        const folder = folders[this.folder];
+        const categories = folder.categories;
 
         if (!categories[category]) {
             categories[category] = [];
@@ -172,21 +189,21 @@ export class CategoriesHandler extends SectionHandler {
             return;
         }
 
-        let folders = this.getFolders();
-        let folder: {
-            order: Array<string>,
+        const folders = this.getFolders();
+        const folder: {
+            order: string[],
             categories :any
         } = folders[this.folder];
 
         if (folder.categories && folder.categories[category]) {
             delete folder.categories[category];
         }
-        
-        let orderIndex = folder.order.indexOf(category); 
+
+        const orderIndex = folder.order.indexOf(category);
         if (folder.order && folder.order.length > 0 && orderIndex > -1) {
             folder.order.splice(orderIndex, 1);
         }
-        
+
         localStorage.setItem('folders', JSON.stringify(folders));
         this.fileSorter.updateFoldersData();
     }
@@ -196,36 +213,41 @@ export class CategoriesHandler extends SectionHandler {
      * @param value Category string value
      */
     private createListElement (value: string): HTMLElement {
-        let folderIcon = this.makeElement('i', {
+        const folderIcon = this.makeElement('i', {
             classList: ['material-icons'],
             innerHTML: 'folder'
         });
 
-        let valueHolder = this.makeElement('span', {
+        const valueHolder = this.makeElement('span', {
             innerHTML: value
         });
 
-        let item = this.makeElement('div', {
+        const item = this.makeElement('div', {
             classList: ['category-list-item'],
             attrs: ['value=' + value],
             children: [folderIcon, valueHolder],
+            click: () => {
+                if (this.folder && value) {
+                    this.rulesHandler.enable(this.folder, value);
+                }
+            }
         });
 
         return item;
     }
 
     private reorderCategories() {
-        let items = this.listRef?.querySelectorAll(this.listItemSelector);
-        let data = this.getFolders();
+        const items = this.listRef?.querySelectorAll(this.listItemSelector);
+        const data = this.getFolders();
         if (!items || !this.folder || !data[this.folder]) {
             return;
         }
 
-        let order: Array<string> = [];
+        const order: string[] = [];
         data[this.folder].order = [];
 
         items.forEach((item) => {
-            let value = item.getAttribute('value');
+            const value = item.getAttribute('value');
             if (value) {
                 order.push(value);
             }

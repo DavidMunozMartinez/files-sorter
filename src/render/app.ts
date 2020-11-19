@@ -19,23 +19,23 @@ class App {
     constructor() {
         this.applyTitlebarStyles();
         this.folderHandler.on('removed', (item: HTMLElement) => {
-            let valueHolder = item.querySelector('.value-holder');
-            let folder = valueHolder?.innerHTML;
+            const valueHolder = item.querySelector('.value-holder');
+            const folder = valueHolder?.innerHTML;
             if (folder) {
                 this.fileSorter.deleteWatcher(folder);
             }
         });
 
         this.folderHandler.on('added', (item: HTMLElement) => {
-            let valueHolder = item.querySelector('.value-holder');
-            let folder = valueHolder?.innerHTML;
+            const valueHolder = item.querySelector('.value-holder');
+            const folder = valueHolder?.innerHTML;
             if (folder) {
                 this.fileSorter.addWatcher(folder);
             }
         });
 
-        let folders = Object.keys(this.folderHandler.getFolders());
-        let items: Array<HTMLElement> = folders.map((folder) => {
+        const folders = Object.keys(this.folderHandler.getFolders());
+        const items: HTMLElement[] = folders.map((folder) => {
             return this.folderHandler.createListElement(folder);
         });
 
@@ -53,4 +53,6 @@ class App {
     private applyTitlebarStyles() {
         // require('electron-titlebar');
     }
-} new App();
+}
+
+const app = new App();

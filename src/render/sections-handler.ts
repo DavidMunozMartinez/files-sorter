@@ -1,6 +1,6 @@
 export class SectionHandler {
 
-    contentRef: HTMLElement | null;
+    contentRef!: HTMLElement;
     listRef: HTMLElement | null;
     overlayRef: HTMLElement | null;
     tipRef: HTMLElement | null;
@@ -15,7 +15,9 @@ export class SectionHandler {
     }
 
     constructor(containerQuerySelector: string, listQuerySelector: string, itemSelector: string) {
-        this.contentRef = document.querySelector(containerQuerySelector);
+        const content: HTMLElement | null = document.querySelector(containerQuerySelector);
+        if (content) this.contentRef = content;
+        // this.contentRef = document.querySelector(containerQuerySelector);
         this.listRef = this.contentRef?.querySelector(listQuerySelector) || null;
         this.overlayRef = this.contentRef?.querySelector('.inactive-overlay') || null;
         this.tipRef = this.contentRef?.querySelector('.section-tip') || null;
@@ -30,7 +32,7 @@ export class SectionHandler {
     on(eventName: string, callback: any) {
         if (this.subscriptions[eventName]) {
             this.subscriptions[eventName].push(callback);
-        }   
+        }
     }
 
     /**
@@ -39,16 +41,16 @@ export class SectionHandler {
      * @param opts Options object that define the element
      */
     makeElement(tag: string, opts: any): HTMLElement {
-        let element = document.createElement(tag);
+        const element = document.createElement(tag);
         if (opts.classList && opts.classList.length && opts.classList.length > 0) {
             element.classList.add(...opts.classList)
         }
 
         if (opts.attrs && opts.attrs.length && opts.attrs.length > 0) {
             opts.attrs.forEach((attr: string) => {
-                let split = attr.split('=');
-                let key = split[0];
-                let value = split[1];
+                const split = attr.split('=');
+                const key = split[0];
+                const value = split[1];
                 element.setAttribute(key, value);
             });
         }
@@ -72,12 +74,12 @@ export class SectionHandler {
      * @param items List of HTML elements to render in the section list
      * @param selectIndex Optional index number to select an item once the list is rendered
      */
-    renderList(items: Array<HTMLElement>, selectIndex?: number) {
-        let animation = 150
+    renderList(items: HTMLElement[], selectIndex?: number) {
+        const animation = 150
         items.forEach((item, index) => {
-            let delay = (animation * index) - (index * 100);
+            const delay = (animation * index) - (index * 100);
             this.renderItem(item, {
-                delay: delay
+                delay
             });
         });
 
@@ -101,7 +103,7 @@ export class SectionHandler {
         if (opts.selectable === undefined) opts.selectable = true;
 
         if (opts.removable) {
-            let removeIcon = this.makeElement('i', {
+            const removeIcon = this.makeElement('i', {
                 classList: ['material-icons', 'close-icon'],
                 innerHTML: 'close',
                 click: (event: any) => {
@@ -109,7 +111,7 @@ export class SectionHandler {
                     event.stopImmediatePropagation();
                 }
             });
-    
+
             removeIcon.style.position = 'relative';
             removeIcon.style.float = 'right';
             item.prepend(removeIcon);
@@ -132,8 +134,8 @@ export class SectionHandler {
         this.listRef?.append(item);
 
         if (!opts.silent) {
-            this.subscriptions['added'].forEach((callback: any) => {
-                let items = this.listRef?.querySelectorAll(this.listItemSelector);
+            this.subscriptions.added.forEach((callback: any) => {
+                const items = this.listRef?.querySelectorAll(this.listItemSelector);
                 callback(item, items);
             });
         }
@@ -143,14 +145,14 @@ export class SectionHandler {
      * Clears the section list items
      */
     clearList() {
-        let items = this.listRef?.querySelectorAll(this.listItemSelector);
+        const items = this.listRef?.querySelectorAll(this.listItemSelector);
         if (items && items.length > 0) {
             items.forEach((item) => {
                 this.listRef?.removeChild(item);
             });
 
         }
-        this.subscriptions['cleared'].forEach((callback: any) => {
+        this.subscriptions.cleared.forEach((callback: any) => {
             callback();
         });
     }
@@ -162,9 +164,9 @@ export class SectionHandler {
     clearItem(item: HTMLElement) {
         item.style.opacity = '0';
         setTimeout(() => {
-            let oldRef = this.listRef?.removeChild(item);
-            this.subscriptions['removed'].forEach((callback: any) => {
-                let items = this.listRef?.querySelectorAll(this.listItemSelector);
+            const oldRef = this.listRef?.removeChild(item);
+            this.subscriptions.removed.forEach((callback: any) => {
+                const items = this.listRef?.querySelectorAll(this.listItemSelector);
                 callback(oldRef, items);
             });
         }, 150);
@@ -184,7 +186,7 @@ export class SectionHandler {
         item.classList.add('active');
         this.selected = item;
 
-        this.subscriptions['selected'].forEach((callback: any) => {
+        this.subscriptions.selected.forEach((callback: any) => {
             callback(item);
         });
     }
@@ -231,7 +233,7 @@ export class SectionHandler {
      */
     getFolders(): any {
         let data = {};
-        let raw: string | null = localStorage.getItem('folders');
+        const raw: string | null = localStorage.getItem('folders');
         if (raw) {
             data = JSON.parse(raw);
         }
@@ -243,9 +245,9 @@ export class SectionHandler {
      * @param folder Folder path to get defined categories from
      */
     getCategories(folder: string): any {
-        let folders = this.getFolders();
+        const folders = this.getFolders();
         let categories = [];
-        let data = folders[folder];
+        const data = folders[folder];
         if (data && data.categories) {
             categories = data.categories;
         }
@@ -259,8 +261,8 @@ export class SectionHandler {
      * @param category Category name to get the extensions from
      */
     getExtensions(folder: string, category: string): any {
-        let categories: any =  this.getCategories(folder);
-        let extensions: Array<any> = [];
+        const categories: any =  this.getCategories(folder);
+        let extensions: any[] = [];
         if (categories && categories[category]) {
             extensions = categories[category];
         }

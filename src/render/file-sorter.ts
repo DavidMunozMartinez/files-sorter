@@ -26,7 +26,7 @@ export class FileSorter {
      */
     updateFoldersData(data?: any) {
         if (!data) {
-            let raw: string | null = localStorage.getItem('folders');
+            const raw: string | null = localStorage.getItem('folders');
             if (raw) data = JSON.parse(raw);
         }
         this.paths = data;
@@ -37,7 +37,7 @@ export class FileSorter {
      * @param folder folder that will be observer
      */
     addWatcher(folder: string) {
-        let watcher = chokidar.watch(folder, this.defaultConfig);
+        const watcher = chokidar.watch(folder, this.defaultConfig);
         watcher.on('add', (location: any) => {
             if(this.paths[folder].active) {
                 this.sort(folder, location)
@@ -84,10 +84,10 @@ export class FileSorter {
      * @param location Absolute location for the new file
      */
     private async sort(folder: string, location: string) {
-        let data = this.paths[folder];
-        let name: any = path.basename(location)	
+        const data = this.paths[folder];
+        const name: any = path.basename(location)
 
-        let category = this.getCategory(data, name);
+        const category = this.getCategory(data, name);
 
         if (!category) {
             return;
@@ -105,7 +105,7 @@ export class FileSorter {
 
         destination = await this.validateDestination(destination, name);
 
-        if (fs.existsSync(location) && destination.toLocaleLowerCase() != location.toLocaleLowerCase()) {
+        if (fs.existsSync(location) && destination.toLocaleLowerCase() !== location.toLocaleLowerCase()) {
             await fs.renameSync(location, destination);
         }
     }
@@ -117,15 +117,15 @@ export class FileSorter {
      * @param name File name (including extension)
      */
     private async validateDestination(destination: string, name: string): Promise<string> {
-        let split = this.splitExtension(name);
-        let fileName = split[0];
-        let extension = split[1];
+        const split = this.splitExtension(name);
+        const fileName = split[0];
+        const extension = split[1];
 
         let posible = path.resolve(destination, name);
         let exists = await fs.existsSync(posible);
         let increment = 1;
         while (exists) {
-            let newName =`${fileName} (${increment}).${extension}`;
+            const newName =`${fileName} (${increment}).${extension}`;
             posible = path.resolve(destination, newName);
             exists = await fs.existsSync(posible);
             increment += 1;
@@ -138,11 +138,11 @@ export class FileSorter {
      * their names
      * @param fileName File name (including extension)
      */
-    private splitExtension (fileName: string): Array<string> {
-        let split = fileName.split('.');
+    private splitExtension (fileName: string): string[] {
+        const split = fileName.split('.');
         let name = '';
         let extension = '';
-        
+
         for (let i = 0; i <= split.length - 2; i++) {
             name += split[i];
             if (i + 1 <= split.length - 2) {
@@ -156,15 +156,15 @@ export class FileSorter {
     }
 
     private getCategory(data: any, name: string): string | null {
-        let categories = data.categories;
-        let order = data.order;
+        const categories = data.categories;
+        const order = data.order;
         let found = false;
         let category = null;
 
         for (let i = 0; i < order.length; i++) {
-            let rules = categories[order[i]];
+            const rules = categories[order[i]];
             for (let j = 0; j < rules.length; j++) {
-                let rule = rules[j];
+                const rule = rules[j];
                 if (this.checkRule(rule, name)) {
                     found = true;
                     category = order[i];
@@ -180,22 +180,22 @@ export class FileSorter {
 
     private checkRule(rule: string, name: string): boolean {
         let result = false;
-        let split = rule.split(':');
-        let condition = split[0];
-        let value = split[1];
+        const split = rule.split(':');
+        const condition = split[0];
+        const value = split[1];
 
         switch (condition) {
             case 'starts_with':
-                result = name.indexOf(value) == 0;
+                result = name.indexOf(value) === 0;
                 break;
             case 'contains':
                 result = name.indexOf(value) > -1;
                 break;
             case 'ends_with':
-                result = name.indexOf(value) == name.length - value.length
+                result = name.indexOf(value) === name.length - value.length
                 break;
         }
-        
+
         return result;
     }
 }
