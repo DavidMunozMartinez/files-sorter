@@ -1,5 +1,5 @@
 export class Utils {
-    constructor () {}
+    constructor() { }
 
     closest(element: HTMLElement, selector: string): HTMLElement | null {
         let match = null;

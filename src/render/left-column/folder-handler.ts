@@ -1,5 +1,6 @@
 import { remote } from 'electron';
 import { FileSorter } from '../file-sorter';
+import { NotificationComponent } from '../notification-component/notification-component';
 import { CategoriesHandler } from '../right-column/categories-handler';
 import { SectionHandler } from '../sections-handler';
 import { Utils } from '../utils';
@@ -8,12 +9,15 @@ export class FolderHandler extends SectionHandler {
 
     categoriesHandler: CategoriesHandler;
     fileSorter: FileSorter;
+    notificationService: NotificationComponent;
 
-    constructor (fileSorter: FileSorter, utils: Utils) {
+    constructor (fileSorter: FileSorter, utils: Utils, notificationService: NotificationComponent) {
         super('.column.left-column', '.folder-list', '.folder-list-item');
         // Handles all logic related to the categories section
         this.categoriesHandler = new CategoriesHandler(fileSorter, utils);
         this.fileSorter = fileSorter;
+        this.notificationService = notificationService
+
         let addButtonRef = document.querySelector('div.folder-input');
         addButtonRef?.addEventListener('click', () =>  this.folderDialog());
 
@@ -116,7 +120,11 @@ export class FolderHandler extends SectionHandler {
                 if (!sorting) {
                     event.target.classList.add('sorting');
                     this.fileSorter.sortFolder(folder).finally(() => {
-                        console.log('Done');
+                        this.notificationService.notify({
+                            timer: 4000,
+                            message: '"' + folder + '" sorted',
+                            type: 'success'
+                        })
                         event.target.classList.remove('sorting');
                     }).catch(() => {
                         // Notify that something went wrogn when sorting
