@@ -1,7 +1,7 @@
 import { FileSorter } from '../file-sorter';
 import { SectionHandler } from '../sections-handler';
 import { RulesHandler } from './rules-handler';
-// import { ExtensionsHandler } from './extensions-handler';
+import { ExtensionsHandler } from './extensions-handler';
 import { Utils } from '../utils';
 
 import Sortable from "sortablejs";
@@ -9,7 +9,7 @@ import Sortable from "sortablejs";
 export class CategoriesHandler extends SectionHandler {
     inputRef: HTMLElement | null;
     folder: string | null = null;
-    // extensionHandler: ExtensionsHandler;
+    extensionHandler: ExtensionsHandler;
     fileSorter: FileSorter;
     rulesHandler: RulesHandler;
 
@@ -17,7 +17,7 @@ export class CategoriesHandler extends SectionHandler {
         super('div.categories', 'smart-hover.category-list', '.category-list-item');
         this.fileSorter = fileSorter;
         this.rulesHandler = new RulesHandler('.rules-view-container');
-        // this.extensionHandler = new ExtensionsHandler(fileSorter, utils);
+        this.extensionHandler = new ExtensionsHandler(fileSorter, utils);
         this.inputRef = this.contentRef.querySelector('div.category-input');
 
         if (this.listRef) {
@@ -227,9 +227,12 @@ export class CategoriesHandler extends SectionHandler {
             attrs: ['value=' + value],
             children: [folderIcon, valueHolder],
             click: () => {
-                if (this.folder && value) {
-                    this.rulesHandler.enable(this.folder, value);
+                if (this.folder) {
+                    this.extensionHandler.enable(this.folder, value);
                 }
+                // if (this.folder && value) {
+                    // this.rulesHandler.enable(this.folder, value);
+                // }
             }
         });
 

@@ -1,9 +1,5 @@
 export class Utils {
-<<<<<<< HEAD
-    constructor() { }
-=======
     // constructor () {}
->>>>>>> 8c559652347d985a0a8c313af5f2f8447d197176
 
     closest(element: HTMLElement, selector: string): HTMLElement | null {
         let match = null;
