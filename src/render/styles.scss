@@ -5,11 +5,11 @@ $text: rgb(214, 214, 214);
 $primary: rgb(70, 194, 132);
 $primary-tint: rgb(85, 192, 142);
 $secondary: rgb(45, 136, 197);
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
-@import '../../node_modules/material-icons-font/material-icons-font.css';
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap");
+@import "../../node_modules/material-icons-font/material-icons-font.css";
 
-@import './left-column/left-column.scss';
-@import './right-column/right-column.scss';
+@import "./left-column/left-column.scss";
+@import "./right-column/right-column.scss";
 
 div#electron-titlebar {
     height: 29px;
@@ -17,17 +17,17 @@ div#electron-titlebar {
         height: 29px;
     }
     background-color: $secondary-background;
-    transition: all 0.2s;    
+    transition: all 0.2s;
 }
 
 #electron-titlebar > .button-close.hover {
-    background-color:  rgb(255, 88, 88) !important;
+    background-color: rgb(255, 88, 88) !important;
     border-radius: 4px;
 }
 
 body {
     font-size: 13px;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: "Ubuntu", sans-serif;
     background: $primary-background;
     color: $text;
     margin: 0;
@@ -59,7 +59,12 @@ body {
             padding: 5px;
             padding-right: 18px;
             margin-right: 15px;
-
+            i {
+                font-size: 13px;
+                margin-left: 5px;
+                vertical-align: middle;
+                cursor: pointer;
+            }
         }
         .input-container {
             height: 30px;
@@ -74,7 +79,7 @@ body {
                 position: absolute;
                 pointer-events: none;
             }
-            div:focus+i {
+            div:focus + i {
                 display: none;
             }
         }
@@ -102,7 +107,7 @@ body {
         div.folder-input:hover {
             transform: scale(1.15);
         }
-        
+
         div.category-input:hover:focus,
         div.folder-input:hover:focus {
             border-radius: 4px;
@@ -125,14 +130,13 @@ body {
             position: absolute;
             margin: 20px;
         }
-
     }
 }
 
 .rules-view-container {
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
     opacity: 1;
     transition: opacity 0.2s ease-in;
     display: initial;
@@ -152,18 +156,18 @@ body {
 ::-webkit-scrollbar-track {
     // background: $primary-background;
     border-radius: 5px;
-  }
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: $secondary-background; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: $secondary-background;
     border-radius: 5px;
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555; 
-  }
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
 
 // This selector applies to the main content height and position, taking into account
 // that its brother exists in the DOM, the DOM only has this div before the main content
@@ -174,7 +178,7 @@ div[style="position: relative;"] + .main-content {
 }
 
 .smart-hover-shadow {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 7px;
     z-index: 0;
 }
@@ -203,7 +207,7 @@ i.sort-icon:hover {
 
 i.sort-icon.sorting {
     color: $primary;
-    animation-timing-function: cubic-bezier(.47,.11,.43,.98);
+    animation-timing-function: cubic-bezier(0.47, 0.11, 0.43, 0.98);
     animation-name: pulse;
     animation-duration: 0.5s;
     animation-iteration-count: infinite;
@@ -211,12 +215,12 @@ i.sort-icon.sorting {
 
 @keyframes pulse {
     0% {
-        color: $primary
+        color: $primary;
     }
     50% {
         color: $primary-tint;
     }
     100% {
-        color: $primary
+        color: $primary;
     }
 }

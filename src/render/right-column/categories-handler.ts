@@ -52,26 +52,26 @@ export class CategoriesHandler extends SectionHandler {
         this.on('selected', (item: HTMLElement) => {
             const category = item.getAttribute('value');
             if (this.folder && category) {
-                // this.extensionHandler.enable(this.folder, category);
+                this.extensionHandler.enable(this.folder, category);
                 this.hideOverlay();
             }
         });
 
-        // Executed when an item weill be removed from the sectin list
+        // Executed when an item is removed from the section list
         this.on('removed', (item: HTMLElement, items: NodeList) => {
             const category = item.getAttribute('value');
             if (items.length === 0) {
                 this.showTip();
-                // this.extensionHandler.clearList();
-                // this.extensionHandler.showOverlay();
-                // this.extensionHandler.hideTip();
+                this.extensionHandler.clearList();
+                this.extensionHandler.showOverlay();
+                this.extensionHandler.hideTip();
             }
 
-            // if (category == this.extensionHandler.category) {
-            //     this.extensionHandler.clearList();
-            //     this.extensionHandler.showOverlay();
-            //     this.extensionHandler.hideTip();
-            // }
+            if (category == this.extensionHandler.category) {
+                this.extensionHandler.clearList();
+                this.extensionHandler.showOverlay();
+                this.extensionHandler.hideTip();
+            }
 
             if (category) {
                 this.delete(category);
@@ -230,9 +230,6 @@ export class CategoriesHandler extends SectionHandler {
                 if (this.folder) {
                     this.extensionHandler.enable(this.folder, value);
                 }
-                // if (this.folder && value) {
-                    // this.rulesHandler.enable(this.folder, value);
-                // }
             }
         });
 
