@@ -92,7 +92,6 @@ export class FileSorter {
         if (!category) {
             return;
         }
-        // let category = data.mappedCategories[extension];
         let destination = path.resolve(folder, category);
 
         if (!destination) {
@@ -155,17 +154,17 @@ export class FileSorter {
         return [name, extension];
     }
 
-    private getCategory(data: any, name: string): string | null {
+    private getCategory(data: any, fileName: string): string | null {
         const categories = data.categories;
         const order = data.order;
         let found = false;
         let category = null;
 
         for (let i = 0; i < order.length; i++) {
-            const rules = categories[order[i]];
-            for (let j = 0; j < rules.length; j++) {
-                const rule = rules[j];
-                if (this.checkRule(rule, name)) {
+            const conditionStrings = categories[order[i]];
+            for (let j = 0; j < conditionStrings.length; j++) {
+                const conditionString = conditionStrings[j];
+                if (this.checkConditionString(conditionString, fileName)) {
                     found = true;
                     category = order[i];
                     break;
@@ -178,24 +177,45 @@ export class FileSorter {
         return category;
     }
 
-    private checkRule(rule: string, name: string): boolean {
+    private checkConditionString(conditionString: string, fileName: string): boolean {
+        let isGrouped = conditionString.indexOf(',') > -1;
         let result = false;
-        const split = rule.split(':');
+        if (isGrouped) {
+            result = this.checkGroupedRule(conditionString, fileName);
+        } else {
+            result = this.checkSingleRule(conditionString, fileName);
+        }
+
+        return result;
+    }
+
+    private checkSingleRule(conditionString: string, fileName: string): boolean {
+        let result = false;
+        const split = conditionString.split(':');
         const condition = split[0];
         const value = split[1];
 
         switch (condition) {
             case 'starts_with':
-                result = name.indexOf(value) === 0;
+                result = fileName.indexOf(value) === 0;
                 break;
             case 'contains':
-                result = name.indexOf(value) > -1;
+                result = fileName.indexOf(value) > -1;
                 break;
             case 'ends_with':
-                result = name.indexOf(value) === name.length - value.length
+                result = fileName.indexOf(value) === fileName.length - value.length
                 break;
         }
 
         return result;
+    }
+
+    private checkGroupedRule(conditionString: string, fileName: string): boolean {
+        let conditions = conditionString.split(',');
+        let validCount = 0;
+        conditions.forEach((condition) => {
+            if (this.checkSingleRule(condition, fileName)) validCount++;
+        });
+        return validCount === conditions.length;
     }
 }

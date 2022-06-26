@@ -19,11 +19,19 @@ body {
     background: var(--background-color);
     color: var(--text-color);
     margin: 0;
+
+    & * {
+        transition: background-color 100ms ease-in-out,
+        color 100ms ease-in-out,
+    }
 }
 
 .nav-bar {
-    transition: width 124ms ease-out;
-    width: 55px;
+    transition: width 114ms ease-out;
+    width: 45px;
+    margin-right: 15px;
+    background: var(--foreground-color);
+    border-radius: 10px;
     .static {
         pointer-events: none;
     }
@@ -34,22 +42,30 @@ body {
         position: absolute;
         top: 15px;
         left: 45px;
-        color: var(--icon-color);
+        color: var(--text-color);
         width: 400px;
     }
     .input-container {
-        margin-bottom: 10px;
         position: relative;
-        margin-right: 15px;
         border-radius: 5px;
         padding: 10px;
+        transition: transform 100ms ease-out;
+        &:hover {
+            transform: translateX(5px);
+        }
     }
     &:hover {
-        width: 225px;
+        width: 165px;
         span {
             display: block;
             opacity: 1;
         }
+    }
+
+    .smart-hover-shadow {
+        border-left: 3px solid var(--icon-color);
+        background: none;
+        border-radius: 0;
     }
 }
 
@@ -96,16 +112,19 @@ body {
                 cursor: pointer;
             }
         }
+        .column-title + .input-container {
+            top: 0px;
+        }
+
         .input-container {
             height: 30px;
             width: 130px;
             position: absolute;
             margin: 11px;
             cursor: pointer;
-            top: 0px;
             i {
-                top: 3px;
-                left: 3px;
+                top: 5px;
+                left: 5px;
                 position: absolute;
                 pointer-events: none;
                 color: var(--primary-icon-color);
@@ -117,30 +136,34 @@ body {
 
         .category-input,
         .extensions-input,
-        .folder-input {
+        .folder-input,
+        .join-conditions-input {
             transition: all 134ms;
             background: var(--primary);
             outline-color: unset;
             outline: unset;
             border-radius: 5px;
-            height: 30px;
-            width: 30px;
+            height: 34px;
+            width: 34px;
             padding: 7px;
             box-sizing: border-box;
         }
 
         div.category-input:hover,
-        div.folder-input:hover {
+        div.folder-input:hover,
+        div.join-conditions-input:hover {
             border-radius: 10px;
         }
 
         div.category-input:hover,
-        div.folder-input:hover {
+        div.folder-input:hover,
+        div.join-conditions-input:hover {
             transform: scale(1.15);
         }
 
         div.category-input:hover:focus,
-        div.folder-input:hover:focus {
+        div.folder-input:hover:focus,
+        div.join-conditions-input:hover:focus {
             border-radius: 4px;
             transform: scale(1);
         }
@@ -219,9 +242,9 @@ div[style="position: relative;"] + .main-content {
 }
 
 .smart-hover-shadow {
-    background: var(--highlight);
+    background: var(--primary);
     border-radius: 7px;
-    z-index: 0;
+    z-index: 4 !important;
 }
 
 .footer {
@@ -256,6 +279,11 @@ i.sort-icon.sorting {
 
 i.material-icons {
     color: var(--icon-color);
+}
+
+.hide {
+    pointer-events: none;
+    opacity: 0 !important;
 }
 
 @keyframes pulse {

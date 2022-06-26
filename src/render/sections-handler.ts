@@ -1,3 +1,5 @@
+import { active } from "sortablejs";
+
 export class SectionHandler {
 
     contentRef!: HTMLElement;
@@ -5,7 +7,9 @@ export class SectionHandler {
     overlayRef: HTMLElement | null;
     tipRef: HTMLElement | null;
     selected: HTMLElement | null = null;
+    multiSelected: Element[] = [];
     listItemSelector: string;
+    multiSelectable: boolean = false;
 
     private subscriptions: any = {
         added: [],
@@ -75,7 +79,7 @@ export class SectionHandler {
      * @param selectIndex Optional index number to select an item once the list is rendered
      */
     renderList(items: HTMLElement[], selectIndex?: number) {
-        const animation = 150
+        const animation = 120
         items.forEach((item, index) => {
             const delay = (animation * index) - (index * 100);
             this.renderItem(item, {
@@ -122,8 +126,12 @@ export class SectionHandler {
         item.style.transition = 'all 200ms ease-out';
 
         if (opts.selectable) {
-            item.addEventListener('mousedown', () => {
-                this.select(item);
+            item.addEventListener('mousedown', (event) => {
+                if (event.ctrlKey && this.multiSelectable) {
+                    this.multiSelect(item);
+                } else {
+                    this.select(item);
+                }
             });
         }
 
@@ -179,16 +187,39 @@ export class SectionHandler {
      * @param folder Folder string path to select
      */
     select(item: HTMLElement) {
-        if (this.selected) {
-            this.selected.classList.remove('active');
-        }
+        this.iterateSelected((element) => {
+            element.classList.remove('active');
+        });
 
         item.classList.add('active');
+        this.multiSelected = [];
         this.selected = item;
 
         this.subscriptions.selected.forEach((callback: any) => {
             callback(item);
         });
+    }
+
+    multiSelect(item: HTMLElement) {
+        item.classList.toggle('active');
+        this.multiSelected = [];
+        this.selected = null;
+        this.iterateSelected((element) => {
+            this.multiSelected.push(element);
+        })
+        this.subscriptions.selected.forEach((callback: any) => {
+            callback(this.multiSelected);
+        });
+    }
+
+    iterateSelected(callback: (item: Element) => void) {
+        let activeItems = this.listRef?.getElementsByClassName('active');
+        if (activeItems) {
+            for(let element of activeItems) {
+                // this.multiSelected.push(element);
+                callback(element);
+            }
+        }
     }
 
     /**

@@ -6,13 +6,17 @@ import "smart-hoverjs";
 import "chokidar";
 
 class App {
+  // let not = new Notification('NOTIFICATION_TITLE', { body: 'NOTIFICATION_BODY' });
   // Utilities instance
   private utils: Utils = new Utils();
   // Handles all logic to actually sort and move files around
   private fileSorter: FileSorter = new FileSorter();
   // Handles rendering app notifications
   private notificationService = new NotificationComponent();
-  
+
+  public currentTheme: 'dark' | 'light' = this.getSystemTheme();
+  public notifications: boolean = this.utils.getData('notifications') || false;
+
   // Handles all logic around storing data and rendering the folders in the view
   private folderHandler: FolderHandler = new FolderHandler(
     this.fileSorter,
@@ -21,12 +25,14 @@ class App {
   );
 
   constructor() {
-    this.applyTitlebarStyles();
-    this.applyTheme();
+    this.setSettings();
+    this.applyTheme(this.currentTheme);
 
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-        const newColorScheme = event.matches ? "dark" : "light";
-        this.applyTheme();
+      let userSetting: 'dark' | 'light' | null = this.utils.getData('theme');
+      if (!userSetting) {
+        this.applyTheme(this.getSystemTheme());
+      }
     });
 
     this.folderHandler.on("removed", (item: HTMLElement) => {
@@ -57,23 +63,55 @@ class App {
     }
   }
 
-  /**
-   * Applies title bar styles for the windows build only.
-   */
-  private applyTitlebarStyles() {
-    // require('electron-titlebar');
+  private getSystemTheme(): 'dark' | 'light' {
+    let userSetting: 'dark' | 'light' | null = this.utils.getData('theme');
+    if (userSetting) {
+      return userSetting;
+    }
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ?
+      'dark' : 'light';
   }
 
-  private applyTheme() {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  private applyTheme(theme: 'dark' | 'light') {
+    switch (theme) {
+      case 'dark':
         document.body.classList.remove('light-theme');
         document.body.classList.add('dark-theme');
-        // Dark mode
-    } else {
+        break;
+      case 'light':
         document.body.classList.remove('dark-theme');
         document.body.classList.add('light-theme');
-        // Clear mode
+        break;
     }
+    this.currentTheme = theme;
+    const navBar = window.document.getElementsByClassName('nav-bar')[0];
+    const themeToggle = navBar.getElementsByClassName('input-container theme-toggle')[0];
+    let icon = themeToggle.getElementsByTagName('i')[0];
+    icon.innerHTML = this.currentTheme  + '_mode'
+  }
+
+  private setSettings() {
+    const navBar = window.document.getElementsByClassName('nav-bar')[0];
+    const themeToggle = navBar.getElementsByClassName('input-container theme-toggle')[0];
+    const notificationsToggle = navBar.getElementsByClassName('input-container notifications-toggle')[0];
+    const notificationState = this.utils.getData('notifications');
+    const notificationIcon = notificationsToggle.getElementsByTagName('i')[0];
+    notificationIcon.innerHTML = notificationState ? 'notifications' : 'notifications_off';
+
+    themeToggle.addEventListener('click', (event) => {
+      let themeToApply: 'dark' | 'light' = this.currentTheme === 'dark' ? 'light' : 'dark';
+      this.applyTheme(themeToApply);
+      let icon = themeToggle.getElementsByTagName('i')[0];
+      icon.innerHTML = themeToApply + '_mode';
+      this.utils.saveData('theme', themeToApply);
+    });
+
+    notificationsToggle.addEventListener('click', (event) => {
+      let icon = notificationsToggle.getElementsByTagName('i')[0];
+      this.notifications = !this.notifications
+      this.notifications ? icon.innerHTML = 'notifications' : icon.innerHTML = 'notifications_off';
+      this.utils.saveData('notifications', this.notifications);
+    });
   }
 }
 

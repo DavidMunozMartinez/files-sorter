@@ -38,4 +38,18 @@ export class Utils {
             }
         }
     }
+
+    saveData(key: string, data: any) {
+        let rawData = JSON.stringify(data);
+        localStorage.setItem(key, rawData);
+    }
+
+    getData(key: string) {
+        const raw: string | null = localStorage.getItem(key);
+        if (raw) return JSON.parse(raw);
+    }
+
+    removeData() {}
+
+
 }

@@ -6,6 +6,7 @@ import { Utils } from "../utils";
 export class ExtensionsHandler extends SectionHandler {
     inputRef: HTMLElement | null;
     conditionRef: HTMLElement | null;
+    joinConditionsRef: HTMLElement | null;
 
     folder: string | null = null;
     category: string | null = null;
@@ -13,6 +14,12 @@ export class ExtensionsHandler extends SectionHandler {
 
     fileSorter: FileSorter;
     utils: Utils;
+
+    private conditions: any = {
+        starts_with: 'Starts with',
+        contains: 'Contains',
+        ends_with: 'Ends with'
+    };
 
     constructor(fileSorter: FileSorter, utils: Utils) {
         super('div.extensions', 'div.extension-list', '.extension-list-item');
@@ -35,6 +42,16 @@ export class ExtensionsHandler extends SectionHandler {
         if (this.conditionRef) {
             this.utils.fsDropdown(this.conditionRef);
         }
+        this.joinConditionsRef = this.contentRef.querySelector('div.input-container.join-conditions');
+        if (this.joinConditionsRef) {
+            this.joinConditionsRef?.classList.add('hide');
+            this.joinConditionsRef.addEventListener('click', () => {
+                if (this.multiSelected && this.multiSelected.length > 1) {
+                    this.joinConditions(this.multiSelected);
+                }
+            });
+        }
+        this.multiSelectable = true;
 
         this.on('removed', (item: HTMLElement, items: NodeList) => {
             const value = item.getAttribute('value');
@@ -50,18 +67,16 @@ export class ExtensionsHandler extends SectionHandler {
             if (items.length > 0) {
                 this.hideTip();
                 this.hideOverlay();
-
-                // const index = Array.prototype.indexOf.call(items, item);
-                // if (index < items.length) {
-                //     const operand = this.createOperandItem();
-                //     this.renderItem(operand, {
-                //         silent: true,
-                //         removable: false,
-                //         selectable: false
-                //     });
-                // }
             }
-        })
+        });
+
+        this.on('selected', (selected: any) => {
+            if (selected.length > 1) {
+                this.joinConditionsRef?.classList.remove('hide');
+            } else {
+                this.joinConditionsRef?.classList.add('hide');
+            }
+        });
     }
 
     /**
@@ -82,10 +97,14 @@ export class ExtensionsHandler extends SectionHandler {
 
         if (extensions.length > 0) {
             const items = extensions.map((extension: any) => {
-                const split = extension.split(':');
-                const condition = split[0];
-                const text = split[1];
-                return this.createListItem(text, condition);
+                if (extension.indexOf(',') > -1) {
+                    return this.createGroupedListItem(extension);
+                }
+                // const split = extension.split(':');
+                // const condition = split[0];
+                // const text = split[1];
+                return this.createListItem(extension);
+                // return this.createListItem(text, condition);
             });
             this.hideTip();
             this.renderList(items);
@@ -115,23 +134,23 @@ export class ExtensionsHandler extends SectionHandler {
      * category, also returns a boolean indicating that it was saved succesfully
      * @param extension Extensoin string to save
      */
-    private save(text: string, condition: string) {
+    private save(conditionString: string) {
         if (!this.folder || !this.category) {
             return false;
         }
-        const value = `${condition}:${text}`;
+        // const value = `${condition}:${text}`;
         let success = false;
         const data = this.getFolders();
         const folder = data[this.folder];
         const extensions = folder.categories[this.category];
 
-        if (extensions.indexOf(value) === -1) {
-            extensions.push(value);
+        if (extensions.indexOf(conditionString) === -1) {
+            extensions.push(conditionString);
             localStorage.setItem('folders', JSON.stringify(data));
             this.fileSorter.updateFoldersData();
             success = true;
         }
-        return success
+        return success;
     }
 
     /**
@@ -171,9 +190,9 @@ export class ExtensionsHandler extends SectionHandler {
             return;
         }
 
-        const item = this.createListItem(value, condition);
-
-        if (this.save(value, condition)) {
+        const conditionString = `${condition}:${value}`;
+        const item = this.createListItem(conditionString);
+        if (this.save(conditionString)) {
             this.renderItem(item);
             event.target.innerText = '';
         }
@@ -181,17 +200,15 @@ export class ExtensionsHandler extends SectionHandler {
 
     }
 
-    private createListItem(value: string, condition?: string): HTMLElement {
-        const conditions: any = {
-            starts_with: 'Starts with',
-            contains: 'Contains',
-            ends_with: 'Ends with'
-        };
+    private createListItem(conditionString: string): HTMLElement {
+        const split = conditionString.split(':');
+        const condition = split[0];
+        const value = split[1];
 
         let innerText = value;
         let valueText = value;
-        if (condition && conditions[condition]) {
-            innerText = conditions[condition] + ': ' + innerText;
+        if (condition && this.conditions[condition]) {
+            innerText = this.conditions[condition] + ': ' + innerText;
             valueText = condition + ':' + value;
         }
 
@@ -199,24 +216,87 @@ export class ExtensionsHandler extends SectionHandler {
             classList: ['extension-list-item'],
             innerHTML: innerText,
             attrs: ['value=' + valueText],
-            click: () => {
-                // const modal = new AddRulesView(document.body);
-            }
         });
 
         return item;
     }
 
-    private createOperandItem() {
-        const item = this.makeElement('div', {
-            classList: ['extension-list-item', 'operand'],
-            innerHTML: 'or',
-            attrs: ['value=or']
-            // click: () => {
-            //     console.log('clicked');
-            // }
+    private getConditionData(conditionString: string) {
+        const split = conditionString.split(':');
+        const condition = split[0];
+        const value = split[1];
+
+        let innerText = value;
+        let valueText = value;
+        if (condition && this.conditions[condition]) {
+            innerText = this.conditions[condition] + ': ' + innerText;
+            valueText = condition + ':' + value;
+        }
+        return { innerText, valueText };
+    }
+
+    private createGroupedListItem(conditionString: string) {
+        let innerText = '';
+        let valueText = conditionString;
+        let conditions = conditionString.split(',');
+        conditions.forEach((condition: string, i: number) => {
+            let data = this.getConditionData(condition);
+            innerText += data.innerText;
+            if (i != conditions.length - 1) {
+                innerText += ' and '
+            } 
         });
 
-        return item;
+        return this.makeElement('div', {
+            classList: ['extension-list-item'],
+            innerHTML: innerText,
+            attrs: ['value=' + valueText]
+        });
+    }
+
+    /**
+     * Turns a group of selected conditions into a single condition, AKA creates an AND condition where all conditions within
+     * the group must be true in order to the group to be considered as "true"
+     */
+    private joinConditions(items: Element[]) {
+        let newText = '';
+        let newValue = '';
+        let toDelete: string[] = [];
+        items.forEach((item: any, i) => {
+            let valueAttr = item.getAttribute('value');
+            if (valueAttr && valueAttr.indexOf(',') > -1) {
+                newText += item.innerText.split('\n')[1];
+                newValue += valueAttr;
+                toDelete.push(valueAttr);
+            } else {
+                let data = valueAttr?.split(':') || [];
+                let condition = data[0];
+                let value = data[1]
+                newValue += condition + ':' + value;
+                newText += this.conditions[condition] + ': ' + value;
+                toDelete.push(valueAttr);
+            }
+            if (i != items.length - 1) {
+                newValue += ',';
+                newText += ' and ';
+            }
+        });
+
+        let newElement = this.makeElement('div', {
+            classList: ['extension-list-item'],
+            innerHTML: newText,
+            attrs: ['value=' + newValue]
+        });
+        items.forEach((item) => {
+            this.clearItem(<HTMLElement>item);
+        });
+
+        toDelete.forEach((conditionString) => {
+            this.delete(conditionString);
+        })
+
+        if (this.save(newValue)) {
+            this.renderItem(newElement);
+        }
     }
 }

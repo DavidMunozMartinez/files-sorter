@@ -12,25 +12,17 @@
     <!-- Titlebar is prepended here on windows-->
     <div class="main-content">
         <div class="nav-bar">
-            <smart-hover>
+            <smart-hover override-styles="true">
                 <div class="input-container static">
                     <i class="material-icons">settings</i>
-                    <span> App Settings</span>
                 </div>
-                <div class="input-container">
-                    <i class="material-icons">download</i>
-                    <span>Download configuration</span>
-                </div>
-                <div class="input-container">
-                    <i class="material-icons">upload_file</i>
-                    <span>Upload configuration</span>
-                </div>
-                <div class="input-container">
+                <div class="input-container theme-toggle">
                     <i class="material-icons">dark_mode</i>
-                    <span>Toggle theme</span>
+                    <span>Theme</span>
                 </div>
-                <div class="input-container">
-                    <i class="material-icons">notifications</i>
+                <div class="input-container notifications-toggle">
+                    <i class="material-icons">notifications_off</i>
+                    <span class="icon-slash"></span>
                     <span>Notifications</span>
                 </div>
             </smart-hover>
@@ -87,7 +79,6 @@
                 </div>
 
                 <div class="input-container">
-
                     <div class="dropdown dropdown-condition" tabindex="0">
                         <span class="value">
                             condition
@@ -103,7 +94,11 @@
                     <div class="extensions-input" contenteditable="true"></div>
                 </div>
 
-                <div class="extension-list">
+                <div class="extension-list">    
+                    <div class="input-container join-conditions" title="Combines multiple conditions into one">
+                        <div class="join-conditions-input"></div>
+                        <i class="material-icons">join_full</i>
+                    </div>
                 </div>
                 <span class="section-tip">
                     Here you define file rules for this category.</br></br>

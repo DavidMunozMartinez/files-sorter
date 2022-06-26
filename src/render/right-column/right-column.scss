@@ -30,10 +30,10 @@
     }
     .extensions {
         flex: 4;
-        div.input-container {
+        & > div.input-container {
             width: 100%;
         }
-        div.extensions-input {
+        div > .extensions-input {
             display: inline-block;
             position: absolute;
             height: 30px;
@@ -65,7 +65,7 @@
                 pointer-events: none;
             }
             smart-hover.options > div.smart-hover-shadow {
-                border-left: 4px solid rgb(199, 199, 199);
+                border-left: 4px solid var(--text-color);
                 border-radius: 0px;
             }
             .options {
@@ -152,10 +152,10 @@
         }
 
         .extension-list-item {
-            border: 1px solid $secondary-background-highlight;
-            height: 30px;
+            border: 1px solid #868686;
             padding: 8px;
-            // min-width: 60px;
+            height: auto;
+            overflow-wrap: normal;
             i {
                 top: -4px;
                 right: -4px;
@@ -166,6 +166,14 @@
 
     .extension-list {
         height: calc(100% - 40px);
+        & > .input-container {
+            transition: all 120ms ease-in-out;
+            bottom: 0;
+            left: 0;
+            div {
+                opacity: 1;
+            }
+        }
     }
 
     .inactive-overlay {

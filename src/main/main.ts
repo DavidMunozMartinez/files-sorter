@@ -1,5 +1,6 @@
-import { app, BrowserWindow, Tray, Menu } from 'electron';
+import { systemPreferences, app, BrowserWindow, Tray, Menu } from 'electron';
 import * as path from 'path';
+
 
 const isDevEnv = process && process.mainModule && process.mainModule.filename.indexOf('app.asar') === -1;
 let isQuiting = false;
@@ -48,12 +49,12 @@ function createWindow(): BrowserWindow {
         show: false,
         maximizable: false,
         webPreferences: {
-            devTools: isDevEnv,
+            devTools: true,
             worldSafeExecuteJavaScript: true,
             nodeIntegration: true,
             enableRemoteModule: true
         },
-        skipTaskbar: !isDevEnv,
+        // skipTaskbar: !isDevEnv,
         icon: getIcon(512)
     });
     win.removeMenu();
@@ -73,11 +74,11 @@ function createWindow(): BrowserWindow {
 
 
 function onWindowClose(event: any) {
-    if (!isQuiting) {
-        event.preventDefault();
-        // win.hide();
-        return false;
-    }
+    // if (!isQuiting) {
+    //     event.preventDefault();
+    //     // win.hide();
+    //     return false;
+    // }
 }
 
 function createTray(): Tray {
