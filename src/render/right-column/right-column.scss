@@ -105,10 +105,12 @@
         background: unset;
         cursor: text;
     }
-
+    smart-hover.category-list {
+        height: calc(100% - 90px);
+    }
     .category-list,
     .extension-list {
-        height: calc(100% - 90px);
+        height: calc(100% - 45px);
         width: 100%;
         position: absolute;
         bottom: 0;

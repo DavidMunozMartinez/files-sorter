@@ -57,7 +57,7 @@ export class CategoriesHandler extends SectionHandler {
             }
         });
 
-        // Executed when an item weill be removed from the sectin list
+        // Executed when an item is removed from the section list
         this.on('removed', (item: HTMLElement, items: NodeList) => {
             const category = item.getAttribute('value');
             if (items.length === 0) {

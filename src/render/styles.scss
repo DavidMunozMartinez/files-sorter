@@ -65,10 +65,14 @@ body {
             margin-right: 15px;
             p {
                 font-weight: bold;
-                // text-align: left;
-                // margin-left: 45px;
             }
 
+            i {
+                font-size: 13px;
+                margin-left: 5px;
+                vertical-align: middle;
+                cursor: pointer;
+            }
         }
         .input-container {
             height: 30px;
@@ -84,7 +88,7 @@ body {
                 pointer-events: none;
                 color: var(--primary-icon-color);
             }
-            div:focus+i {
+            div:focus + i {
                 display: none;
             }
         }
@@ -112,7 +116,7 @@ body {
         div.folder-input:hover {
             transform: scale(1.15);
         }
-        
+
         div.category-input:hover:focus,
         div.folder-input:hover:focus {
             border-radius: 4px;
@@ -135,7 +139,6 @@ body {
             position: absolute;
             margin: 20px;
         }
-
     }
 }
 
@@ -172,18 +175,18 @@ body {
 ::-webkit-scrollbar-track {
     // background: $primary-background;
     border-radius: 5px;
-  }
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: $secondary-background; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: $secondary-background;
     border-radius: 5px;
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555; 
-  }
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
 
 // This selector applies to the main content height and position, taking into account
 // that its brother exists in the DOM, the DOM only has this div before the main content
@@ -223,7 +226,7 @@ i.sort-icon:hover {
 
 i.sort-icon.sorting {
     color: $primary;
-    animation-timing-function: cubic-bezier(.47,.11,.43,.98);
+    animation-timing-function: cubic-bezier(0.47, 0.11, 0.43, 0.98);
     animation-name: pulse;
     animation-duration: 0.5s;
     animation-iteration-count: infinite;
@@ -235,12 +238,12 @@ i.material-icons {
 
 @keyframes pulse {
     0% {
-        color: $primary
+        color: $primary;
     }
     50% {
         color: $primary-tint;
     }
     100% {
-        color: $primary
+        color: $primary;
     }
 }

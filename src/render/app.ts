@@ -1,6 +1,7 @@
 import { FileSorter } from "./file-sorter";
 import { FolderHandler } from "./left-column/folder-handler";
 import { Utils } from "./utils";
+import { NotificationComponent } from "./notification-component/notification-component";
 import "smart-hoverjs";
 import "chokidar";
 
@@ -9,10 +10,14 @@ class App {
   private utils: Utils = new Utils();
   // Handles all logic to actually sort and move files around
   private fileSorter: FileSorter = new FileSorter();
+  // Handles rendering app notifications
+  private notificationService = new NotificationComponent();
+  
   // Handles all logic around storing data and rendering the folders in the view
   private folderHandler: FolderHandler = new FolderHandler(
     this.fileSorter,
-    this.utils
+    this.utils,
+    this.notificationService
   );
 
   constructor() {
