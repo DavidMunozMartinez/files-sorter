@@ -1,7 +1,7 @@
 import { FileSorter } from '../file-sorter';
 import { SectionHandler } from '../sections-handler';
 import { RulesHandler } from './rules-handler';
-// import { ExtensionsHandler } from './extensions-handler';
+import { ExtensionsHandler } from './extensions-handler';
 import { Utils } from '../utils';
 
 import Sortable from "sortablejs";
@@ -9,15 +9,15 @@ import Sortable from "sortablejs";
 export class CategoriesHandler extends SectionHandler {
     inputRef: HTMLElement | null;
     folder: string | null = null;
-    // extensionHandler: ExtensionsHandler;
+    extensionHandler: ExtensionsHandler;
     fileSorter: FileSorter;
-    rulesHandler: RulesHandler;
+    // rulesHandler: RulesHandler;
 
     constructor(fileSorter: FileSorter, utils: Utils) {
         super('div.categories', 'smart-hover.category-list', '.category-list-item');
         this.fileSorter = fileSorter;
-        this.rulesHandler = new RulesHandler('.rules-view-container');
-        // this.extensionHandler = new ExtensionsHandler(fileSorter, utils);
+        // this.rulesHandler = new RulesHandler('.rules-view-container');
+        this.extensionHandler = new ExtensionsHandler(fileSorter, utils);
         this.inputRef = this.contentRef.querySelector('div.category-input');
 
         if (this.listRef) {
@@ -52,7 +52,7 @@ export class CategoriesHandler extends SectionHandler {
         this.on('selected', (item: HTMLElement) => {
             const category = item.getAttribute('value');
             if (this.folder && category) {
-                // this.extensionHandler.enable(this.folder, category);
+                this.extensionHandler.enable(this.folder, category);
                 this.hideOverlay();
             }
         });
@@ -62,16 +62,16 @@ export class CategoriesHandler extends SectionHandler {
             const category = item.getAttribute('value');
             if (items.length === 0) {
                 this.showTip();
-                // this.extensionHandler.clearList();
-                // this.extensionHandler.showOverlay();
-                // this.extensionHandler.hideTip();
+                this.extensionHandler.clearList();
+                this.extensionHandler.showOverlay();
+                this.extensionHandler.hideTip();
             }
 
-            // if (category == this.extensionHandler.category) {
-            //     this.extensionHandler.clearList();
-            //     this.extensionHandler.showOverlay();
-            //     this.extensionHandler.hideTip();
-            // }
+            if (category === this.extensionHandler.category) {
+                this.extensionHandler.clearList();
+                this.extensionHandler.showOverlay();
+                this.extensionHandler.hideTip();
+            }
 
             if (category) {
                 this.delete(category);
@@ -114,8 +114,8 @@ export class CategoriesHandler extends SectionHandler {
             this.inputRef?.focus();
             this.showTip();
             this.hideOverlay();
-            // this.extensionHandler.clearList();
-            // this.extensionHandler.disable();
+            this.extensionHandler.clearList();
+            this.extensionHandler.disable();
         }
     }
 
@@ -127,8 +127,8 @@ export class CategoriesHandler extends SectionHandler {
         this.showOverlay();
         this.hideTip();
         this.folder = null;
-        // this.extensionHandler.clearList()
-        // this.extensionHandler.disable();
+        this.extensionHandler.clearList()
+        this.extensionHandler.disable();
 
         const activeRef = this.contentRef.querySelector('.active-folder');
         if (activeRef) {
@@ -228,7 +228,7 @@ export class CategoriesHandler extends SectionHandler {
             children: [folderIcon, valueHolder],
             click: () => {
                 if (this.folder && value) {
-                    this.rulesHandler.enable(this.folder, value);
+                    // this.rulesHandler.enable(this.folder, value);
                 }
             }
         });

@@ -269,4 +269,9 @@ export class SectionHandler {
 
         return extensions;
     }
+
+    /**
+     * Returns all conditional data attached to the specified category item
+     */
+    getCategoryConditions() {}
 }

@@ -53,7 +53,7 @@ function createWindow(): BrowserWindow {
             nodeIntegration: true,
             enableRemoteModule: true
         },
-        skipTaskbar: true,
+        skipTaskbar: !isDevEnv,
         icon: getIcon(512)
     });
     win.removeMenu();

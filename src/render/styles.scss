@@ -5,31 +5,35 @@ $text: rgb(214, 214, 214);
 $primary: rgb(70, 194, 132);
 $primary-tint: rgb(85, 192, 142);
 $secondary: rgb(45, 136, 197);
+
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
 @import '../../node_modules/material-icons-font/material-icons-font.css';
 
+@import './themes.scss';
 @import './left-column/left-column.scss';
 @import './right-column/right-column.scss';
 
-div#electron-titlebar {
-    height: 29px;
-    div {
-        height: 29px;
-    }
-    background-color: $secondary-background;
-    transition: all 0.2s;    
-}
 
-#electron-titlebar > .button-close.hover {
-    background-color:  rgb(255, 88, 88) !important;
-    border-radius: 4px;
-}
+
+// div#electron-titlebar {
+//     height: 29px;
+//     div {
+//         height: 29px;
+//     }
+//     background-color: $secondary-background;
+//     transition: all 0.2s;    
+// }
+
+// #electron-titlebar > .button-close.hover {
+//     background-color:  rgb(255, 88, 88) !important;
+//     border-radius: 4px;
+// }
 
 body {
     font-size: 13px;
     font-family: 'Ubuntu', sans-serif;
-    background: $primary-background;
-    color: $text;
+    background: var(--background-color);
+    color: var(--text-color);
     margin: 0;
 }
 
@@ -59,6 +63,11 @@ body {
             padding: 5px;
             padding-right: 18px;
             margin-right: 15px;
+            p {
+                font-weight: bold;
+                // text-align: left;
+                // margin-left: 45px;
+            }
 
         }
         .input-container {
@@ -73,6 +82,7 @@ body {
                 left: 3px;
                 position: absolute;
                 pointer-events: none;
+                color: var(--primary-icon-color);
             }
             div:focus+i {
                 display: none;
@@ -83,7 +93,7 @@ body {
         .extensions-input,
         .folder-input {
             transition: all 0.2s;
-            background: $secondary;
+            background: var(--primary);
             outline-color: unset;
             outline: unset;
             border-radius: 5px;
@@ -110,7 +120,7 @@ body {
         }
 
         .section-tip {
-            color: $secondary-background-highlight;
+            color: var(--text-color);
             font-size: 15px;
             pointer-events: none;
             z-index: -1;
@@ -132,14 +142,24 @@ body {
 .rules-view-container {
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.7);
     opacity: 1;
-    transition: opacity 0.2s ease-in;
+    transition: opacity 0.4s ease-in;
     display: initial;
     position: absolute;
+    padding: 100px;
+    box-sizing: border-box;
     &.hidden {
         opacity: 0;
         display: none;
+    }
+
+    .rules-list-container {
+        height: 100%;
+    width: 100%;
+    background: rgba(65,65,65);
+    /* margin: auto; */
+    border-radius: 10px;
     }
 }
 
@@ -174,7 +194,7 @@ div[style="position: relative;"] + .main-content {
 }
 
 .smart-hover-shadow {
-    background: rgba(255,255,255,0.1);
+    background: var(--highlight);
     border-radius: 7px;
     z-index: 0;
 }
@@ -207,6 +227,10 @@ i.sort-icon.sorting {
     animation-name: pulse;
     animation-duration: 0.5s;
     animation-iteration-count: infinite;
+}
+
+i.material-icons {
+    color: var(--icon-color);
 }
 
 @keyframes pulse {

@@ -51,15 +51,15 @@ export class ExtensionsHandler extends SectionHandler {
                 this.hideTip();
                 this.hideOverlay();
 
-                const index = Array.prototype.indexOf.call(items, item);
-                if (index < items.length - 1) {
-                    const operand = this.createOperandItem();
-                    this.renderItem(operand, {
-                        silent: true,
-                        removable: false,
-                        selectable: false
-                    });
-                }
+                // const index = Array.prototype.indexOf.call(items, item);
+                // if (index < items.length) {
+                //     const operand = this.createOperandItem();
+                //     this.renderItem(operand, {
+                //         silent: true,
+                //         removable: false,
+                //         selectable: false
+                //     });
+                // }
             }
         })
     }

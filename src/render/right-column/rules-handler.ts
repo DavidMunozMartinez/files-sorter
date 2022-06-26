@@ -15,16 +15,16 @@ export class RulesHandler {
 
 
     enable(folder: string, category: string) {
-        this.toggleView();
+        this.contentRef.classList.toggle('hidden');
+        // this.toggleView();
     }
 
     disable() {
-        this.toggleView();
+        this.contentRef.classList.toggle('hidden');
+        // this.toggleView();
     }
 
     private toggleView() {
-        if (this.contentRef.classList.contains('hidden')) {
-            this.contentRef.classList.toggle('hidden');
-        }
+        this.contentRef.classList.toggle('hidden');
     }
 }
