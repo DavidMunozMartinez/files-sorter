@@ -1,4 +1,6 @@
-import { spawn } from 'child_process';
+import { spawn, exec } from 'child_process';
+import path from 'path';
+import fs from 'fs';
 
 export class Utils {
     // constructor () {}
@@ -60,5 +62,21 @@ export class Utils {
         else {
             spawn('explorer', [`"${pathString}"`], {shell:true});
         }
+    }
+
+    getOpenCommandLine() {
+        switch (process.platform) { 
+           case 'darwin' : return 'open';
+           case 'win32' : return 'start';
+           default : return 'xdg-open';
+        }
+    }
+
+    readLogs() {
+        if (!fs.existsSync('./logs.txt')) {
+            return;
+        }
+
+        exec(this.getOpenCommandLine() + ' ' + path.resolve('./logs.txt'));
     }
 }

@@ -15,7 +15,7 @@ export class FolderHandler extends SectionHandler {
     constructor (fileSorter: FileSorter, utils: Utils, notificationService: NotificationComponent) {
         super('.column.left-column', '.folder-list', '.folder-list-item');
         // Handles all logic related to the categories section
-        this.categoriesHandler = new CategoriesHandler(fileSorter, utils);
+        this.categoriesHandler = new CategoriesHandler(fileSorter, utils, notificationService);
         this.fileSorter = fileSorter;
         this.notificationService = notificationService;
         this.utils = utils;

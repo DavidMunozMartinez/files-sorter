@@ -1,4 +1,5 @@
 import { FileSorter } from "../file-sorter";
+import { NotificationComponent } from "../notification-component/notification-component";
 import { SectionHandler } from "../sections-handler";
 import { Utils } from "../utils";
 // import { AddRulesView } from './add-rules-modal/add-rules.component';
@@ -14,6 +15,7 @@ export class ExtensionsHandler extends SectionHandler {
 
     fileSorter: FileSorter;
     utils: Utils;
+    notificationService: NotificationComponent;
 
     private conditions: any = {
         starts_with: 'Starts with',
@@ -21,11 +23,12 @@ export class ExtensionsHandler extends SectionHandler {
         ends_with: 'Ends with'
     };
 
-    constructor(fileSorter: FileSorter, utils: Utils) {
+    constructor(fileSorter: FileSorter, utils: Utils, notificationService: NotificationComponent) {
         super('div.extensions', 'div.extension-list', '.extension-list-item');
 
         this.fileSorter = fileSorter;
         this.utils = utils;
+        this.notificationService = notificationService;
 
         this.inputRef = this.contentRef?.querySelector('div.extensions-input');
         this.inputRef?.addEventListener('keydown', (event: any) => {
@@ -68,6 +71,16 @@ export class ExtensionsHandler extends SectionHandler {
                 this.hideTip();
                 this.hideOverlay();
             }
+
+            let groupTip = this.utils.getData('group-tip');
+            if (items.length > 2 && !groupTip) {
+                this.utils.saveData('group-tip', true);
+                this.notificationService.notify({
+                    message: 'You can group multiple conditions into one, select multiple with Ctrl + Click and use the group button that appears at the bottom',
+                    type: 'info',
+                    timer: 10000
+                });
+            }
         });
 
         this.on('selected', (selected: any) => {
@@ -100,11 +113,7 @@ export class ExtensionsHandler extends SectionHandler {
                 if (extension.indexOf(',') > -1) {
                     return this.createGroupedListItem(extension);
                 }
-                // const split = extension.split(':');
-                // const condition = split[0];
-                // const text = split[1];
                 return this.createListItem(extension);
-                // return this.createListItem(text, condition);
             });
             this.hideTip();
             this.renderList(items);
@@ -183,10 +192,20 @@ export class ExtensionsHandler extends SectionHandler {
         const condition = this.conditionRef?.getAttribute('value');
         if (!condition) {
             event.preventDefault();
+            this.notificationService.notify({
+                message: 'Please select a condition',
+                type: 'info',
+                timer: 10000 
+            });
             return;
         }
 
         if (!value) {
+            this.notificationService.notify({
+                message: 'Please enter a value',
+                type: 'info',
+                timer: 10000 
+            });
             return;
         }
 

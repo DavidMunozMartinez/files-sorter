@@ -3,6 +3,7 @@ import  path from 'path';
 import * as fs from 'fs'
 import { spawn, exec } from 'child_process';
 import { NotificationComponent } from './notification-component/notification-component';
+import { Utils } from './utils';
 
 export interface IMovedFileData {
     from: string,
@@ -25,9 +26,11 @@ export class FileSorter {
     watchers: any = {};
     moveHistory = [];
     notificationService: NotificationComponent;
+    utils: Utils;
 
-    constructor (notificationService: NotificationComponent) {
+    constructor (notificationService: NotificationComponent, utils: Utils) {
         this.notificationService = notificationService;
+        this.utils = utils;
         this.updateFoldersData();
     }
 
@@ -109,13 +112,13 @@ export class FileSorter {
         });
     }
 
-    readHistory() {
-        if (!fs.existsSync('./logs.txt')) {
-            return;
-        }
+    // readHistory() {
+    //     if (!fs.existsSync('./logs.txt')) {
+    //         return;
+    //     }
 
-        exec(this.getOpenCommandLine() + ' ' + path.resolve('./logs.txt'));
-    }
+    //     exec(this.utils.getOpenCommandLine() + ' ' + path.resolve('./logs.txt'));
+    // }
 
     /**
      * Executed when a new file is detected by a watcher, it makes sure to pick the right
@@ -279,11 +282,11 @@ export class FileSorter {
         fs.appendFileSync('./logs.txt', new Date().toLocaleString() + ': ' + value + '\n');
     }
 
-    private getOpenCommandLine() {
-        switch (process.platform) { 
-           case 'darwin' : return 'open';
-           case 'win32' : return 'start';
-           default : return 'xdg-open';
-        }
-     }
+    // private getOpenCommandLine() {
+    //     switch (process.platform) { 
+    //        case 'darwin' : return 'open';
+    //        case 'win32' : return 'start';
+    //        default : return 'xdg-open';
+    //     }
+    //  }
 }

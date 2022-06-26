@@ -53,13 +53,15 @@ export class NotificationComponent {
 
     notifyFileMove(folder: string, movedFiles: IMovedFileData[]) {
         let message = '"' + folder + '" sorted';
+        let path: string | null = null;
         if (!movedFiles.length) {
             message = 'All seems in order!';
         } else if (movedFiles.length === 1) {
-            message = `${movedFiles[0].fileName} has been moved from ${movedFiles[0].from} to ${movedFiles[0].to}`;
+            message = `${movedFiles[0].fileName} has been moved to ${movedFiles[0].to}`;
+            path  = movedFiles[0].to;
         }
         if (movedFiles.length > 1) {
-            message = `${movedFiles.length} files have been sorted in "${folder}"`;
+            message = `${movedFiles.length} files have been sorted from "${folder}", to know exactly what went where, take a look at the logs file`;
         }
         this.notify({
             timer: 4000,
@@ -67,11 +69,16 @@ export class NotificationComponent {
             type: 'success',
         });
 
+
         if (movedFiles.length) {
             let osNotification = this.notifyOS('Files sorted', message);
-            if (osNotification) {
+            if (osNotification && path) {
                 osNotification.onclick = () => {
-                    this.utils.revealInExplorer(folder);
+                    if (path) {
+                        this.utils.revealInExplorer(path, true)
+                    } else if (movedFiles.length > 1) {
+                        this.utils.readLogs();
+                    }
                 }
             }
         }

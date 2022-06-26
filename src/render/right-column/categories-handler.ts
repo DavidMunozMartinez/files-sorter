@@ -1,11 +1,12 @@
 import { FileSorter } from '../file-sorter';
 import { SectionHandler } from '../sections-handler';
-import { RulesHandler } from './rules-handler';
+// import { RulesHandler } from './rules-handler';
 import { ExtensionsHandler } from './extensions-handler';
 import { Utils } from '../utils';
 import path from 'path';
 
 import Sortable from "sortablejs";
+import { NotificationComponent } from '../notification-component/notification-component';
 
 export class CategoriesHandler extends SectionHandler {
     inputRef: HTMLElement | null;
@@ -13,14 +14,16 @@ export class CategoriesHandler extends SectionHandler {
     extensionHandler: ExtensionsHandler;
     fileSorter: FileSorter;
     utils: Utils;
+    notificationService: NotificationComponent;
     // rulesHandler: RulesHandler;
 
-    constructor(fileSorter: FileSorter, utils: Utils) {
+    constructor(fileSorter: FileSorter, utils: Utils, notificationService: NotificationComponent) {
         super('div.categories', 'smart-hover.category-list', '.category-list-item');
         this.fileSorter = fileSorter;
         this.utils = utils;
+        this.notificationService = notificationService;
         // this.rulesHandler = new RulesHandler('.rules-view-container');
-        this.extensionHandler = new ExtensionsHandler(fileSorter, utils);
+        this.extensionHandler = new ExtensionsHandler(fileSorter, utils, notificationService);
         this.inputRef = this.contentRef.querySelector('div.category-input');
 
         if (this.listRef) {

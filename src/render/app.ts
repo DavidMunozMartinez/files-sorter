@@ -11,7 +11,7 @@ class App {
   // Handles rendering app notifications
   private notificationService = new NotificationComponent(this.utils);
   // Handles all logic to actually sort and move files around
-  private fileSorter: FileSorter = new FileSorter(this.notificationService);
+  private fileSorter: FileSorter = new FileSorter(this.notificationService, this.utils);
 
   public currentTheme: 'dark' | 'light' = this.getSystemTheme();
   public notifications: boolean = this.utils.getData('notifications') || false;
@@ -114,7 +114,7 @@ class App {
     });
 
     logsToggle.addEventListener('click', () => {
-      this.fileSorter.readHistory();
+      this.utils.readLogs();
     });
   }
 }
