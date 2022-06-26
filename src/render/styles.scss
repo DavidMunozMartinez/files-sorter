@@ -7,27 +7,11 @@ $primary-tint: rgb(85, 192, 142);
 $secondary: rgb(45, 136, 197);
 
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
-@import '../../node_modules/material-icons-font/material-icons-font.css';
-
+// @import '../../node_modules/material-icons-font/material-icons-font.css';
 @import './themes.scss';
 @import './left-column/left-column.scss';
 @import './right-column/right-column.scss';
 
-
-
-// div#electron-titlebar {
-//     height: 29px;
-//     div {
-//         height: 29px;
-//     }
-//     background-color: $secondary-background;
-//     transition: all 0.2s;    
-// }
-
-// #electron-titlebar > .button-close.hover {
-//     background-color:  rgb(255, 88, 88) !important;
-//     border-radius: 4px;
-// }
 
 body {
     font-size: 13px;
@@ -35,6 +19,38 @@ body {
     background: var(--background-color);
     color: var(--text-color);
     margin: 0;
+}
+
+.nav-bar {
+    transition: width 124ms ease-out;
+    width: 55px;
+    .static {
+        pointer-events: none;
+    }
+    span {
+        transition: opacity 120ms ease-out;
+        opacity: 0;
+        display: none;
+        position: absolute;
+        top: 15px;
+        left: 45px;
+        color: var(--icon-color);
+        width: 400px;
+    }
+    .input-container {
+        margin-bottom: 10px;
+        position: relative;
+        margin-right: 15px;
+        border-radius: 5px;
+        padding: 10px;
+    }
+    &:hover {
+        width: 225px;
+        span {
+            display: block;
+            opacity: 1;
+        }
+    }
 }
 
 .main-content {
@@ -53,6 +69,12 @@ body {
     }
     div.left-column {
         flex: 1;
+        background-color: var(--foreground-color);
+        border-radius: 10px;
+    }
+
+    .input-container {
+        cursor: pointer;
     }
 
     .column {
@@ -96,7 +118,7 @@ body {
         .category-input,
         .extensions-input,
         .folder-input {
-            transition: all 0.2s;
+            transition: all 134ms;
             background: var(--primary);
             outline-color: unset;
             outline: unset;
@@ -162,7 +184,7 @@ body {
     width: 100%;
     background: rgba(65,65,65);
     /* margin: auto; */
-    border-radius: 10px;
+    // border-radius: 10px;
     }
 }
 

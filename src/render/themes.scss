@@ -6,15 +6,12 @@ body.light-theme {
     --icon-color: rgb(90,90,90);
     --primary: rgb(34 177 191);
     --primary-icon-color: rgb(244, 244, 244);
-    
-    // --primary: rgb(70, 194, 132);
-    // --primary-tint: rgb(85, 192, 142);
 }
 
 body.dark-theme {
     --background-color: rgb(37, 37, 37);
-    --foreground-color: rgb(66, 66, 66);
-    --highlight: rgba(255,255,255, 0.1);
+    --foreground-color: rgb(50, 50, 50);
+    --highlight: rgba(240,240,240, 0.2);
     --text-color: rgb(214, 214, 214);
     --icon-color: rgb(120,120,120);
     --primary: rgb(45, 136, 197);
