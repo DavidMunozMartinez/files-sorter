@@ -49,12 +49,12 @@ function createWindow(): BrowserWindow {
         show: false,
         maximizable: false,
         webPreferences: {
-            devTools: true,
+            devTools: isDevEnv,
             worldSafeExecuteJavaScript: true,
             nodeIntegration: true,
             enableRemoteModule: true
         },
-        // skipTaskbar: !isDevEnv,
+        skipTaskbar: !isDevEnv,
         icon: getIcon(512)
     });
     win.removeMenu();
@@ -74,11 +74,16 @@ function createWindow(): BrowserWindow {
 
 
 function onWindowClose(event: any) {
-    // if (!isQuiting) {
-    //     event.preventDefault();
-    //     // win.hide();
-    //     return false;
-    // }
+    if (isDevEnv) {
+        app.quit();
+        return;
+    }
+
+    if (!isQuiting) {
+        event.preventDefault();
+        win.hide();
+        return false;
+    }
 }
 
 function createTray(): Tray {
