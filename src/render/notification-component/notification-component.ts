@@ -1,17 +1,30 @@
 import './notification-component.scss';
+import { spawn } from 'child_process';
+import { Utils } from '../utils';
+import { IMovedFileData } from '../file-sorter';
+
+
+export interface INotificationOptions {
+    type?: 'warning' | 'info' | 'error' | 'success'
+    message?: string
+    timer: number,
+    os?: boolean
+}
 
 export class NotificationComponent {
 
     private container: HTMLElement = document.createElement('div');
     private queue: any = {};
+    utils: Utils;
 
-    constructor() {
+    constructor(utils: Utils) {
+        this.utils = utils;
         this.container.classList.add('notification-container');
         document.body.append(this.container);
     }
 
     notify(options: INotificationOptions) {
-        let notification = new Notification(options);
+        let notification = new AppNotification(options);
         this.queue[notification.id] = notification;
         this.container.append(notification.ref);
 
@@ -22,11 +35,57 @@ export class NotificationComponent {
             notification.show();
         });
     }
+
+    notifyOS(title: string, body: string) {
+        if (this.utils.getData('notifications')) {
+            const notification = new Notification(title, {
+                body: body
+            });
+            return notification;
+        } else {
+            return false;
+        }
+
+        // notification.onclick = () => {
+        //     spawn('explorer', [`/select, "${destination}"`], {shell:true})
+        // };
+    }
+
+    notifyFileMove(folder: string, movedFiles: IMovedFileData[]) {
+        let message = '"' + folder + '" sorted';
+        if (!movedFiles.length) {
+            message = 'All seems in order!';
+        } else if (movedFiles.length === 1) {
+            message = `${movedFiles[0].fileName} has been moved from ${movedFiles[0].from} to ${movedFiles[0].to}`;
+        }
+        if (movedFiles.length > 1) {
+            message = `${movedFiles.length} files have been sorted in "${folder}"`;
+        }
+        this.notify({
+            timer: 4000,
+            message: message,
+            type: 'success',
+        });
+
+        if (movedFiles.length) {
+            let osNotification = this.notifyOS('Files sorted', message);
+            if (osNotification) {
+                osNotification.onclick = () => {
+                    this.utils.revealInExplorer(folder);
+                }
+            }
+        }
+    }
+
+    makeNotifyMessage() {
+
+    }
 }
 
-class Notification {
+class AppNotification {
     ref: HTMLElement = document.createElement('div');
     id: string = '_' + Math.random().toString(36).substr(2, 9);
+    type: 'warning' | 'info' | 'error' | 'success';
 
     private header: HTMLElement = document.createElement('div');
     private message: HTMLElement = document.createElement('div');
@@ -37,6 +96,7 @@ class Notification {
         if (!options.timer) { options.timer = 2000 }
         if (!options.message) { options.message = "" }
 
+        this.type = options.type;
         this.timer = options.timer;
         const closeIcon: HTMLElement = document.createElement('i');
         closeIcon.classList.add('close');
@@ -63,9 +123,11 @@ class Notification {
             this.ref.classList.add('show');
         }
 
-        setTimeout(() => {
-            this.remove();
-        }, this.timer);
+        if (this.type !== 'error') {
+            setTimeout(() => {
+                this.remove();
+            }, this.timer);
+        }
     }
 
     remove() {
@@ -100,12 +162,4 @@ class Notification {
         this.header.innerHTML = '<p>' + type.charAt(0).toUpperCase() + type.slice(1) + '</p>';
         this.header.append(iconRef);
     }
-}
-
-
-
-export interface INotificationOptions {
-    type?: 'warning' | 'info' | 'error' | 'success'
-    message?: string
-    timer: number
 }

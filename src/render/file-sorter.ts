@@ -1,6 +1,14 @@
 import chokidar from 'chokidar';
 import  path from 'path';
 import * as fs from 'fs'
+import { spawn, exec } from 'child_process';
+import { NotificationComponent } from './notification-component/notification-component';
+
+export interface IMovedFileData {
+    from: string,
+    to: string,
+    fileName: string
+}
 
 export class FileSorter {
     private paths: any;
@@ -15,8 +23,11 @@ export class FileSorter {
 
     };
     watchers: any = {};
+    moveHistory = [];
+    notificationService: NotificationComponent;
 
-    constructor () {
+    constructor (notificationService: NotificationComponent) {
+        this.notificationService = notificationService;
         this.updateFoldersData();
     }
 
@@ -40,7 +51,11 @@ export class FileSorter {
         const watcher = chokidar.watch(folder, this.defaultConfig);
         watcher.on('add', (location: any) => {
             if(this.paths[folder].active) {
-                this.sort(folder, location)
+                this.sort(folder, location).then((moved: IMovedFileData) => {
+                    if (moved) {
+                        this.notificationService.notifyFileMove(folder, [moved]);
+                    }
+                });
             }
         });
         this.watchers[folder] = watcher;
@@ -63,17 +78,43 @@ export class FileSorter {
      * Reads all contents of a given folder path and applies its sorting rules to each file
      * @param folder Folder that will be sorted
      */
-    async sortFolder (folder: string) {
-        await fs.readdir(folder, { withFileTypes: true }, (err, dirents) => {
-            if (err) {
-                return;
-            }
-            dirents.map(async dirent => {
-                if (dirent.isFile()) {
-                    await this.sort(folder, path.resolve(folder, dirent.name));
-                }
+    sortFolder (folder: string): Promise<IMovedFileData[]> {
+        let movedFiles: IMovedFileData[] = [];
+        return new Promise((resolve, reject) => {
+            let timeoutId = setTimeout(() => {
+                reject('timeout');
+            }, 1000 * 10);
+            fs.readdir(folder, { withFileTypes: true }, (err, dirents) => {
+                if (err) return reject(err);
+                let solved = 0;
+                dirents.forEach((dirent) => {
+                    if (dirent.isFile()) {
+                        this.sort(folder, path.resolve(folder, dirent.name)).then((movedData) => {
+                            solved++
+                            if (movedData) movedFiles.push(movedData);
+                            if (solved === dirents.length) {
+                                resolve(movedFiles);
+                                clearTimeout(timeoutId);
+                            };
+                        }); 
+                    } else {
+                        solved++;
+                        if (solved === dirents.length) {
+                            resolve(movedFiles);
+                            clearTimeout(timeoutId);
+                        };
+                    }
+                });
             });
         });
+    }
+
+    readHistory() {
+        if (!fs.existsSync('./logs.txt')) {
+            return;
+        }
+
+        exec(this.getOpenCommandLine() + ' ' + path.resolve('./logs.txt'));
     }
 
     /**
@@ -81,21 +122,21 @@ export class FileSorter {
      * plae for the new detected file and moves it to a constructed location based on the
      * folder rules
      * @param folder Path that triggered the sort action
-     * @param location Absolute location for the new file
+     * @param location Absolute location for the file
      */
-    private async sort(folder: string, location: string) {
+    private async sort(folder: string, location: string): Promise<any> {
         const data = this.paths[folder];
         const name: any = path.basename(location)
-
         const category = this.getCategory(data, name);
+        let moved = null;
 
         if (!category) {
-            return;
+            return null;
         }
-        let destination = path.resolve(folder, category);
 
+        let destination = path.resolve(folder, category);
         if (!destination) {
-            return
+            return null;
         }
 
         if (!fs.existsSync(destination)) {
@@ -103,10 +144,17 @@ export class FileSorter {
         }
 
         destination = await this.validateDestination(destination, name);
-
         if (fs.existsSync(location) && destination.toLocaleLowerCase() !== location.toLocaleLowerCase()) {
             await fs.renameSync(location, destination);
+            moved = {
+                from: location,
+                to: destination,
+                fileName: name
+            };
+            this.logToFile(moved);
         }
+
+        return moved;
     }
 
     /**
@@ -120,16 +168,16 @@ export class FileSorter {
         const fileName = split[0];
         const extension = split[1];
 
-        let posible = path.resolve(destination, name);
-        let exists = await fs.existsSync(posible);
+        let possible = path.resolve(destination, name);
+        let exists = await fs.existsSync(possible);
         let increment = 1;
         while (exists) {
             const newName =`${fileName} (${increment}).${extension}`;
-            posible = path.resolve(destination, newName);
-            exists = await fs.existsSync(posible);
+            possible = path.resolve(destination, newName);
+            exists = await fs.existsSync(possible);
             increment += 1;
         }
-        return posible;
+        return possible;
     }
 
     /**
@@ -218,4 +266,24 @@ export class FileSorter {
         });
         return validCount === conditions.length;
     }
+
+    private revealInExplorer(pathString: string) {
+        spawn('explorer', [`/select, "${pathString}"`], {shell:true});
+    }
+
+    private logToFile(data: any) {
+        if (!fs.existsSync('./logs.txt')) {
+            fs.writeFileSync('./logs.txt', '');
+        }
+        let value = JSON.stringify(data);
+        fs.appendFileSync('./logs.txt', new Date().toLocaleString() + ': ' + value + '\n');
+    }
+
+    private getOpenCommandLine() {
+        switch (process.platform) { 
+           case 'darwin' : return 'open';
+           case 'win32' : return 'start';
+           default : return 'xdg-open';
+        }
+     }
 }

@@ -1,3 +1,5 @@
+import { spawn } from 'child_process';
+
 export class Utils {
     // constructor () {}
 
@@ -51,5 +53,12 @@ export class Utils {
 
     removeData() {}
 
-
+    revealInExplorer(pathString: string, select?: boolean) {
+        if (select) {
+            spawn('explorer', [`/select, "${pathString}"`], {shell:true});
+        }
+        else {
+            spawn('explorer', [`"${pathString}"`], {shell:true});
+        }
+    }
 }

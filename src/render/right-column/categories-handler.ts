@@ -3,6 +3,7 @@ import { SectionHandler } from '../sections-handler';
 import { RulesHandler } from './rules-handler';
 import { ExtensionsHandler } from './extensions-handler';
 import { Utils } from '../utils';
+import path from 'path';
 
 import Sortable from "sortablejs";
 
@@ -11,11 +12,13 @@ export class CategoriesHandler extends SectionHandler {
     folder: string | null = null;
     extensionHandler: ExtensionsHandler;
     fileSorter: FileSorter;
+    utils: Utils;
     // rulesHandler: RulesHandler;
 
     constructor(fileSorter: FileSorter, utils: Utils) {
         super('div.categories', 'smart-hover.category-list', '.category-list-item');
         this.fileSorter = fileSorter;
+        this.utils = utils;
         // this.rulesHandler = new RulesHandler('.rules-view-container');
         this.extensionHandler = new ExtensionsHandler(fileSorter, utils);
         this.inputRef = this.contentRef.querySelector('div.category-input');
@@ -228,8 +231,11 @@ export class CategoriesHandler extends SectionHandler {
             children: [folderIcon, valueHolder],
             click: () => {
                 if (this.folder && value) {
-                    // this.rulesHandler.enable(this.folder, value);
                 }
+            },
+            dblclick: () => {
+                let fullPath = path.resolve(this.folder || '', value);
+                this.utils.revealInExplorer(fullPath);
             }
         });
 

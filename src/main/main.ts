@@ -1,4 +1,4 @@
-import { systemPreferences, app, BrowserWindow, Tray, Menu } from 'electron';
+import { app, BrowserWindow, Tray, Menu } from 'electron';
 import * as path from 'path';
 
 

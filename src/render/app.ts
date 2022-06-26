@@ -4,15 +4,14 @@ import { Utils } from "./utils";
 import { NotificationComponent } from "./notification-component/notification-component";
 import "smart-hoverjs";
 import "chokidar";
-
 class App {
   // let not = new Notification('NOTIFICATION_TITLE', { body: 'NOTIFICATION_BODY' });
   // Utilities instance
   private utils: Utils = new Utils();
-  // Handles all logic to actually sort and move files around
-  private fileSorter: FileSorter = new FileSorter();
   // Handles rendering app notifications
-  private notificationService = new NotificationComponent();
+  private notificationService = new NotificationComponent(this.utils);
+  // Handles all logic to actually sort and move files around
+  private fileSorter: FileSorter = new FileSorter(this.notificationService);
 
   public currentTheme: 'dark' | 'light' = this.getSystemTheme();
   public notifications: boolean = this.utils.getData('notifications') || false;
@@ -94,13 +93,14 @@ class App {
     const navBar = window.document.getElementsByClassName('nav-bar')[0];
     const themeToggle = navBar.getElementsByClassName('input-container theme-toggle')[0];
     const notificationsToggle = navBar.getElementsByClassName('input-container notifications-toggle')[0];
+    const logsToggle = navBar.getElementsByClassName('input-container logs-viewer')[0]
     const notificationState = this.utils.getData('notifications');
     const notificationIcon = notificationsToggle.getElementsByTagName('i')[0];
     notificationIcon.innerHTML = notificationState ? 'notifications' : 'notifications_off';
 
     themeToggle.addEventListener('click', (event) => {
       let themeToApply: 'dark' | 'light' = this.currentTheme === 'dark' ? 'light' : 'dark';
-      this.applyTheme(themeToApply);
+      this.applyTheme(themeToApply);  
       let icon = themeToggle.getElementsByTagName('i')[0];
       icon.innerHTML = themeToApply + '_mode';
       this.utils.saveData('theme', themeToApply);
@@ -111,6 +111,10 @@ class App {
       this.notifications = !this.notifications
       this.notifications ? icon.innerHTML = 'notifications' : icon.innerHTML = 'notifications_off';
       this.utils.saveData('notifications', this.notifications);
+    });
+
+    logsToggle.addEventListener('click', () => {
+      this.fileSorter.readHistory();
     });
   }
 }

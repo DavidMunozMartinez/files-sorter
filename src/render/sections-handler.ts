@@ -64,6 +64,11 @@ export class SectionHandler {
                 opts.click(event);
             });
         }
+        if (opts.dblclick && typeof (opts.dblclick) === 'function') {
+            element.addEventListener('dblclick', (event: any) => {
+                opts.dblclick(event);
+            });
+        }
         if (opts.innerHTML) {
             element.innerHTML = opts.innerHTML;
         }

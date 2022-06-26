@@ -1,5 +1,5 @@
 import { remote } from 'electron';
-import { FileSorter } from '../file-sorter';
+import { FileSorter, IMovedFileData } from '../file-sorter';
 import { NotificationComponent } from '../notification-component/notification-component';
 import { CategoriesHandler } from '../right-column/categories-handler';
 import { SectionHandler } from '../sections-handler';
@@ -10,6 +10,7 @@ export class FolderHandler extends SectionHandler {
     categoriesHandler: CategoriesHandler;
     fileSorter: FileSorter;
     notificationService: NotificationComponent;
+    utils: Utils;
 
     constructor (fileSorter: FileSorter, utils: Utils, notificationService: NotificationComponent) {
         super('.column.left-column', '.folder-list', '.folder-list-item');
@@ -17,6 +18,7 @@ export class FolderHandler extends SectionHandler {
         this.categoriesHandler = new CategoriesHandler(fileSorter, utils);
         this.fileSorter = fileSorter;
         this.notificationService = notificationService;
+        this.utils = utils;
         const addButtonRef = document.querySelector('div.folder-input');
         addButtonRef?.addEventListener('click', () =>  this.folderDialog());
 
@@ -118,15 +120,19 @@ export class FolderHandler extends SectionHandler {
                 const sorting = event.target.classList.contains('sorting');
                 if (!sorting) {
                     event.target.classList.add('sorting');
-                    this.fileSorter.sortFolder(folder).finally(() => {
-                        this.notificationService.notify({
-                            timer: 4000,
-                            message: '"' + folder + '" sorted',
-                            type: 'success'
-                        })
+                    this.fileSorter.sortFolder(folder).then((movedFiles: IMovedFileData[]) => {
+                        this.notificationService.notifyFileMove(folder, movedFiles);
                         event.target.classList.remove('sorting');
-                    }).catch(() => {
-                        // Notify that something went wrogn when sorting
+                    }).catch((err) => {
+                        if (err.indexOf('timeout') > -1) {
+                            let message = `Timeout limit exceeded while sorting ${folder}`;
+                            this.notificationService.notify({
+                                timer: 6000,
+                                message: message,
+                                type: 'error'
+                            });
+                            this.notificationService.notifyOS('Sorting time out', message);
+                        }
                         event.target.classList.remove('sorting');
                     });
                 }
@@ -156,7 +162,10 @@ export class FolderHandler extends SectionHandler {
 
         const listItem = this.makeElement('div', {
             classList: ['folder-list-item'],
-            children: [valueElement, sortIcon, watchIcon]
+            children: [valueElement, sortIcon, watchIcon],
+            dblclick: () => {
+                this.utils.revealInExplorer(folder);
+            }
         });
 
         return listItem;
