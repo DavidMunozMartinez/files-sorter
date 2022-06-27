@@ -2,7 +2,7 @@ import { app, BrowserWindow, Tray, Menu } from 'electron';
 import * as path from 'path';
 
 
-const isDevEnv = process && process.mainModule && process.mainModule.filename.indexOf('app.asar') === -1;
+const isDevEnv = false;
 let isQuiting = false;
 let win: BrowserWindow;
 let appTray: Tray;
@@ -12,6 +12,7 @@ const trayMenu = [
         click: () => {
             isQuiting = true;
             app.quit();
+            app.exit();
         }
     },
     {
@@ -64,6 +65,7 @@ function createWindow(): BrowserWindow {
     if (isDevEnv) {
         win.webContents.toggleDevTools();
     }
+
     win.on('close', onWindowClose);
     if (process.platform === 'darwin') {
         app.dock.hide();
