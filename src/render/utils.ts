@@ -56,12 +56,13 @@ export class Utils {
     removeData() {}
 
     revealInExplorer(pathString: string, select?: boolean) {
-        if (select) {
-            spawn('explorer', [`/select, "${pathString}"`], {shell:true});
-        }
-        else {
-            spawn('explorer', [`"${pathString}"`], {shell:true});
-        }
+      let command = this.getShowCommand();
+      let args: string[] = [`"${pathString}"`];
+      if (select) {
+        let selectArg = process.platform === 'darwin' ? '-R' : '/select';
+        args.unshift(selectArg);
+      }
+      spawn(command, args, { shell: true });
     }
 
     getOpenCommandLine() {
@@ -70,6 +71,14 @@ export class Utils {
            case 'win32' : return 'start';
            default : return 'xdg-open';
         }
+    }
+
+    getShowCommand() {
+      switch (process.platform) { 
+        case 'darwin' : return 'open';
+        case 'win32' : return 'explorer';
+        default : return 'xdg-open';
+     }
     }
 
     readLogs() {

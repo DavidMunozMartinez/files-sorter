@@ -87,6 +87,7 @@ export class FileSorter {
             let timeoutId = setTimeout(() => {
                 reject('timeout');
             }, 1000 * 10);
+
             fs.readdir(folder, { withFileTypes: true }, (err, dirents) => {
                 if (err) return reject(err);
                 let solved = 0;
@@ -108,7 +109,10 @@ export class FileSorter {
                         };
                     }
                 });
-                if (!dirents.length) clearTimeout(timeoutId);
+                if (!dirents.length) {
+                  resolve([]);
+                  clearTimeout(timeoutId);
+                };
             });
         });
     }

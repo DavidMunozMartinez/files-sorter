@@ -1,7 +1,0 @@
-6/26/2022, 5:11:54 PM: {"from":"C:\\Users\\JDavi\\Downloads\\One.txt","to":"C:\\Users\\JDavi\\Downloads\\Test\\One (1).txt","fileName":"One.txt"}
-6/26/2022, 5:12:21 PM: {"from":"C:\\Users\\JDavi\\Downloads\\Oneeee.txt","to":"C:\\Users\\JDavi\\Downloads\\Test\\Oneeee.txt","fileName":"Oneeee.txt"}
-6/26/2022, 5:13:10 PM: {"from":"C:\\Users\\JDavi\\Downloads\\Onee.txt","to":"C:\\Users\\JDavi\\Downloads\\Test\\Onee.txt","fileName":"Onee.txt"}
-6/26/2022, 5:13:52 PM: {"from":"C:\\Users\\JDavi\\Downloads\\Oneeeeeeeeeeeeeeekasjdhfas.txt","to":"C:\\Users\\JDavi\\Downloads\\Test\\Oneeeeeeeeeeeeeeekasjdhfas.txt","fileName":"Oneeeeeeeeeeeeeeekasjdhfas.txt"}
-6/26/2022, 5:25:06 PM: {"from":"C:\\Users\\JDavi\\Downloads\\Onekasjdhfkajsdh.txt","to":"C:\\Users\\JDavi\\Downloads\\Test\\Onekasjdhfkajsdh.txt","fileName":"Onekasjdhfkajsdh.txt"}
-6/26/2022, 5:25:30 PM: {"from":"C:\\Users\\JDavi\\Downloads\\aldfjaslOne.txt","to":"C:\\Users\\JDavi\\Downloads\\Test\\aldfjaslOne.txt","fileName":"aldfjaslOne.txt"}
-6/26/2022, 5:26:36 PM: {"from":"C:\\Users\\JDavi\\Downloads\\One.txt","to":"C:\\Users\\JDavi\\Downloads\\Test\\One.txt","fileName":"One.txt"}
