@@ -52,6 +52,15 @@ export class CategoriesHandler extends SectionHandler {
                 this.hideTip();
                 this.select(item);
             }
+            let tip = this.utils.getData('category-order-tip');
+            if (items.length > 1 && !tip) {
+                this.notificationService.notify({
+                    message: 'Re-order your categories with drag and drop, when a file is sorted, categories are checked in order from top to bottom and the file its placed on the first available match',
+                    type: 'info',
+                    timer: 25000
+                });
+                this.utils.saveData('category-order-tip', true);
+            }
         });
 
         // Executed when a list item is selected

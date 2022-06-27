@@ -78,7 +78,7 @@ export class ExtensionsHandler extends SectionHandler {
                 this.notificationService.notify({
                     message: 'You can group multiple conditions into one, select multiple with Ctrl + Click and use the group button that appears at the bottom',
                     type: 'info',
-                    timer: 10000
+                    timer: 20000
                 });
             }
         });

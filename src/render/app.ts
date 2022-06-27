@@ -111,6 +111,12 @@ class App {
       this.notifications = !this.notifications
       this.notifications ? icon.innerHTML = 'notifications' : icon.innerHTML = 'notifications_off';
       this.utils.saveData('notifications', this.notifications);
+
+      this.notificationService.notify({
+        message: 'OS notifications turned ' + (this.notifications ? 'on' : 'off'),
+        type: 'info',
+        timer: 5000
+      });
     });
 
     logsToggle.addEventListener('click', () => {

@@ -17,6 +17,7 @@
         opacity: 0;
         pointer-events: none;
         transform: translateX(-20px);
+        font-size: 15px;
         &.show {
             opacity: 1;
             pointer-events: initial;
@@ -50,16 +51,16 @@
         }
 
         &.info {
-            background-color: rgb(183, 204, 235);
-            color: rgb(46, 67, 99);;
+            background-color: var(--info-background);
+            color: var(--info-color);
         }
         &.success {
             background-color: #e3ffe3;
             color: #1c471c;
         }
         &.error {
-            background-color: #ffe7e7;
-            color: #6d4a4a;
+            background-color: var(--error-background);
+            color: var(--error-color);
         }
         &.warning {
             background-color: rgb(255, 254, 184);
