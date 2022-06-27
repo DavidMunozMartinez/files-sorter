@@ -108,6 +108,7 @@ export class FileSorter {
                         };
                     }
                 });
+                if (!dirents.length) clearTimeout(timeoutId);
             });
         });
     }
