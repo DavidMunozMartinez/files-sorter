@@ -2,7 +2,7 @@ import { app, BrowserWindow, Tray, Menu } from 'electron';
 import * as path from 'path';
 
 
-const isDevEnv = false;
+const isDevEnv = process && process.mainModule && process.mainModule.filename.indexOf('app.asar') === -1;
 let isQuiting = false;
 let win: BrowserWindow;
 let appTray: Tray;
