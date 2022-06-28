@@ -2,6 +2,7 @@ import './notification-component.scss';
 import { spawn } from 'child_process';
 import { Utils } from '../utils';
 import { IMovedFileData } from '../file-sorter';
+import { Tips } from '../app-tips';
 
 
 export interface INotificationOptions {
@@ -23,7 +24,7 @@ export class NotificationComponent {
         document.body.append(this.container);
     }
 
-    notify(options: INotificationOptions) {
+    notify(options: INotificationOptions): AppNotification {
         let notification = new AppNotification(options);
         this.queue[notification.id] = notification;
         this.container.append(notification.ref);
@@ -34,6 +35,8 @@ export class NotificationComponent {
             // Notification hides itself based on the timer, or on manual close
             notification.show();
         });
+
+        return notification;
     }
 
     notifyOS(title: string, body: string) {
@@ -84,8 +87,18 @@ export class NotificationComponent {
         }
     }
 
-    makeNotifyMessage() {
-
+    showTipIfNeeded(tipKey: keyof typeof Tips): AppNotification | null {
+      let userHasSeenTip = this.utils.getData(tipKey);
+      let result = null;
+      if (!userHasSeenTip) {
+        result = this.notify({
+          message: Tips[tipKey],
+          type: 'info',
+          timer: 20000
+        });
+        this.utils.saveData(tipKey, true);
+      }
+      return result;
     }
 }
 
@@ -118,12 +131,14 @@ class AppNotification {
         this.header.classList.add('notification-header');
         this.makeHeader(options.type);
         this.message.classList.add('notification-message');
-        this.message.innerText = options.message;
+        this.message.innerHTML = options.message;
 
         this.header.append(closeIcon);
         this.ref.append(this.header);
         this.ref.append(this.message);
     }
+
+    onClose() {}
 
     show() {
         if (!this.ref.classList.contains('show')) {
@@ -141,7 +156,10 @@ class AppNotification {
         if (this.ref.classList.contains('show')) {
             this.ref.classList.remove('show');
             // Wait for the animation to end, then physically remove the element
-            setTimeout(() => { this.ref.parentElement?.removeChild(this.ref); }, 200);
+            setTimeout(() => {
+              this.ref.parentElement?.removeChild(this.ref);
+              this.onClose();
+            }, 200);
         }
     }
 

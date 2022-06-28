@@ -72,14 +72,9 @@ export class ExtensionsHandler extends SectionHandler {
                 this.hideOverlay();
             }
 
-            let groupTip = this.utils.getData('group-tip');
-            if (items.length > 2 && !groupTip) {
-                this.utils.saveData('group-tip', true);
-                this.notificationService.notify({
-                    message: 'You can group multiple conditions into one, select multiple with Ctrl + Click and use the group button that appears at the bottom',
-                    type: 'info',
-                    timer: 20000
-                });
+            // let groupTip = this.utils.getData('group-tip');
+            if (items.length > 2) {
+              this.notificationService.showTipIfNeeded('GROUP_RULES')
             }
         });
 
@@ -195,7 +190,7 @@ export class ExtensionsHandler extends SectionHandler {
             this.notificationService.notify({
                 message: 'Please select a condition',
                 type: 'info',
-                timer: 10000 
+                timer: 5000 
             });
             return;
         }
@@ -204,7 +199,7 @@ export class ExtensionsHandler extends SectionHandler {
             this.notificationService.notify({
                 message: 'Please enter a value',
                 type: 'info',
-                timer: 10000 
+                timer: 5000 
             });
             return;
         }
@@ -317,5 +312,7 @@ export class ExtensionsHandler extends SectionHandler {
         if (this.save(newValue)) {
             this.renderItem(newElement);
         }
+
+        this.notificationService.showTipIfNeeded('GROUP_RULE_CHECK');
     }
 }

@@ -48,6 +48,10 @@
         }
         .notification-message {
             padding: 10px;
+            line-height: 1.5;
+            i {
+              vertical-align: sub;
+            }
         }
 
         &.info {

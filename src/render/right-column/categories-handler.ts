@@ -15,14 +15,12 @@ export class CategoriesHandler extends SectionHandler {
     fileSorter: FileSorter;
     utils: Utils;
     notificationService: NotificationComponent;
-    // rulesHandler: RulesHandler;
 
     constructor(fileSorter: FileSorter, utils: Utils, notificationService: NotificationComponent) {
         super('div.categories', 'smart-hover.category-list', '.category-list-item');
         this.fileSorter = fileSorter;
         this.utils = utils;
         this.notificationService = notificationService;
-        // this.rulesHandler = new RulesHandler('.rules-view-container');
         this.extensionHandler = new ExtensionsHandler(fileSorter, utils, notificationService);
         this.inputRef = this.contentRef.querySelector('div.category-input');
 
@@ -52,14 +50,8 @@ export class CategoriesHandler extends SectionHandler {
                 this.hideTip();
                 this.select(item);
             }
-            let tip = this.utils.getData('category-order-tip');
-            if (items.length > 1 && !tip) {
-                this.notificationService.notify({
-                    message: 'Re-order your categories with drag and drop, when a file is sorted, categories are checked in order from top to bottom and the file its placed on the first available match',
-                    type: 'info',
-                    timer: 25000
-                });
-                this.utils.saveData('category-order-tip', true);
+            if (items.length > 1) {
+              this.notificationService.showTipIfNeeded('REORDER_CATEGORIES');
             }
         });
 

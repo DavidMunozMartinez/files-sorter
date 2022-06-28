@@ -38,14 +38,18 @@ function init() {
     // Avoid creating the tray for dev env because it causes problems when auto reloading,
     // Its not necessary for debbugging, hence not worth trying to fix.
     if (!isDevEnv) {
-        appTray = createTray();
+      appTray = createTray();
+      appTray.on('click', () => {
+        win.show();
+        win.focus();
+      });
     }
 }
 
 function createWindow(): BrowserWindow {
     // Create the browser window.
     win = new BrowserWindow({
-        width: 910,
+        width: 1010,
         height: 700,
         show: false,
         maximizable: false,
@@ -55,7 +59,7 @@ function createWindow(): BrowserWindow {
             nodeIntegration: true,
             enableRemoteModule: true
         },
-        skipTaskbar: !isDevEnv,
+        // skipTaskbar: !isDevEnv,
         icon: getIcon(512)
     });
     win.removeMenu();

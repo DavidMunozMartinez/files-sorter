@@ -117,14 +117,6 @@ export class FileSorter {
         });
     }
 
-    // readHistory() {
-    //     if (!fs.existsSync('./logs.txt')) {
-    //         return;
-    //     }
-
-    //     exec(this.utils.getOpenCommandLine() + ' ' + path.resolve('./logs.txt'));
-    // }
-
     /**
      * Executed when a new file is detected by a watcher, it makes sure to pick the right
      * plae for the new detected file and moves it to a constructed location based on the

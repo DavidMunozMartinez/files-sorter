@@ -4,6 +4,7 @@ import { NotificationComponent } from '../notification-component/notification-co
 import { CategoriesHandler } from '../right-column/categories-handler';
 import { SectionHandler } from '../sections-handler';
 import { Utils } from '../utils';
+import { Tips } from '../app-tips';
 
 export class FolderHandler extends SectionHandler {
 
@@ -47,6 +48,12 @@ export class FolderHandler extends SectionHandler {
             if (items.length === 1) {
                 this.hideTip();
                 this.select(item);
+                let tip = this.notificationService.showTipIfNeeded('AUTO_SORT_ON_OFF');
+                if (tip) {
+                  tip.onClose = () => {
+                    this.notificationService.showTipIfNeeded('MANUAL_SORT');
+                  }
+                }
             }
         });
     }
@@ -115,7 +122,7 @@ export class FolderHandler extends SectionHandler {
         const sortIcon = this.makeElement('i', {
             classList: ['material-icons', 'sort-icon'],
             attrs: ['title=Apply sort configuration'],
-            innerHTML: 'low_priority',
+            innerHTML: 'fact_check',
             click: (event: any)  => {
                 const sorting = event.target.classList.contains('sorting');
                 if (!sorting) {

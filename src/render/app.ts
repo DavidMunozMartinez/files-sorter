@@ -93,7 +93,7 @@ class App {
     const navBar = window.document.getElementsByClassName('nav-bar')[0];
     const themeToggle = navBar.getElementsByClassName('input-container theme-toggle')[0];
     const notificationsToggle = navBar.getElementsByClassName('input-container notifications-toggle')[0];
-    const logsToggle = navBar.getElementsByClassName('input-container logs-viewer')[0]
+    // const logsToggle = navBar.getElementsByClassName('input-container logs-viewer')[0]
     const notificationState = this.utils.getData('notifications');
     const notificationIcon = notificationsToggle.getElementsByTagName('i')[0];
     notificationIcon.innerHTML = notificationState ? 'notifications' : 'notifications_off';
@@ -119,9 +119,9 @@ class App {
       });
     });
 
-    logsToggle.addEventListener('click', () => {
-      this.utils.readLogs();
-    });
+    // logsToggle.addEventListener('click', () => {
+    //   this.utils.readLogs();
+    // });
   }
 }
 
