@@ -32,9 +32,9 @@ export class CategoriesHandler extends SectionHandler {
             const sortable = new Sortable(this.listRef, {
                 animation: 180,
                 draggable: '.category-list-item',
-                ghostClass: 'sortable-ghost',
                 onStart: (event: any) => {
-                  this.dragging = this.activeCategory;
+                    this.select(event.item);
+                    this.dragging = this.activeCategory;
                 },
                 onEnd: (event: any) => {
                   this.reorderCategories();
@@ -60,9 +60,9 @@ export class CategoriesHandler extends SectionHandler {
                 this.hideTip();
                 this.select(item);
             }
-            if (items.length > 1) {
-              this.notificationService.showTipIfNeeded('REORDER_CATEGORIES');
-            }
+            // if (items.length > 1) {
+
+            // }
         });
 
         // Executed when a list item is selected
@@ -172,20 +172,31 @@ export class CategoriesHandler extends SectionHandler {
      * @param event Native DOM event
      */
     private onEnter(event: any) {
-        if (!this.inputRef) {
+        if (!this.inputRef || !this.folder) {
             return;
         }
 
         const value = this.inputRef.innerText;
-        if (this.save(value)) {
-            const item = this.createListElement(value);
-            this.renderItem(item);
-            this.inputRef.innerText = '';
-            fs.mkdirSync(this.folder + '/' + value);
-            this.select(item);
-            this.reorderCategories();
-            item.scrollIntoView();
-        }
+        let destination = path.resolve(this.folder, value);
+        fs.mkdir(destination, (err) => {
+            if (err) {
+                this.notificationService.notify({
+                    message: 'Oops, something went wrong',
+                    type: 'error',
+                    timer: 0
+                });
+                return;
+            }
+            if (this.save(value) && this.inputRef) {
+                this.inputRef.innerText = '';
+                const item = this.createListElement(value);
+                this.renderItem(item);
+                this.select(item);
+                this.reorderCategories();
+                item.scrollIntoView();
+                this.notificationService.showTipIfNeeded('REORDER_CATEGORIES');
+            }
+        });
         event.preventDefault();
     }
 

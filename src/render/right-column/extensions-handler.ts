@@ -73,7 +73,6 @@ export class ExtensionsHandler extends SectionHandler {
                 this.hideOverlay();
             }
 
-            // let groupTip = this.utils.getData('group-tip');
             if (items.length > 2) {
               this.notificationService.showTipIfNeeded('GROUP_RULES')
             }

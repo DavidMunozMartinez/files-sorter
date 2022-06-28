@@ -4,7 +4,7 @@ import { NotificationComponent } from '../notification-component/notification-co
 import { CategoriesHandler } from '../right-column/categories-handler';
 import { SectionHandler } from '../sections-handler';
 import { Utils } from '../utils';
-import { Tips } from '../app-tips';
+import path from 'path'
 
 export class FolderHandler extends SectionHandler {
 
@@ -13,6 +13,7 @@ export class FolderHandler extends SectionHandler {
     notificationService: NotificationComponent;
     utils: Utils;
     listReady: boolean = false;
+    folders: {[key: string]: HTMLElement } = {};
 
     constructor (fileSorter: FileSorter, utils: Utils, notificationService: NotificationComponent) {
         super('.column.left-column', '.folder-list', '.folder-list-item');
@@ -24,16 +25,28 @@ export class FolderHandler extends SectionHandler {
         const addButtonRef = document.querySelector('div.folder-input');
         addButtonRef?.addEventListener('click', () =>  this.folderDialog());
 
-          this.contentRef.addEventListener('drop', (event) => {
-            let folder = this.categoriesHandler.folder + '/' + this.categoriesHandler.dragging;
-            if (!this.categoriesHandler.dragging) return;
-            const saved = this.save(folder);
-            if (this.listRef && saved) {
-                const listElement = this.createListElement(folder);
-                this.renderItem(listElement);
-                this.select(listElement);
+        this.contentRef.addEventListener('drop', () => {
+            if (this.categoriesHandler.folder  && this.categoriesHandler.dragging) {
+                let folder = path.resolve(this.categoriesHandler.folder, this.categoriesHandler.dragging);
+                if (!this.categoriesHandler.dragging) return;
+                const saved = this.save(folder);
+                if (this.listRef && saved) {
+                    const listElement = this.createListElement(folder);
+                    this.renderItem(listElement);
+                    this.select(listElement);
+                }
             }
-          });
+            this.contentRef.classList.remove('drag-hover');
+        });
+        
+        this.contentRef.addEventListener('dragover', (event) => {
+            this.contentRef.classList.add('drag-hover');
+            event.preventDefault();
+        });
+
+        this.contentRef.addEventListener('dragleave', (event) => {
+            this.contentRef.classList.remove('drag-hover');
+        });
 
 
         this.on('selected', (item: HTMLElement) => {
@@ -47,13 +60,25 @@ export class FolderHandler extends SectionHandler {
         this.on('removed', (item: HTMLElement, items: NodeList) => {
             const folder = item.querySelector('.value-holder');
             const value = folder?.innerHTML;
+            let index = 0;
+            Object.values(this.folders).forEach((element, i) => {
+                if (item === element) index = i;
+            });
             if (value) {
                 this.delete(value);
             }
             if (items.length === 0) {
                 this.showTip();
-                this.categoriesHandler.clearList();
                 this.categoriesHandler.disable()
+                this.categoriesHandler.clearList();
+            } else if (value) {
+                delete this.folders[value];
+                let items = Object.values(this.folders);
+                if (items[index]) {
+                    this.select(items[index]);
+                } else {
+                    this.select(items[index - 1]);
+                }
             }
         });
 
@@ -98,6 +123,7 @@ export class FolderHandler extends SectionHandler {
         const data: any = this.getFolders();
         if (data && data[folder]) {
             delete data[folder];
+            // delete this.folders[folder];
             localStorage.setItem('folders', JSON.stringify(data));
             this.fileSorter.updateFoldersData();
         }
@@ -119,6 +145,8 @@ export class FolderHandler extends SectionHandler {
             localStorage.setItem('folders', JSON.stringify(data));
             this.fileSorter.updateFoldersData();
             success = true;
+        } else if (this.folders[folder]) {
+            this.select(this.folders[folder]);
         }
         return success;
     }
@@ -136,7 +164,7 @@ export class FolderHandler extends SectionHandler {
         const sortIcon = this.makeElement('i', {
             classList: ['material-icons', 'sort-icon'],
             attrs: ['title=Apply sort configuration'],
-            innerHTML: 'fact_check',
+            innerHTML: 'task_alt',
             click: (event: any)  => {
                 const sorting = event.target.classList.contains('sorting');
                 if (!sorting) {
@@ -166,13 +194,13 @@ export class FolderHandler extends SectionHandler {
         const watchIcon = this.makeElement('i', {
             classList: ['material-icons', 'watch-icon', (active ? 'enabled' : 'disabled')],
             attrs: ['title=On/Off automatically sort new files'],
-            innerHTML: active ? 'visibility' : 'visibility_off',
+            innerHTML: active ? 'sync' : 'sync_disabled',
             click: (event: any) => {
                 data = this.getFolders();
-                active = event.target.innerHTML === 'visibility';
+                active = event.target.innerHTML === 'sync';
                 if (data[folder]) {
                     data[folder].active = !active;
-                    event.target.innerHTML = active ? 'visibility_off' : 'visibility';
+                    event.target.innerHTML = active ? 'sync_disabled' : 'sync';
                     event.target.classList.toggle('disabled');
                     localStorage.setItem('folders', JSON.stringify(data));
                     this.fileSorter.updateFoldersData();
@@ -188,6 +216,8 @@ export class FolderHandler extends SectionHandler {
                 this.utils.revealInExplorer(folder);
             }
         });
+
+        this.folders[folder] = listItem;
 
         return listItem;
     }

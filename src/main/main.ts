@@ -49,7 +49,7 @@ function init() {
 function createWindow(): BrowserWindow {
     // Create the browser window.
     win = new BrowserWindow({
-        width: 1010,
+        width: 1210,
         height: 700,
         show: false,
         maximizable: false,

@@ -131,7 +131,7 @@ export class SectionHandler {
         item.style.transition = 'all 200ms ease-out';
 
         if (opts.selectable) {
-            item.addEventListener('mousedown', (event) => {
+            item.addEventListener('click', (event) => {
                 if (event.ctrlKey && this.multiSelectable) {
                     this.multiSelect(item);
                 } else {
@@ -306,9 +306,4 @@ export class SectionHandler {
 
         return extensions;
     }
-
-    /**
-     * Returns all conditional data attached to the specified category item
-     */
-    getCategoryConditions() {}
 }

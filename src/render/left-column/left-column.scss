@@ -2,6 +2,7 @@
     box-sizing: border-box;
     margin-right: 15px;
     padding-left: 4px;
+    transition: all 120ms ease-in-out;
     .folder-list {
         box-sizing: border-box;
         width: 100%;
@@ -61,4 +62,10 @@
             border-radius: 10px;
         }
     }
+}
+
+.left-column.drag-hover {
+    outline: 2px dotted var(--text-color);
+    transform: scale(1.01);
+
 }

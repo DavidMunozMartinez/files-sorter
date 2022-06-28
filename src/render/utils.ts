@@ -92,6 +92,7 @@ export class Utils {
   async getDirectories(source: any): Promise<string[]> {
     return new Promise((resolve, reject) => {
       fs.readdir(source, { withFileTypes: true }, (err, dirents) => {
+        if (!dirents) { return resolve(dirents); }
         let result = dirents
           .filter(dirent => dirent.isDirectory() && dirent.name.indexOf('.app') !== dirent.name.length - '.app'.length)
           .map(dirent => dirent.name);
