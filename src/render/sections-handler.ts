@@ -143,7 +143,8 @@ export class SectionHandler {
         setTimeout(() => {
             item.style.transform = '';
             item.style.opacity = '1';
-        }, opts.delay)
+        }, opts.delay);
+
         this.listRef?.append(item);
 
         if (!opts.silent) {

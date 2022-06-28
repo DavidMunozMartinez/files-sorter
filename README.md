@@ -44,5 +44,5 @@ that has not been figured out yet.
 ```
 npm run package
 ```
-This will build the app natively for Windows or MacOS (It will build your current OS). The files will be in the release folder
+This will build the app natively for Windows or MacOS (It will build your current OS). The files will be in the release folder, the app is unsigned so if you try to run the packaged filed it will prompt warnings from both Windows and MacOS telling you that the app is from an Unknown publisher
 

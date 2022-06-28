@@ -12,6 +12,7 @@ export class FolderHandler extends SectionHandler {
     fileSorter: FileSorter;
     notificationService: NotificationComponent;
     utils: Utils;
+    listReady: boolean = false;
 
     constructor (fileSorter: FileSorter, utils: Utils, notificationService: NotificationComponent) {
         super('.column.left-column', '.folder-list', '.folder-list-item');
@@ -22,6 +23,18 @@ export class FolderHandler extends SectionHandler {
         this.utils = utils;
         const addButtonRef = document.querySelector('div.folder-input');
         addButtonRef?.addEventListener('click', () =>  this.folderDialog());
+
+          this.contentRef.addEventListener('drop', (event) => {
+            let folder = this.categoriesHandler.folder + '/' + this.categoriesHandler.dragging;
+            if (!this.categoriesHandler.dragging) return;
+            const saved = this.save(folder);
+            if (this.listRef && saved) {
+                const listElement = this.createListElement(folder);
+                this.renderItem(listElement);
+                this.select(listElement);
+            }
+          });
+
 
         this.on('selected', (item: HTMLElement) => {
             const element = item.querySelector('.value-holder');
@@ -45,9 +58,9 @@ export class FolderHandler extends SectionHandler {
         });
 
         this.on('added', (item: HTMLElement, items: NodeList) => {
-            if (items.length === 1) {
+          if (items.length === 1) {
+              this.select(item);
                 this.hideTip();
-                this.select(item);
                 let tip = this.notificationService.showTipIfNeeded('AUTO_SORT_ON_OFF');
                 if (tip) {
                   tip.onClose = () => {
@@ -73,6 +86,7 @@ export class FolderHandler extends SectionHandler {
         if (this.listRef && saved) {
             const listElement = this.createListElement(value);
             this.renderItem(listElement);
+            this.select(listElement);
         }
     }
 

@@ -8,6 +8,7 @@ export class ExtensionsHandler extends SectionHandler {
     inputRef: HTMLElement | null;
     conditionRef: HTMLElement | null;
     joinConditionsRef: HTMLElement | null;
+    rulesForRef: HTMLElement | null;
 
     folder: string | null = null;
     category: string | null = null;
@@ -29,8 +30,8 @@ export class ExtensionsHandler extends SectionHandler {
         this.fileSorter = fileSorter;
         this.utils = utils;
         this.notificationService = notificationService;
-
         this.inputRef = this.contentRef?.querySelector('div.extensions-input');
+        this.rulesForRef = document.getElementById('rulesFor');
         this.inputRef?.addEventListener('keydown', (event: any) => {
             if (event.which === 13) {
                 this.onEnter(event)
@@ -100,7 +101,7 @@ export class ExtensionsHandler extends SectionHandler {
         this.folder = folder;
         this.category = category;
         this.clearList();
-
+        if (this.rulesForRef) this.rulesForRef.innerText = ` "${category}" `;
         const extensions = this.getExtensions(this.folder, this.category);
 
         if (extensions.length > 0) {

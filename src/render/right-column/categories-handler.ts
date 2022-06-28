@@ -5,8 +5,10 @@ import { ExtensionsHandler } from './extensions-handler';
 import { Utils } from '../utils';
 import path from 'path';
 
-import Sortable from "sortablejs";
+import Sortable, { SortableEvent } from "sortablejs";
 import { NotificationComponent } from '../notification-component/notification-component';
+// import { fs } from 'original-fs';
+import fs from 'fs';
 
 export class CategoriesHandler extends SectionHandler {
     inputRef: HTMLElement | null;
@@ -15,6 +17,8 @@ export class CategoriesHandler extends SectionHandler {
     fileSorter: FileSorter;
     utils: Utils;
     notificationService: NotificationComponent;
+    dragging: string | null = null;
+    activeCategory: string | null = null;
 
     constructor(fileSorter: FileSorter, utils: Utils, notificationService: NotificationComponent) {
         super('div.categories', 'smart-hover.category-list', '.category-list-item');
@@ -29,8 +33,14 @@ export class CategoriesHandler extends SectionHandler {
                 animation: 180,
                 draggable: '.category-list-item',
                 ghostClass: 'sortable-ghost',
-                onEnd: () => {
-                    this.reorderCategories();
+                onStart: (event: any) => {
+                  this.dragging = this.activeCategory;
+                },
+                onEnd: (event: any) => {
+                  this.reorderCategories();
+                  setTimeout(() => {
+                    this.dragging = null;
+                  }, 200);
                 }
             });
         }
@@ -60,6 +70,7 @@ export class CategoriesHandler extends SectionHandler {
             const category = item.getAttribute('value');
             if (this.folder && category) {
                 this.extensionHandler.enable(this.folder, category);
+                this.activeCategory = category;
                 this.hideOverlay();
             }
         });
@@ -82,6 +93,7 @@ export class CategoriesHandler extends SectionHandler {
 
             if (category) {
                 this.delete(category);
+                this.notificationService.showTipIfNeeded('DELETE');
             }
         });
     }
@@ -94,36 +106,46 @@ export class CategoriesHandler extends SectionHandler {
         if (this.folder === folder) {
             return;
         }
-        this.hideOverlay();
 
-        this.folder = folder;
-        this.clearList();
-        const data = this.getFolders();
-        const order: string[] = data[this.folder].order;
+        this.utils.getDirectories(folder).then((categories: string[]) => {
+          this.hideOverlay();
+  
+          this.folder = folder;
+          this.clearList();
+          let data = this.getFolders();
+          categories.forEach((category: string) => {
+            if (this.folder && data[this.folder] && !data[this.folder].categories[category]) {
+              this.save(category);
+            }
+          });
+          // this.reorderCategories();
+          data = this.getFolders();
+          const order: string[] = data[this.folder].order;
 
-        const activeRef = this.contentRef.querySelector('.active-folder');
-        if (activeRef) {
-            activeRef.classList.remove('disabled');
-            activeRef.children[1].innerHTML = folder;
-        }
-
-        // If the category list is greater than 0 we render it and remove the section tip
-        if (order.length > 0) {
-            const items: HTMLElement[] = order.map((category) => {
-                return this.createListElement(category);
-            });
-
-            this.renderList(items);
-            this.hideTip();
-        }
-        // If not, the section is enabled but we show the tip
-        else {
-            this.inputRef?.focus();
-            this.showTip();
-            this.hideOverlay();
-            this.extensionHandler.clearList();
-            this.extensionHandler.disable();
-        }
+          const activeRef = this.contentRef.querySelector('.active-folder');
+          if (activeRef) {
+              activeRef.classList.remove('disabled');
+              activeRef.children[1].innerHTML = folder;
+          }
+  
+          // If the category list is greater than 0 we render it and remove the section tip
+          if (categories.length > 0) {
+              const items: HTMLElement[] = (order.length ? order: categories).map((category) => {
+                  return this.createListElement(category);
+              });
+  
+              this.renderList(items);
+              this.hideTip();
+          }
+          // If not, the section is enabled but we show the tip
+          else {
+              this.inputRef?.focus();
+              this.showTip();
+              this.hideOverlay();
+              this.extensionHandler.clearList();
+              this.extensionHandler.disable();
+          }
+        });
     }
 
     /**
@@ -159,6 +181,10 @@ export class CategoriesHandler extends SectionHandler {
             const item = this.createListElement(value);
             this.renderItem(item);
             this.inputRef.innerText = '';
+            fs.mkdirSync(this.folder + '/' + value);
+            this.select(item);
+            this.reorderCategories();
+            item.scrollIntoView();
         }
         event.preventDefault();
     }
@@ -178,7 +204,7 @@ export class CategoriesHandler extends SectionHandler {
 
         if (!categories[category]) {
             categories[category] = [];
-            folder.order.push(category);
+            // folder.order.push(category);
             localStorage.setItem('folders', JSON.stringify(folders));
             this.fileSorter.updateFoldersData();
             success = true;

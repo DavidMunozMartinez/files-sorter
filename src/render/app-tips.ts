@@ -5,5 +5,5 @@ export enum Tips {
   REORDER_CATEGORIES = 'Re-order your categories with drag and drop, when a file is sorted, categories are checked in order from top to bottom and the file its placed on the first available match',
   GROUP_RULES = 'You can group multiple conditions into one, select multiple with Ctrl + Click and use the group button that appears at the bottom',
   GROUP_RULE_CHECK = 'All conditions within a group need to pass for the entire group to pass when the rule check is performed',
-
+  DELETE = 'Removing anything from a list wont do anything to your files or folders, it will just delete the configuration for it'
 };

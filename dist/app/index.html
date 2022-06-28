@@ -35,7 +35,7 @@
                 </div> -->
             </smart-hover>
         </div>
-        <div class="column left-column">
+        <div class="column left-column" ondragover="event.preventDefault()">
             <div class="column-title">
                 <p>Automated folders <i class="material-icons">help_outline</i> </p>
             </div>
@@ -58,7 +58,7 @@
                 <div class="inactive-overlay">
                 </div>
                 <div class="column-title">
-                    <p>Categories/Subfolders <i class="material-icons">help_outline</i> </p>
+                    <p>Folders<i class="material-icons">help_outline</i> </p>
                 </div>
                 <div class="input-container">
                     <div class="category-input" contenteditable="true">
@@ -75,8 +75,7 @@
                 <smart-hover class="category-list" query-selector=".category-list-item" override-styles="true">
                 </smart-hover>
                 <span class="section-tip">
-                    Categories are subfolders that will hold your organized files. You can create
-                    as many categories as you want.
+                    These section shows directories within your automated folders so you can easily add as many rules as you want
                     <!-- <br>
                     <br>
                     Add new categories or add rules to your existing folders! -->
@@ -86,7 +85,7 @@
                 <div class="inactive-overlay">
                 </div>
                 <div class="column-title">
-                    <p>Rules <i class="material-icons">help_outline</i> </p>
+                    <p>Rules For <span id="rulesFor"></span><i class="material-icons">help_outline</i> </p>
                 </div>
 
                 <div class="input-container">
@@ -112,8 +111,8 @@
                     </div>
                 </div>
                 <span class="section-tip">
-                    Here you define file rules for this category.</br></br>
-                    Files names (including file extension) will be checked against each category rules in order
+                    Here you define file rules for this folder.</br></br>
+                    Files names (including file extension) will be checked against each rule
                 </span>
             </div>
         </div>
