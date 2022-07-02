@@ -2,13 +2,11 @@
 </div>
 <div class="column-title">
     <p>Rules For
-      <span inner-html-bind="category">
+      <span [bind]="inner-html: this.category">
           <!-- This is dynamic -->
       </span>
       <i class="material-icons">help_outline</i>
     </p>
-
-    <p bind="test"></p>
 </div>
 
 <div class="input-container">
