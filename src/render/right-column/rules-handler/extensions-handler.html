@@ -1,0 +1,40 @@
+<div class="inactive-overlay">
+</div>
+<div class="column-title">
+    <p>Rules For
+      <span inner-html-bind="category">
+          <!-- This is dynamic -->
+      </span>
+      <i class="material-icons">help_outline</i>
+    </p>
+
+    <p bind="test"></p>
+</div>
+
+<div class="input-container">
+    <div class="dropdown dropdown-condition" tabindex="0">
+        <span class="value">
+            condition
+        </span>
+        <smart-hover class="options">
+            <span value="starts_with">Starts with</span>
+            <span value="contains">Contains</span>
+            <span value="ends_with">Ends with</span>
+        </smart-hover>
+        <i class="material-icons">keyboard_arrow_down</i>
+    </div>
+
+    <div class="extensions-input" contenteditable="true"></div>
+</div>
+
+<div class="extension-list">
+     <!--Rules will be rendered here  -->
+    <div class="input-container join-conditions" title="Combines multiple conditions into one">
+        <div class="join-conditions-input"></div>
+        <i class="material-icons">join_full</i>
+    </div>
+</div>
+<span class="section-tip">
+    Here you define file rules for this folder.</br></br>
+    Files names (including file extension) will be checked against each rule
+</span>

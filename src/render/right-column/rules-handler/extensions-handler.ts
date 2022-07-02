@@ -1,8 +1,18 @@
-import { FileSorter } from "../file-sorter";
-import { NotificationComponent } from "../notification-component/notification-component";
-import { SectionHandler } from "../sections-handler";
-import { Utils } from "../utils";
-// import { AddRulesView } from './add-rules-modal/add-rules.component';
+import { FileSorter } from "../../file-sorter";
+import { NotificationComponent } from "../../notification-component/notification-component";
+import { SectionHandler } from "../../sections-handler";
+import { Utils } from "../../utils";
+import { Renderer } from '../../app-renderer';
+
+const renderer = new Renderer({
+  id: 'extensions-handler',
+  template: require('./extensions-handler.html'),
+  innerHTMLBinds: { 
+    category: ''
+  }
+});
+
+const innerHTMLBinds = renderer.innerHTMLBinds;
 
 export class ExtensionsHandler extends SectionHandler {
     inputRef: HTMLElement | null;
@@ -100,7 +110,9 @@ export class ExtensionsHandler extends SectionHandler {
         this.folder = folder;
         this.category = category;
         this.clearList();
-        if (this.rulesForRef) this.rulesForRef.innerText = ` "${category}" `;
+
+        innerHTMLBinds.category = category;
+
         const extensions = this.getExtensions(this.folder, this.category);
 
         if (extensions.length > 0) {

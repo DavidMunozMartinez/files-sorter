@@ -1,10 +1,16 @@
 import { remote } from 'electron';
 import { FileSorter, IMovedFileData } from '../file-sorter';
 import { NotificationComponent } from '../notification-component/notification-component';
-import { CategoriesHandler } from '../right-column/categories-handler';
+import { CategoriesHandler } from '../right-column/categories-handler/categories-handler';
 import { SectionHandler } from '../sections-handler';
 import { Utils } from '../utils';
-import path from 'path'
+import path from 'path';
+import { Renderer } from '../app-renderer';
+
+const renderer: Renderer = new Renderer({
+  id: 'folder-handler',
+  template: require('./folder-handler.html')
+});
 
 export class FolderHandler extends SectionHandler {
 
@@ -16,7 +22,7 @@ export class FolderHandler extends SectionHandler {
     folders: {[key: string]: HTMLElement } = {};
 
     constructor (fileSorter: FileSorter, utils: Utils, notificationService: NotificationComponent) {
-        super('.column.left-column', '.folder-list', '.folder-list-item');
+       super('.column.left-column', '.folder-list', '.folder-list-item');
         // Handles all logic related to the categories section
         this.categoriesHandler = new CategoriesHandler(fileSorter, utils, notificationService);
         this.fileSorter = fileSorter;

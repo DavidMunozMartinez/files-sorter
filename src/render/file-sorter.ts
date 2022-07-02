@@ -278,12 +278,4 @@ export class FileSorter {
         let value = JSON.stringify(data);
         fs.appendFileSync('./logs.txt', new Date().toLocaleString() + ': ' + value + '\n');
     }
-
-    // private getOpenCommandLine() {
-    //     switch (process.platform) { 
-    //        case 'darwin' : return 'open';
-    //        case 'win32' : return 'start';
-    //        default : return 'xdg-open';
-    //     }
-    //  }
 }

@@ -80,7 +80,7 @@ const electronReder = {
         ]
     },
     resolve: {
-        extensions: ['.ts', '.js', '.scss', 'css']
+        extensions: ['.ts', '.js', '.scss', '.css', '.html']
     },
     output: {
         path: __dirname + '/dist/app',

@@ -1,14 +1,22 @@
-import { FileSorter } from '../file-sorter';
-import { SectionHandler } from '../sections-handler';
-// import { RulesHandler } from './rules-handler';
-import { ExtensionsHandler } from './extensions-handler';
-import { Utils } from '../utils';
+import { FileSorter } from '../../file-sorter';
+import { SectionHandler } from '../../sections-handler';
+import { ExtensionsHandler } from './../rules-handler/extensions-handler';
+import { Utils } from '../../utils';
 import path from 'path';
-
-import Sortable, { SortableEvent } from "sortablejs";
-import { NotificationComponent } from '../notification-component/notification-component';
-// import { fs } from 'original-fs';
+import Sortable from "sortablejs";
+import { NotificationComponent } from '../../notification-component/notification-component';
 import fs from 'fs';
+import { Renderer } from '../../app-renderer';
+
+const renderer: Renderer = new Renderer({
+  id: 'categories-handler',
+  template: require('./categories-handler.html'),
+  innerHTMLBinds: {
+    activeFolder: '',
+  }
+});
+
+const innerHTMLBinds = renderer.innerHTMLBinds;
 
 export class CategoriesHandler extends SectionHandler {
     inputRef: HTMLElement | null;
@@ -60,9 +68,6 @@ export class CategoriesHandler extends SectionHandler {
                 this.hideTip();
                 this.select(item);
             }
-            // if (items.length > 1) {
-
-            // }
         });
 
         // Executed when a list item is selected
@@ -122,10 +127,10 @@ export class CategoriesHandler extends SectionHandler {
           data = this.getFolders();
           const order: string[] = data[this.folder].order;
 
+          innerHTMLBinds.activeFolder = folder;
           const activeRef = this.contentRef.querySelector('.active-folder');
           if (activeRef) {
               activeRef.classList.remove('disabled');
-              activeRef.children[1].innerHTML = folder;
           }
   
           // If the category list is greater than 0 we render it and remove the section tip

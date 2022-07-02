@@ -9,13 +9,9 @@
 </head>
 
 <body>
-    <!-- Titlebar is prepended here on windows-->
     <div class="main-content">
         <div class="nav-bar">
             <smart-hover override-styles="true">
-                <!-- <div class="input-container static">
-                    <i class="material-icons">settings</i>
-                </div> -->
                 <div class="input-container theme-toggle">
                     <i class="material-icons">dark_mode</i>
                     <span>Theme</span>
@@ -24,108 +20,19 @@
                     <i class="material-icons">notifications_off</i>
                     <span>Notifications</span>
                 </div>
-
-                <!-- <div class="input-container logs-viewer bottom">
-                    <i class="material-icons">description</i>
-                    <span>Logs</span>
-                </div> -->
-                <!-- <div class="input-container update-button">
-                    <i class="material-icons">update</i>
-                    <span>Update</span>
-                </div> -->
             </smart-hover>
         </div>
-        <div class="column left-column">
-            <div class="column-title">
-                <p>Automated folders <i class="material-icons">help_outline</i> </p>
-            </div>
 
-            <div class="input-container">
-                <div class="folder-input"></div>
-                <i class="material-icons">create_new_folder</i>
-            </div>
-            <smart-hover class="folder-list" query-selector=".folder-list-item" override-styles="true">
-            </smart-hover>
-            <span class="section-tip">
-                Click the icon <i class="material-icons"
-                    style="font-size: 24px; vertical-align: middle; margin: 5px;">create_new_folder</i> to select a
-                folder and start organizing!</br></br>
-                </br></br>
-            </span>
-        </div>
+        <div class="column left-column" id="folder-handler"></div>
+
         <div class="column right-column">
-            <div class="categories">
-                <div class="inactive-overlay">
-                </div>
-                <div class="column-title">
-                    <p>Folders<i class="material-icons">help_outline</i> </p>
-                </div>
-                <div class="input-container">
-                    <div class="category-input" contenteditable="true">
-                    </div>
-                    <i class="material-icons">add</i>
-                </div>
-
-                <div class="active-folder disabled">
-                    <i class="material-icons" style="font-size: 24px; vertical-align: middle; margin: 5px;">folder</i>
-                    <div class="active-folder-value">
-                    </div>
-                    <!-- Active folder string will be rendered here -->
-                </div>
-                <smart-hover class="category-list" query-selector=".category-list-item" override-styles="true">
-                </smart-hover>
-                <span class="section-tip">
-                    These section shows directories within your automated folders so you can easily add as many rules as you want
-                    <!-- <br>
-                    <br>
-                    Add new categories or add rules to your existing folders! -->
-                </span>
-            </div>
-            <div class="extensions">
-                <div class="inactive-overlay">
-                </div>
-                <div class="column-title">
-                    <p>Rules For <span id="rulesFor"></span><i class="material-icons">help_outline</i> </p>
-                </div>
-
-                <div class="input-container">
-                    <div class="dropdown dropdown-condition" tabindex="0">
-                        <span class="value">
-                            condition
-                        </span>
-                        <smart-hover class="options">
-                            <span value="starts_with">Starts with</span>
-                            <span value="contains">Contains</span>
-                            <span value="ends_with">Ends with</span>
-                        </smart-hover>
-                        <i class="material-icons">keyboard_arrow_down</i>
-                    </div>
-
-                    <div class="extensions-input" contenteditable="true"></div>
-                </div>
-
-                <div class="extension-list">    
-                    <div class="input-container join-conditions" title="Combines multiple conditions into one">
-                        <div class="join-conditions-input"></div>
-                        <i class="material-icons">join_full</i>
-                    </div>
-                </div>
-                <span class="section-tip">
-                    Here you define file rules for this folder.</br></br>
-                    Files names (including file extension) will be checked against each rule
-                </span>
-            </div>
+            <div class="categories" id="categories-handler"></div>
+            <div class="extensions" id="extensions-handler"></div>
         </div>
     </div>
 
-    <!-- <div class="rules-view-container hidden">
-        <div class="rules-list-container">
-
-        </div>
-    </div> -->
-
     <div class="footer">Thanks for using the app <3 </div>
-            <script src="app.js"></script>
+    <script src="app.js"></script>
 </body>
 
 </html>
