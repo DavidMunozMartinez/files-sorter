@@ -50,6 +50,9 @@ export class ExtensionsHandler extends SectionHandler {
       }
     });
 
+    const helpRef = document.getElementById('rules-help');
+    helpRef?.addEventListener('click', () => this.notificationService.showConsecutiveTips(['GROUP_RULES', 'GROUP_RULE_CHECK']));
+
     this.inputRef?.addEventListener("blur", (event: any) => {
       event.target.innerText = "";
     });

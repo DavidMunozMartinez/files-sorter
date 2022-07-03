@@ -6,7 +6,6 @@ import { SectionHandler } from "../sections-handler";
 import { Utils } from "../utils";
 import path from "path";
 import { Renderer } from "../app-renderer";
-import { Tips } from "../app-tips";
 
 const renderer: Renderer = new Renderer({
   id: "folder-handler",
@@ -40,7 +39,7 @@ export class FolderHandler extends SectionHandler {
     const addButtonRef = document.querySelector("div.folder-input");
     const helpButtonRef = document.getElementById('folder-help');
     addButtonRef?.addEventListener("click", () => this.folderDialog());
-    helpButtonRef?.addEventListener("click", () => this.showFolderTips())
+    helpButtonRef?.addEventListener("click", () => this.notificationService.showConsecutiveTips(['AUTO_SORT_ON_OFF', 'MANUAL_SORT']))
 
     this.contentRef.addEventListener("drop", () => {
       if (this.categoriesHandler.folder && this.categoriesHandler.dragging) {
@@ -168,24 +167,6 @@ export class FolderHandler extends SectionHandler {
       this.select(this.folders[folder]);
     }
     return success;
-  }
-
-  private showFolderTips() {
-    let folderTips: Array<keyof typeof Tips> = ['AUTO_SORT_ON_OFF', 'MANUAL_SORT'];
-    let tip = folderTips.pop();
-    if (tip) {
-      let notification = this.notificationService.showTip(tip);
-      if (notification) {
-        notification.onClose = () => {
-          tip = folderTips.pop();
-          if (tip) this.notificationService.showTip(tip);
-        };
-      }
-    }
-
-    // while (tip) {
-    // }
-    // let folderTips: <T extendskeyof typeof Tips> = [AUTO_SORT_ON_OFF]
   }
 
   /**

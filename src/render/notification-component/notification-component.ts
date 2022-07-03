@@ -88,10 +88,19 @@ export class NotificationComponent {
     }
 
     showConsecutiveTips(tips: Array<keyof typeof Tips>) {
-
+      let current = 0;
+      let show = (i: number) => {
+        let notification = this.showTip(tips[i]);
+        if (tips[i + 1]) notification.onClose = close;
+      };
+      let close = () => {
+        current++;
+        if (tips[current]) show(current);
+      }
+      show(current);
     }
 
-    showTip(tipKey: keyof typeof Tips): AppNotification | null {
+    showTip(tipKey: keyof typeof Tips): AppNotification {
       return this.notify({
         message: Tips[tipKey],
         type: 'info',
