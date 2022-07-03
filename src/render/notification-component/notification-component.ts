@@ -87,15 +87,23 @@ export class NotificationComponent {
         }
     }
 
+    showConsecutiveTips(tips: Array<keyof typeof Tips>) {
+
+    }
+
+    showTip(tipKey: keyof typeof Tips): AppNotification | null {
+      return this.notify({
+        message: Tips[tipKey],
+        type: 'info',
+        timer: 20000
+      });
+    }
+
     showTipIfNeeded(tipKey: keyof typeof Tips): AppNotification | null {
       let userHasSeenTip = this.utils.getData(tipKey);
       let result = null;
       if (!userHasSeenTip) {
-        result = this.notify({
-          message: Tips[tipKey],
-          type: 'info',
-          timer: 20000
-        });
+        result = this.showTip(tipKey);
         this.utils.saveData(tipKey, true);
       }
       return result;

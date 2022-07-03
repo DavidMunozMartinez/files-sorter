@@ -136,7 +136,8 @@ export class SectionHandler {
 
     if (opts.selectable) {
       item.addEventListener("click", (event) => {
-        if (event.ctrlKey && this.multiSelectable) {
+        let controlKey = (event.ctrlKey || event.altKey || event.metaKey);      
+        if (controlKey && this.multiSelectable) {
           this.multiSelect(item);
         } else {
           this.select(item);

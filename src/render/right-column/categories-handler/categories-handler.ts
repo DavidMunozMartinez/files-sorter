@@ -7,6 +7,7 @@ import Sortable from "sortablejs";
 import { NotificationComponent } from "../../notification-component/notification-component";
 import fs from "fs";
 import { Renderer } from "../../app-renderer";
+import { Tips } from "../../app-tips";
 
 const renderer: Renderer = new Renderer({
   id: "categories-handler",
@@ -41,6 +42,8 @@ export class CategoriesHandler extends SectionHandler {
       notificationService
     );
     this.inputRef = this.contentRef.querySelector("div.category-input");
+    const helpRef = document.getElementById('categories-help');
+    helpRef?.addEventListener('click', () => this.showTips());
 
     if (this.listRef) {
       const sortable = new Sortable(this.listRef, {
@@ -318,5 +321,20 @@ export class CategoriesHandler extends SectionHandler {
     data[this.folder].order = order;
     localStorage.setItem("folders", JSON.stringify(data));
     this.fileSorter.updateFoldersData();
+  }
+
+  private showTips() {
+    let tips: Array<keyof typeof Tips> = ['REORDER_CATEGORIES', 'DELETE'];
+    let next = tips.pop();
+
+    if (next) {
+      let notification = this.notificationService.showTip(next);
+      if (notification) {
+        notification.onClose = () => {
+          next = tips.pop();
+          if (next) this.notificationService.showTip(next);
+        }
+      }
+    }
   }
 }
