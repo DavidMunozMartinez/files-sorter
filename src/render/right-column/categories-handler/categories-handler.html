@@ -11,14 +11,14 @@
 
 <div class="active-folder">
     <i class="material-icons" style="font-size: 24px; vertical-align: middle; margin: 5px;">folder</i>
-    <div class="active-folder-value" [bind]="inner-html:this.activeFolder">
+    <div class="active-folder-value" :bind="inner-html:this.activeFolder">
       <!-- Active folder string will be rendered here -->
     </div>
   </div>
 <smart-hover class="category-list" query-selector=".category-list-item" override-styles="true">
 </smart-hover>
 <span class="section-tip">
-    These section shows directories within your automated folders so you can easily add as many rules as you want
+  These section shows directories within your automated folders, you can add as many rules as you want to these folders
     <!-- <br>
     <br>
     Add new categories or add rules to your existing folders! -->

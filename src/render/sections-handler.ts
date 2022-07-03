@@ -88,19 +88,24 @@ export class SectionHandler {
    * @param selectIndex Optional index number to select an item once the list is rendered
    */
   renderList(items: HTMLElement[], selectIndex?: number) {
-    const animation = 120;
-    items.forEach((item, index) => {
-      const delay = animation * index - index * 100;
-      this.renderItem(item, {
-        delay,
+    return new Promise((resolve, reject) => {
+      const animation = 120;
+      const renderTime = animation * items.length;
+      items.forEach((item, index) => {
+        const delay = animation * index - index * 100;
+        this.renderItem(item, {
+          delay,
+        });
       });
-    });
+  
+      if (selectIndex) {
+        setTimeout(() => {
+          this.select(items[selectIndex]);
+        }, animation * items.length);
+      }
 
-    if (selectIndex) {
-      setTimeout(() => {
-        this.select(items[selectIndex]);
-      }, animation * items.length);
-    }
+      setTimeout(() => resolve(true), renderTime);
+    });
   }
 
   /**

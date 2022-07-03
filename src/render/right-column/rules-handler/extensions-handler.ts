@@ -7,7 +7,7 @@ import { Renderer } from "../../app-renderer";
 const renderer = new Renderer({
   id: "extensions-handler",
   template: require("./extensions-handler.html"),
-  binds: {
+  bind: {
     category: null,
   },
 });
@@ -51,7 +51,7 @@ export class ExtensionsHandler extends SectionHandler {
     });
 
     const helpRef = document.getElementById('rules-help');
-    helpRef?.addEventListener('click', () => this.notificationService.showConsecutiveTips(['GROUP_RULES', 'GROUP_RULE_CHECK']));
+    helpRef?.addEventListener('click', () => this.notificationService.showConsecutiveTips(['RULES_TIP', 'GROUP_RULES', 'GROUP_RULE_CHECK']));
 
     this.inputRef?.addEventListener("blur", (event: any) => {
       event.target.innerText = "";
@@ -118,7 +118,7 @@ export class ExtensionsHandler extends SectionHandler {
     this.category = category;
     this.clearList();
 
-    renderer.binds.category = `"${category}"`;
+    renderer.bind.category = `"${category}"`;
 
     const extensions = this.getExtensions(this.folder, this.category);
 

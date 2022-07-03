@@ -11,8 +11,8 @@ import { Renderer } from "../../app-renderer";
 const renderer: Renderer = new Renderer({
   id: "categories-handler",
   template: require("./categories-handler.html"),
-  binds: {
-    activeFolder: null,
+  bind: {
+    activeFolder: null
   },
 });
 
@@ -42,7 +42,7 @@ export class CategoriesHandler extends SectionHandler {
     );
     this.inputRef = this.contentRef.querySelector("div.category-input");
     const helpRef = document.getElementById('categories-help');
-    helpRef?.addEventListener('click', () => this.notificationService.showConsecutiveTips(['REORDER_CATEGORIES', 'DELETE']));
+    helpRef?.addEventListener('click', () => this.notificationService.showConsecutiveTips(['CATEGORIES_TIP', 'REORDER_CATEGORIES', 'DELETE']));
 
     if (this.listRef) {
       const sortable = new Sortable(this.listRef, {
@@ -137,7 +137,7 @@ export class CategoriesHandler extends SectionHandler {
       });
       data = this.getFolders();
       const order: string[] = data[this.folder].order;
-      renderer.binds.activeFolder = folder;
+      renderer.bind.activeFolder = folder;
       const activeRef = this.contentRef.querySelector(".active-folder");
       if (activeRef) {
         activeRef.classList.remove("disabled");

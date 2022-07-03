@@ -39,7 +39,7 @@ export class FolderHandler extends SectionHandler {
     const addButtonRef = document.querySelector("div.folder-input");
     const helpButtonRef = document.getElementById('folder-help');
     addButtonRef?.addEventListener("click", () => this.folderDialog());
-    helpButtonRef?.addEventListener("click", () => this.notificationService.showConsecutiveTips(['AUTO_SORT_ON_OFF', 'MANUAL_SORT']))
+    helpButtonRef?.addEventListener("click", () => this.notificationService.showConsecutiveTips(['FOLDERS_TIP', 'AUTO_SORT_ON_OFF', 'MANUAL_SORT']))
 
     this.contentRef.addEventListener("drop", () => {
       if (this.categoriesHandler.folder && this.categoriesHandler.dragging) {
