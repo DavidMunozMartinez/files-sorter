@@ -1,6 +1,6 @@
 {
     "name": "file-sorter",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "Automatic file sorter",
     "main": "dist/main.js",
     "build": {
