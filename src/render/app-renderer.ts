@@ -50,8 +50,8 @@ export class Renderer {
   id: string;
   template: string;
   bind: any = {};
+  container: HTMLElement | null;
 
-  private container: HTMLElement | null;
   private rendererBinds: any = {};
 
   constructor(data: IRenderer) {
@@ -146,6 +146,7 @@ export class Renderer {
         );
       }
 
+      let type = pair[0];
       let expression = pair[1];
       if (pair.length > 2) {
         pair.shift();
@@ -153,7 +154,7 @@ export class Renderer {
       }
 
       templateBinds.push({
-        type: <BindTypes>pair[0],
+        type: <BindTypes>type,
         element: <HTMLElement>node,
         expression: expression,
         result: this.evaluateDOMExpression(expression),

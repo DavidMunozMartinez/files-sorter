@@ -1,0 +1,10 @@
+<smart-hover override-styles="true">
+    <div class="input-container theme-toggle">
+        <i class="material-icons" :bind="inner-text: this.theme + '_mode' ">dark_mode</i>
+        <span>Theme</span>
+    </div>
+    <div class="input-container notifications-toggle">
+        <i class="material-icons" :bind="inner-text: 'notifications' + (this.notification ? '' : '_off')">notifications_off</i>
+        <span>Notifications</span>
+    </div>
+</smart-hover>

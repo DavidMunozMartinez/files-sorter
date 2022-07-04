@@ -1,15 +1,15 @@
 import { remote } from "electron";
-import { FileSorter, IMovedFileData } from "../file-sorter";
-import { NotificationComponent } from "../notification-component/notification-component";
-import { CategoriesHandler } from "../right-column/categories-handler/categories-handler";
-import { SectionHandler } from "../sections-handler";
-import { Utils } from "../utils";
+import { FileSorter, IMovedFileData } from "../../file-sorter";
+import { NotificationComponent } from "../../notification-component/notification-component";
+import { CategoriesHandler } from "../../right-column/categories-handler/categories-handler";
+import { SectionHandler } from "../../sections-handler";
+import { Utils } from "../../utils";
 import path from "path";
-import { Renderer } from "../app-renderer";
+import { Renderer } from "../../app-renderer";
 
 const renderer: Renderer = new Renderer({
   id: "folder-handler",
-  template: require("./folder-handler.html"),
+  template: require("./folder-handler.html")
 });
 
 export class FolderHandler extends SectionHandler {
@@ -72,6 +72,7 @@ export class FolderHandler extends SectionHandler {
       const folder = element?.innerHTML;
       if (folder) {
         this.categoriesHandler.enable(folder);
+
       }
     });
 
