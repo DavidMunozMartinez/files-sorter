@@ -1,37 +1,49 @@
 /**
- * This is my attempt at creating a simple enough HTML render engine similar to what ALL popular front end frameworks/libriarires offer, AKA data binding
- * to templates, but withouth the extra fancy features, this is targeted to smaller "simpler" projects that only want to bind data to the HTML with as
- * minimum configuration or setup as possible
+ * This is my attempt at creating a simple enough HTML render engine similar to what ALL popular front-end frameworks/libraries already do perfectly, AKA data binding
+ * except "cheaper" and without the extra fancy features, this is targeted to smaller "simpler" projects that only want to bind data to the HTML with as
+ * minimum configuration or setup as possible, the end goal here is to have minimum extra knowledge outside HTML and JavaScript and be able to empower your templates
+ * HOPEFULLY once the actual project where this file is being used is done, I can move forward on this. for now its current state is enough for the project needs
  */
 
-const BindValues = ['inner-html', 'class', 'style', 'attr', 'if'] as const;
-type ArrayAsTypes <T extends ReadonlyArray <unknown>> = T extends ReadonlyArray<infer ArrayAsTypes> ? ArrayAsTypes : never
-type BindTypes = ArrayAsTypes<typeof BindValues>
+// To add more binding types/logic first add them to this array then, for behavior add its function to the BindHandlers Object
+const BindValues = [
+  "inner-html",
+  "inner-text",
+  "class",
+  "style",
+  "attr",
+  "if",
+] as const;
+type ArrayAsTypes<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<
+  infer ArrayAsTypes
+>
+  ? ArrayAsTypes
+  : never;
+type BindTypes = ArrayAsTypes<typeof BindValues>;
 
-const bindHandlers: any = {
-  "inner-html": (bind: any) => {
-    if (bind.element) {
-      bind.element.innerHTML = String(bind.result);
-    }
+/**
+ * These functions are the core functionality of this library, each bind type ends up executing one of these functions which
+ * each manipulates a referenced HTMLElement or DOM in a very specific way that should react to the data changes
+ */
+const bindHandlers: BindHandlers = {
+  "inner-html": (bind: ITemplateBind) => {
+    bind.element.innerHTML = String(bind.result);
   },
-  class: (bind: any) => {
-    if (bind.element) {
-      let className = String(bind.result);
-      bind.element.className = className;
-    }
+  "inner-text": (bind: ITemplateBind) => {
+    bind.element.innerText = String(bind.result);
   },
-  style: (bind: any) => {
-    if (bind.element) {
-      bind.element.setAttribute("style", String(bind.result))
-    }
+  class: (bind: ITemplateBind) => {
+    throw new Error("class binding not implemented yet.");
   },
-  attr: (bind: any) => { throw new Error("attr binding not implemented yet.") },
-  if: (bind: any) => {
-    if (bind.element) {
-      bind.element.style.opacity = bind.result ? 1 : 0;
-      console.log(bind);
-    }
-  }
+  style: (bind: ITemplateBind) => {
+    throw new Error("style binding not implemented yet.");
+  },
+  attr: (bind: ITemplateBind) => {
+    throw new Error("attr binding not implemented yet.");
+  },
+  if: (bind: ITemplateBind) => {
+    throw new Error("if binding not implemented yet.");
+  },
 };
 
 export class Renderer {
@@ -40,7 +52,7 @@ export class Renderer {
   bind: any = {};
 
   private container: HTMLElement | null;
-  private bindsData: any = {};
+  private rendererBinds: any = {};
 
   constructor(data: IRenderer) {
     this.id = data.id;
@@ -55,7 +67,7 @@ export class Renderer {
       try {
         if (this.validateBindProps(data.bind)) {
           this.bind = new Proxy(data.bind, { set: this.update.bind(this) });
-          this.mapBinds();
+          this.defineBinds();
         } else {
           let err = new Error(
             "Cannot bind Objects, Arrays or Functions to the Renderer... Yet"
@@ -69,8 +81,8 @@ export class Renderer {
   }
 
   /**
-   * Executed each time one of the binded properties is updates by the use or JS Proxy API
-   * this is a intermetiate process between the setters and getters of the binds property sent
+   * Executed each time one of the bind properties is updated by the use or JS Proxy API
+   * this is a intermediate process between the setters and getters of the bind properties sent
    * trough the Renderer class
    * @param target
    * @param key
@@ -79,89 +91,95 @@ export class Renderer {
   update(target: any, key: string | symbol, value: any): boolean {
     key = String(key);
     target[key] = value;
-
-    if (this.bindsData[key] && this.container) {
-      // Update all DOM connections to this data
-      this.bindsData[key].forEach((bindData: any) => {
-        // We re-evaluate the expression after we updated the target
-        bindData.result = this.evaluateDOMExpression(bindData.expression);
-        bindHandlers[bindData.type](bindData);
-      });
+    if (this.rendererBinds[key] && this.container) {
+      let rendererBind = this.rendererBinds[key];
+      if (rendererBind.affects) {
+        // Update all DOM connections to this data
+        rendererBind.affects.forEach((templateBind: ITemplateBind) => {
+          // Re-evaluate DOM expression 
+          templateBind.result = this.evaluateDOMExpression(templateBind.expression);
+          // Execute bind handler
+          bindHandlers[templateBind.type](templateBind);
+        });
+      }
     }
-
     return true;
   }
 
   updateBinds() {
-    this.mapBinds();
+    this.defineBinds();
   }
 
   /**
-   * Exact same document.createElement function, except it checks again for bindings to keep them updates
-   * this function should be used if you inted to add a new element with a property binded to it
+   * Exact same document.createElement function, except it re-defined bindings to keep them updated
+   * this function should be used if you intend to add a new element with a property binded to it
    */
   createElement(...args: any) {
     try {
       let element = document.createElement.apply(null, args);
-      this.mapBinds();
+      this.defineBinds();
       return element;
-    } catch (e) { console.error(e) };
+    } catch (e) {
+      console.error(e);
+    }
   }
-
 
   /**
    * This is a somewhat expensive function in an attempt to keep the data/DOM updates as quick as possible,
    * we iterate over all found bindings and create a helper object with enough references to perform quick
    * updates whenever a binded property is updated
+   * TODO: Make is so it only checks the new element for bind data connections instead of re-mapping everything
    */
-  private mapBinds() {
-    let binds = Object.keys(this.bind);
-    let DOMBinds: any = {};
-    let rendererBinds: any = {};
+  private defineBinds() {
+    let bindsPropertyKeys = Object.keys(this.bind);
+    let templateBindNodes = this.container?.querySelectorAll("[\\:bind]") || [];
 
-    this.container?.querySelectorAll("[\\:bind]").forEach(DOMBind => {
-      let pair = (DOMBind.getAttribute(":bind") || "").split(":") || [];
+    let templateBinds: ITemplateBind[] = [];
+    let rendererBinds: IRendererBindMaps = {};
+
+    templateBindNodes.forEach((node: Element) => {
+      let pair = (node.getAttribute(":bind") || "").split(":") || [];
+
       if (!this.isBindingType(<BindTypes>pair[0])) {
-        throw new Error(`Invalid bind type "${pair[0]}", valid bind types are: ${BindValues}.`);
+        throw new Error(
+          `Invalid bind type "${pair[0]}", valid bind types are: ${BindValues}.`
+        );
       }
-      let type: BindTypes = <BindTypes>pair[0];
+
       let expression = pair[1];
-      // let expression = pair[1];
       if (pair.length > 2) {
         pair.shift();
-        expression = pair.reduce((prev, current) => prev += ':' + current);
-      }
-      let element = DOMBind;
-      let id = this.uid();
-      DOMBinds[id] = {
-        type: type,
-        expression: expression,
-        element: element,
-        result: this.evaluateDOMExpression(expression)
+        expression = pair.reduce((prev: string, current: string) => (prev += ":" + current));
       }
 
-      // Once we gathered the expression we remove the attribute to keep the DOM clean
-      // DOMBind.removeAttribute(':bind');
+      templateBinds.push({
+        type: <BindTypes>pair[0],
+        element: <HTMLElement>node,
+        expression: expression,
+        result: this.evaluateDOMExpression(expression),
+        isAffectedBy: []
+      });
     });
-    
-    binds.forEach((bindKey) => {
-      let DOMBindsArray = Object.values(DOMBinds);
-      let uses: any = [];
-      DOMBindsArray.forEach((DOMBind: any) => {
-        if (DOMBind.expression.indexOf(bindKey)) {
-          // This expression in DOM uses this data bind
-          uses.push(DOMBind);
+
+    bindsPropertyKeys.forEach((propKey) => {
+      let templateBindKeys = Object.keys(templateBinds);
+      let affects: any = [];
+
+      templateBindKeys.forEach((key: any) => {
+        let templateBind = templateBinds[key];
+        if (templateBind.expression.indexOf(propKey)) {
+          affects.push(templateBind);
+          templateBind.isAffectedBy.push(propKey);
         }
       });
-      rendererBinds[bindKey] = uses;
-      if (uses.length) {
-        uses.forEach((bindData: any) => {
-          bindHandlers[bindData.type](bindData);
-        });
-      }
+
+      rendererBinds[propKey] = {
+        affects: affects,
+      };
     });
 
-    this.bindsData = rendererBinds;
+    this.rendererBinds = rendererBinds;
+    // this.templateBinds = templateBinds
   }
 
   /**
@@ -194,20 +212,12 @@ export class Renderer {
     return BindValues.includes(bindType);
   }
 
-  private uid() {
-    let firstPart: any  = (Math.random() * 46656) | 0;
-    let secondPart: any = (Math.random() * 46656) | 0;
-    firstPart = ("000" + firstPart.toString(36)).slice(-3);
-    secondPart = ("000" + secondPart.toString(36)).slice(-3);
-    return firstPart + secondPart;
-  }
-
   private evaluateDOMExpression(expression: string): unknown {
     return Function(`return ${expression}`).apply(this.bind);
   }
 }
 
-type BindHandlers = { [key in BindTypes]: (bind: IBinding) => void };
+type BindHandlers = { [key in BindTypes]: (bind: ITemplateBind) => void };
 
 interface IRenderer {
   id: string;
@@ -215,14 +225,18 @@ interface IRenderer {
   bind?: any;
 }
 
-interface IBinding {
-  element?: HTMLElement;
-  type: BindTypes;
-  val: number | string | boolean;
-  expression: string;
-  relatives: string[]
+interface ITemplateBind {
+  element: HTMLElement,
+  type: BindTypes,
+  result: unknown,
+  expression: string,
+  isAffectedBy: string[]
 }
 
-interface IBindMaps {
-  [key: string]: IBinding;
+interface IRendererBindMaps {
+  [key: string]: IRendererBind;
+}
+
+interface IRendererBind {
+  affects: string
 }
