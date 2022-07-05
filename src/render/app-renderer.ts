@@ -1,18 +1,77 @@
 /**
  * This is my attempt at creating a simple enough HTML render engine similar to what ALL popular front-end frameworks/libraries already do perfectly, AKA data binding
  * except "cheaper" and without the extra fancy features, this is targeted to smaller "simpler" projects that only want to bind data to the HTML with as
- * minimum configuration or setup as possible, the end goal here is to have minimum extra knowledge outside HTML and JavaScript and be able to empower your templates
- * HOPEFULLY once the actual project where this file is being used is done, I can move forward on this. for now its current state is enough for the project needs
+ * minimum configuration or setup as possible, the end goal here is to have minimum extra knowledge outside HTML and JavaScript and be able to empower your templates.
+ * HOPEFULLY once the actual project where this file is being used is done, I can move forward on this idea. for now its current state is enough for the project needs
+ * 
+ * # Bind examples 
+ * 
+ * ```html
+ * <div id="main-content">
+ *  <div bind:inner-text="this.test"><div>
+ * <div>
+ * ```
+ * 
+ * ```js
+ * let renderer = new Renderer({
+ *  id: 'main-content',
+ *  bind: {
+ *    test: 'Hello world!'
+ *  }
+ * });
+ * ```
+ * 
+ * ## HTML outputs:
+ * <div id="main-content">
+ *  <div bind:inner-text="this.test">Hello world!<div>
+ * <div>
  */
+ const BindableMouseEvents = [
+  'onclick',
+  // 'ondblclick',	 
+  // 'ondrag',		
+  // 'ondragend',	 
+  // 'ondragenter',		
+  // 'ondragleave',		
+  // 'ondragover',	 
+  // 'ondragstart',	 
+  // 'ondrop',	 
+  // 'onmousedown',	 
+  // 'onmousemove',	 
+  // 'onmouseout',	 
+  // 'onmouseover',	 
+  // 'onmouseup',	 
+  // 'onmousewheel',		
+  // 'onscroll',
+];
 
 // To add more binding types/logic first add them to this array then, for behavior add its function to the BindHandlers Object
 const BindValues = [
+  // Element binds
   "inner-html",
   "inner-text",
   "class",
   "style",
   "attr",
   "if",
+  // Mouse events
+  'onclick',
+  // 'ondblclick',	 
+  // 'ondrag',		
+  // 'ondragend',	 
+  // 'ondragenter',		
+  // 'ondragleave',		
+  // 'ondragover',	 
+  // 'ondragstart',	 
+  // 'ondrop',	 
+  // 'onmousedown',	 
+  // 'onmousemove',	 
+  // 'onmouseout',	 
+  // 'onmouseover',	 
+  // 'onmouseup',	 
+  // 'onmousewheel',		
+  // 'onscroll',
+  // ...BindableEvents
 ] as const;
 type ArrayAsTypes<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<
   infer ArrayAsTypes
@@ -21,45 +80,64 @@ type ArrayAsTypes<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<
   : never;
 type BindTypes = ArrayAsTypes<typeof BindValues>;
 
-/**
- * These functions are the core functionality of this library, each bind type ends up executing one of these functions which
- * each manipulates a referenced HTMLElement or DOM in a very specific way that should react to the data changes
- */
-const bindHandlers: BindHandlers = {
-  "inner-html": (bind: ITemplateBind) => {
-    bind.element.innerHTML = String(bind.result);
-  },
-  "inner-text": (bind: ITemplateBind) => {
-    bind.element.innerText = String(bind.result);
-  },
-  class: (bind: ITemplateBind) => {
-    throw new Error("class binding not implemented yet.");
-  },
-  style: (bind: ITemplateBind) => {
-    throw new Error("style binding not implemented yet.");
-  },
-  attr: (bind: ITemplateBind) => {
-    throw new Error("attr binding not implemented yet.");
-  },
-  if: (bind: ITemplateBind) => {
-    throw new Error("if binding not implemented yet.");
-  },
-};
-
 export class Renderer {
   id: string;
-  template: string;
+  template?: string;
   bind: any = {};
   container: HTMLElement | null;
+  bindAs?: string | null;
 
-  private rendererBinds: any = {};
+  private rendererBinds: IRendererBindMaps = {};
+
+  // private eventBindHandlers = BindableEvents.reduce((acc: any, curr: string) => (acc[curr]= (bind: any) => {
+  //   bind.element[bind.type] = () => this.evaluateDOMExpression(bind.expression);
+  // } , acc), {});
+
+  /**
+   * These functions are the core functionality of this library, each bind type ends up executing one of these functions which
+   * each manipulates a referenced HTMLElement or DOM in a very specific way that should react to the data changes or events
+   */
+  private bindHandlers: BindHandlers = {
+    // Probably shouldn't use this, since seems unsafe
+    "inner-html": (bind: ITemplateBind) => {
+      bind.element.innerHTML = String(bind.result);
+    },
+    "inner-text": (bind: ITemplateBind) => {
+      bind.element.innerText = String(bind.result);
+    },
+    class: (bind: ITemplateBind) => {
+      let current = String(bind.result);
+      let previous = bind.element.getAttribute('data-bind-class');
+      if (previous && current !== previous && bind.element.classList.contains(previous)) {
+        bind.element.classList.remove(previous);
+      }
+      bind.element.classList.add(current);
+      bind.element.setAttribute('data-bind-class', current);
+    },
+    style: (bind: ITemplateBind) => {
+      throw new Error("style binding not implemented yet.");
+    },
+    attr: (bind: ITemplateBind) => {
+      throw new Error("attr binding not implemented yet.");
+    },
+    if: (bind: ITemplateBind) => {
+      throw new Error("if binding not implemented yet.");
+    },
+    onclick: (bind: ITemplateBind) => {
+      bind.element.onclick = () => {
+        this.evaluateDOMExpression(bind.expression);
+      }
+    }
+    // ... this.eventBindHandlers
+  };
 
   constructor(data: IRenderer) {
     this.id = data.id;
-    this.template = data.template.toString();
+    this.template = data.template?.toString();
     this.container = document.getElementById(this.id);
+    this.bindAs = data.bindAs || null;
 
-    if (this.container) {
+    if (this.container && this.template) {
       this.container.innerHTML = this.template;
     }
 
@@ -99,13 +177,17 @@ export class Renderer {
           // Re-evaluate DOM expression 
           templateBind.result = this.evaluateDOMExpression(templateBind.expression);
           // Execute bind handler
-          bindHandlers[templateBind.type](templateBind);
+          this.bindHandlers[templateBind.type](templateBind);
         });
       }
     }
     return true;
   }
 
+  /**
+   * Does a check in the renderer container to look for tempalte bindings and properly create the renderer
+   * bind mapings
+   */
   updateBinds() {
     this.defineBinds();
   }
@@ -117,7 +199,7 @@ export class Renderer {
   createElement(...args: any) {
     try {
       let element = document.createElement.apply(null, args);
-      this.defineBinds();
+      // this.defineBinds();
       return element;
     } catch (e) {
       console.error(e);
@@ -132,55 +214,18 @@ export class Renderer {
    */
   private defineBinds() {
     let bindsPropertyKeys = Object.keys(this.bind);
-    let templateBindNodes = this.container?.querySelectorAll("[\\:bind]") || [];
-
-    let templateBinds: ITemplateBind[] = [];
-    let rendererBinds: IRendererBindMaps = {};
-
-    templateBindNodes.forEach((node: Element) => {
-      let pair = (node.getAttribute(":bind") || "").split(":") || [];
-
-      if (!this.isBindingType(<BindTypes>pair[0])) {
-        throw new Error(
-          `Invalid bind type "${pair[0]}", valid bind types are: ${BindValues}.`
-        );
-      }
-
-      let type = pair[0];
-      let expression = pair[1];
-      if (pair.length > 2) {
-        pair.shift();
-        expression = pair.reduce((prev: string, current: string) => (prev += ":" + current));
-      }
-
-      templateBinds.push({
-        type: <BindTypes>type,
-        element: <HTMLElement>node,
-        expression: expression,
-        result: this.evaluateDOMExpression(expression),
-        isAffectedBy: []
-      });
-    });
+    let templateBinds: ITemplateBind[] = this.getTemplateBinds();
 
     bindsPropertyKeys.forEach((propKey) => {
-      let templateBindKeys = Object.keys(templateBinds);
-      let affects: any = [];
-
-      templateBindKeys.forEach((key: any) => {
-        let templateBind = templateBinds[key];
-        if (templateBind.expression.indexOf(propKey)) {
-          affects.push(templateBind);
-          templateBind.isAffectedBy.push(propKey);
-        }
+      let affects: ITemplateBind[] = [];
+      templateBinds.forEach((templateBind: ITemplateBind) => {
+          if (templateBind.expression.indexOf(propKey) && templateBind.type !== 'onclick') {
+            affects.push(templateBind);
+            templateBind.isAffectedBy.push(propKey);
+          }
       });
-
-      rendererBinds[propKey] = {
-        affects: affects,
-      };
+      this.rendererBinds[propKey] = { affects };
     });
-
-    this.rendererBinds = rendererBinds;
-    // this.templateBinds = templateBinds
   }
 
   /**
@@ -193,10 +238,7 @@ export class Renderer {
     let validBinds = true;
     for (let i = 0; i <= values.length; i++) {
       let val = values[i];
-      if (
-        (typeof val === "object" || typeof val === "function") &&
-        val !== null
-      ) {
+      if (typeof val === "object" && val !== null) {
         validBinds = false;
         break;
       }
@@ -204,26 +246,75 @@ export class Renderer {
     return validBinds;
   }
 
-  /**
-   * Checks if the string is a valid binding type
-   * @param bindType Bind type string
-   * @returns
-   */
-  private isBindingType(bindType: BindTypes): bindType is BindTypes {
-    return BindValues.includes(bindType);
+  private evaluateDOMExpression(expression: string): unknown {
+    let alias = this.bindAs ? `let ${this.bindAs}=this;` : '';
+    // I probably need to sanitize this
+    return Function(`${alias} return ${expression};`).apply(this.bind);
   }
 
-  private evaluateDOMExpression(expression: string): unknown {
-    return Function(`return ${expression}`).apply(this.bind);
+  private getTemplateBinds(container?: HTMLElement): ITemplateBind[] {
+    return BindValues
+      .map((type) => {
+        let result: ITemplateBind[] = [];
+        if (container) {}
+        let list = this.container?.querySelectorAll(`[bind\\:${type}]`) || [];
+        if (list.length) {
+          let entries = list.entries();
+          let current = entries.next();
+          while(!current.done) {
+            let element = <HTMLElement>current.value[1];
+            let data = this.getTemplateBindingData(element, type);
+            result.push(data);
+            current = entries.next();
+          }
+        }
+        return result;
+      })
+      .reduce((prev: any, current: any) => {
+        return prev = prev.concat(current);
+      });
+  }
+
+  private getTemplateBindingData(element: HTMLElement, type: BindTypes): ITemplateBind {
+    let expression = element.getAttribute(`bind:${type}`) || '';
+    let isEvent = BindableMouseEvents.indexOf(String(type)) > -1;
+    let data = {
+      type: <BindTypes>type,
+      element: element,
+      expression: expression,
+      // Event bindings should not evaluate their expression until the event is triggered
+      result: !isEvent ? this.evaluateDOMExpression(expression) : null,
+      isAffectedBy: []
+    };
+
+    this.bindHandlers[type](data);
+
+    return data;
   }
 }
 
 type BindHandlers = { [key in BindTypes]: (bind: ITemplateBind) => void };
 
 interface IRenderer {
+  /**
+   * Id of the element that will benefit from the context of this renderer
+   */
   id: string;
-  template: NodeRequire;
+  /**
+   * If exsits, it will replace the innerHTML content of the container, can be a path or a NodeRquire statement
+   * if the string contains valid HTML it will be attached as is, if the string ends with .html, it will attempt
+   * to do a fetch to the file
+   */
+  template?: NodeRequire | string;
+  /**
+   * This object will be attached to the container (found by the id property) and it will make the
+   * data accessible to the entire container and its children trough the 'this' keyword
+   */
   bind?: any;
+  /**
+   * Alias that will be used within the template context, so you can use that alias instead of the 'this' keyword
+   */
+  bindAs?: string | null;
 }
 
 interface ITemplateBind {
@@ -239,5 +330,5 @@ interface IRendererBindMaps {
 }
 
 interface IRendererBind {
-  affects: string
+  affects: ITemplateBind[]
 }

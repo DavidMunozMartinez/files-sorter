@@ -16,44 +16,27 @@ export class NavBar {
   constructor(utils: Utils, notificationService: NotificationComponent) {
     this.utils = utils;
     this.notificationService = notificationService;
-    this.currentTheme = this.getSystemTheme();
-    this.notification = this.utils.getData("notifications") || false;
-    this.applyTheme(this.currentTheme);
+
     this.renderer = new Renderer({
       id: "nav-bar-component",
       template: require("./nav-bar-component.html"),
       bind: {
-        theme: this.currentTheme,
-        notification: this.notification,
+        theme: this.getSystemTheme(),
+        notification: this.utils.getData("notifications") || false,
+        toggleTheme: () => {
+          this.bind.theme = this.bind.theme === "dark" ? "light" : "dark";
+          this.applyTheme(this.bind.theme);
+          this.utils.saveData("theme", this.bind.notification)
+        },
+        toggleNotification: (data: any) => {
+          console.log(data)
+          this.bind.notification = !this.bind.notification;
+          this.utils.saveData("notifications", this.bind.notification);
+        }
       },
     });
     this.bind = this.renderer.bind;
-
-    const themeToggle =
-      this.renderer.container?.getElementsByClassName("theme-toggle")[0];
-    const notificationToggle = this.renderer.container?.getElementsByClassName(
-      "notifications-toggle"
-    )[0];
-
-    themeToggle?.addEventListener("click", () => {
-      let theme: themes = this.currentTheme === "dark" ? "light" : "dark";
-      this.applyTheme(theme);
-      this.bind.themeIcon = theme;
-      this.utils.saveData("theme", theme);
-    });
-
-    notificationToggle?.addEventListener("click", () => {
-      this.notification = !this.notification;
-      this.bind.notification = this.notification;
-      this.utils.saveData("notifications", this.notification);
-
-      this.notificationService.notify({
-        message:
-          "OS notifications turned " + (this.notification ? "on" : "off"),
-        type: "info",
-        timer: 5000,
-      });
-    });
+    this.applyTheme(this.bind.theme);
 
     window
       .matchMedia("(prefers-color-scheme: dark)")
