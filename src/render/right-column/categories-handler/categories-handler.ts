@@ -8,11 +8,12 @@ import { NotificationComponent } from "../../notification-component/notification
 import fs from "fs";
 import { Renderer } from "../../app-renderer";
 
-const renderer: Renderer = new Renderer({
+let renderer: Renderer = new Renderer({
   id: "categories-handler",
   template: require("./categories-handler.html"),
   bind: {
-    activeFolder: null
+    activeFolder: null,
+    looseFiles: null,
   },
 });
 
@@ -25,6 +26,7 @@ export class CategoriesHandler extends SectionHandler {
   notificationService: NotificationComponent;
   dragging: string | null = null;
   activeCategory: string | null = null;
+  // renderer: Renderer;
 
   constructor(
     fileSorter: FileSorter,
@@ -40,6 +42,10 @@ export class CategoriesHandler extends SectionHandler {
       utils,
       notificationService
     );
+    renderer.bind.openPath = () => {
+      let fullPath = path.resolve(renderer.bind.activeFolder);
+      this.utils.revealInExplorer(fullPath);
+    }
     this.inputRef = this.contentRef.querySelector("div.category-input");
     const helpRef = document.getElementById('categories-help');
     helpRef?.addEventListener('click', () => this.notificationService.showConsecutiveTips(['CATEGORIES_TIP', 'REORDER_CATEGORIES', 'DELETE']));
@@ -138,6 +144,10 @@ export class CategoriesHandler extends SectionHandler {
       data = this.getFolders();
       const order: string[] = data[this.folder].order;
       renderer.bind.activeFolder = folder;
+      fs.readdir(folder, (err, contents) => {
+        let files = contents.filter(content => fs.statSync(path.resolve(folder, content)).isFile());
+        renderer.bind.looseFiles = `${files.length} loose files`
+      });
       const activeRef = this.contentRef.querySelector(".active-folder");
       if (activeRef) {
         activeRef.classList.remove("disabled");
@@ -178,7 +188,7 @@ export class CategoriesHandler extends SectionHandler {
 
     const activeRef = this.contentRef.querySelector(".active-folder");
     if (activeRef) {
-      if (!activeRef.classList.contains("diabled")) {
+      if (!activeRef.classList.contains("disabled")) {
         activeRef.classList.add("disabled");
       }
     }

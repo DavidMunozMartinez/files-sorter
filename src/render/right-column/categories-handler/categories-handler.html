@@ -10,9 +10,13 @@
 </div>
 
 <div class="active-folder">
-    <i class="material-icons" style="font-size: 24px; vertical-align: middle; margin: 5px;">folder</i>
-    <div class="active-folder-value" bind:inner-text="this.activeFolder">
-      <!-- Active folder string will be rendered here -->
+  <i class="material-icons" style="float: left;">folder</i>
+  <div class="active-folder-path" bind:innerText="this.activeFolder">
+    <!-- Active folder string will be rendered here -->
+  </div>
+    <i class="material-icons" style="float: right; cursor: pointer;" bind:onclick="this.openPath()">open_in_new</i>
+    <div class="active-folder-files-count" bind:innerText="this.looseFiles">
+      <!-- Loose files number will be rendered here -->
     </div>
   </div>
 <smart-hover class="category-list" query-selector=".category-list-item" override-styles="true">

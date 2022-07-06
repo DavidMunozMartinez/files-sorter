@@ -1,6 +1,7 @@
 import { Renderer } from "../../app-renderer";
 import { NotificationComponent } from "../../notification-component/notification-component";
 import { Utils } from "../../utils";
+import axios from "axios";
 
 type themes = "dark" | "light";
 
@@ -8,8 +9,9 @@ export class NavBar {
   renderer!: Renderer;
   utils: Utils;
   notificationService: NotificationComponent;
-  currentTheme!: "dark" | "light";
+  currentTheme!: themes;
   notification: boolean = false;
+  versionCheckUrl: string = "";
 
   private bind!: any;
 
@@ -26,13 +28,47 @@ export class NavBar {
         toggleTheme: () => {
           this.bind.theme = this.bind.theme === "dark" ? "light" : "dark";
           this.applyTheme(this.bind.theme);
-          this.utils.saveData("theme", this.bind.notification)
+          this.utils.saveData("theme", this.bind.notification);
         },
-        toggleNotification: (data: any) => {
-          console.log(data)
+        toggleNotification: () => {
           this.bind.notification = !this.bind.notification;
           this.utils.saveData("notifications", this.bind.notification);
-        }
+        },
+        checkForUpdates: () => {
+          let current = process.env.npm_package_version;
+          axios
+            .get(
+              "https://api.github.com/repos/DavidMunozMartinez/files-sorter/releases/latest"
+            )
+            .then((result: any) => {
+              let latest = result.data.name;
+              let message = "";
+              let timer = 0;
+              if (latest.indexOf(current) === -1) {
+                let appFile =
+                  process.platform === "darwin"
+                    ? "file-sorter-" + latest + ".dmg"
+                    : "file-sorter." + latest + ".exe";
+                let asset = result.data.assets.filter(
+                  (asset: any) => asset.name === appFile
+                )[0];
+                let url = asset.browser_download_url;
+                message = `
+                  There is a new(${latest}) version available!
+                  <a href="${url}">Download</a>
+                `;
+                timer = 10000;
+              } else {
+                (message = `You are using the latest version! \n (${current})`),
+                  (timer = 5000);
+              }
+              this.notificationService.notify({
+                message: message,
+                type: "info",
+                timer: timer,
+              });
+            });
+        },
       },
     });
     this.bind = this.renderer.bind;

@@ -1,199 +1,208 @@
 .right-column {
-    display: flex;
-    flex-direction: column;
-    .active-folder {
-        width: 100%;
-        height: 50px;
-        background: var(--foreground-color);
-        box-sizing: border-box;
-        padding: 10px;
-        &.disabled {
-            opacity: 0;
-        }
-        .active-folder-value {
-            display: inline;
-        }
+  display: flex;
+  flex-direction: column;
+  .active-folder {
+    width: 100%;
+    height: 50px;
+    background: var(--foreground-color);
+    box-sizing: border-box;
+    padding: 10px;
+    i {
+      font-size: 24px;
+      vertical-align: middle;
+      margin: 5px;
     }
-    .categories,
-    .extensions {
-        border-radius: 10px;
-        background: var(--foreground-color);
-        position: relative;
-        .sortable-ghost {
-        
-            opacity: 0.8 !important;
-        }
+    &.disabled {
+      opacity: 0;
     }
-    .categories {
-        flex: 5;
-        margin-bottom: 15px;
-        user-select: none;
+    .active-folder-path,
+    .active-folder-files-count {
+      margin-top: 10px;
+      display: inline;
     }
-    .extensions {
-        flex: 4;
-        & > div.input-container {
-            // width: 100%;
-        }
-        div > .extensions-input {
-            display: inline-block;
-            position: absolute;
-            height: 30px;
-            width: 90px;
-            margin-left: 5px;
-            background-color: unset;
-        }
-        .dropdown {
-            position: relative;
-            display: inline-block;
-            height: 30px;
-            width: 120px;
-            outline: none;
-            border-radius: 5px;
-            box-sizing: border-box;
-            cursor: pointer;
-            i.material-icons {
-                left: unset;
-                right: 3px;
-                color: var(--icon-color);
-            }
-            .value {
-                height: 100%;
-                width: 100%;
-                position: absolute;
-                padding: 7px;
-                padding-right: 30px;
-                box-sizing: border-box;
-                pointer-events: none;
-            }
-            smart-hover.options > div.smart-hover-shadow {
-                border-left: 4px solid var(--text-color);
-                border-radius: 0px;
-            }
-            .options {
-                top: 100%;
-                width: 100%;
-                position: absolute;
-                background: var(--background-color);
-                z-index: 1;
-                border-radius: 0 0 5px 5px;
-                height: 0px;
-                overflow: hidden;
-                transition: all 0.2s;
-                max-height: 0px;
-                z-index: 3;
-                span {
-                    display: block;
-                    padding: 10px;
-                    padding-left: 15px;
-                }
-            }
-        }
-        .dropdown:focus {
-            .options {
-                max-height: 110px;
-                height: auto;
-            }
-        }
+    .active-folder-path {
+      float: left;
     }
-
-    div.category-input:focus,
-    div.extensions-input,
-    div.dropdown {
-        border-radius: 3px;
-        border: 1px solid #535353;
-        width: 130px;
-        height: 30px;
-        background: unset;
-        cursor: text;
+    .active-folder-files-count {
+      float: right;
     }
-    smart-hover.category-list {
-        height: calc(100% - 90px);
+  }
+  .categories,
+  .extensions {
+    border-radius: 10px;
+    background: var(--foreground-color);
+    position: relative;
+    .sortable-ghost {
+      opacity: 0.8 !important;
     }
-    .category-list,
-    .extension-list {
-        height: calc(100% - 45px);
-        width: 100%;
-        position: absolute;
-        bottom: 0;
-        padding: 20px;
-        box-sizing: border-box;
-        overflow-y: scroll;
-        .category-list-item,
-        .extension-list-item {
-            transition: background-color 0.2s;
-            height: 40px;
-            padding-left: 18px;
-            padding-right: 18px;
-            box-sizing: border-box;
-            display: inline-block;
-            margin: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            position: relative;
-            &.active {
-                background: var(--highlight);
-            }
-            span {
-                position: absolute;
-                top: 12px;
-                left: 55px;
-                pointer-events: none;
-            }
-            i {
-                position: absolute;
-                top: 7px;
-            }
-        }
-
-        .category-list-item {
-            width: 100%;
-            box-sizing: border-box;
-            margin: 0;
-            margin-bottom: 5px;
-        }
-
-        .extension-list-item {
-            border: 1px solid #868686;
-            padding: 8px;
-            height: auto;
-            overflow-wrap: normal;
-            i {
-                top: -4px;
-                right: -4px;
-                font-size: 20px;
-            }
-        }
+  }
+  .categories {
+    flex: 5;
+    margin-bottom: 15px;
+    user-select: none;
+  }
+  .extensions {
+    flex: 4;
+    div > .extensions-input {
+      display: inline-block;
+      position: absolute;
+      height: 30px;
+      width: 90px;
+      margin-left: 5px;
+      background-color: unset;
     }
-
-    .extension-list {
-        height: calc(100% - 40px);
-        & > .input-container {
-            transition: all 120ms ease-in-out;
-            bottom: 0;
-            left: 0;
-            div {
-                opacity: 1;
-            }
-        }
-    }
-
-    .inactive-overlay {
-        border-radius: 5px;
-        position: absolute;
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      height: 30px;
+      width: 120px;
+      outline: none;
+      border-radius: 5px;
+      box-sizing: border-box;
+      cursor: pointer;
+      i.material-icons {
+        left: unset;
+        right: 3px;
+        color: var(--icon-color);
+      }
+      .value {
         height: 100%;
         width: 100%;
-        z-index: 4;
-        background: var(--background-color);
-        opacity: 1;
-        transition: all 0.2s;
-        color: var(--highlight);
-        padding: 30px;
-        padding-top: 100px;
+        position: absolute;
+        padding: 7px;
+        padding-right: 30px;
         box-sizing: border-box;
-    }
-    .inactive-overlay.hiden {
-        opacity: 0;
         pointer-events: none;
-        z-index: -1;
+      }
+      smart-hover.options > div.smart-hover-shadow {
+        border-left: 4px solid var(--text-color);
+        border-radius: 0px;
+      }
+      .options {
+        top: 100%;
+        width: 100%;
+        position: absolute;
+        background: var(--background-color);
+        z-index: 1;
+        border-radius: 0 0 5px 5px;
+        height: 0px;
+        overflow: hidden;
+        transition: all 0.2s;
+        max-height: 0px;
+        z-index: 3;
+        span {
+          display: block;
+          padding: 10px;
+          padding-left: 15px;
+        }
+      }
     }
+    .dropdown:focus {
+      .options {
+        max-height: 110px;
+        height: auto;
+      }
+    }
+  }
+
+  div.category-input:focus,
+  div.extensions-input,
+  div.dropdown {
+    border-radius: 3px;
+    border: 1px solid #535353;
+    width: 130px;
+    height: 30px;
+    background: unset;
+    cursor: text;
+  }
+  smart-hover.category-list {
+    height: calc(100% - 90px);
+  }
+  .category-list,
+  .extension-list {
+    height: calc(100% - 45px);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: scroll;
+    .category-list-item,
+    .extension-list-item {
+      transition: background-color 0.2s;
+      height: 40px;
+      padding-left: 18px;
+      padding-right: 18px;
+      box-sizing: border-box;
+      display: inline-block;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      position: relative;
+      &.active {
+        background: var(--highlight);
+      }
+      span {
+        position: absolute;
+        top: 12px;
+        left: 55px;
+        pointer-events: none;
+      }
+      i {
+        position: absolute;
+        top: 7px;
+      }
+    }
+
+    .category-list-item {
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0;
+      margin-bottom: 5px;
+    }
+
+    .extension-list-item {
+      border: 1px solid #868686;
+      padding: 8px;
+      height: auto;
+      overflow-wrap: normal;
+      i {
+        top: -4px;
+        right: -4px;
+        font-size: 20px;
+      }
+    }
+  }
+
+  .extension-list {
+    height: calc(100% - 40px);
+    & > .input-container {
+      transition: all 120ms ease-in-out;
+      bottom: 0;
+      left: 0;
+      div {
+        opacity: 1;
+      }
+    }
+  }
+
+  .inactive-overlay {
+    border-radius: 5px;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 4;
+    background: var(--background-color);
+    opacity: 1;
+    transition: all 0.2s;
+    color: var(--highlight);
+    padding: 30px;
+    padding-top: 100px;
+    box-sizing: border-box;
+  }
+  .inactive-overlay.hiden {
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+  }
 }

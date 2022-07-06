@@ -4,7 +4,7 @@
       bind:onclick="this.toggleTheme()">
         <i
           class="material-icons"
-          bind:inner-text="this.theme + '_mode' ">
+          bind:innerText="this.theme + '_mode' ">
           <!-- dark_mode -->
         </i>
         <span>Theme</span>
@@ -14,9 +14,18 @@
       bind:onclick="this.toggleNotification()">
         <i 
           class="material-icons"
-          bind:inner-text="'notifications' + (this.notification ? '' : '_off')">
+          bind:innerText="'notifications' + (this.notification ? '' : '_off')">
           <!-- notifications_off -->
         </i>
         <span>Notifications</span>
+    </div>
+
+    <div 
+      class="input-container check-updates"
+      bind:onclick="this.checkForUpdates()">
+      <i class="material-icons">
+        update
+      </i>
+      <span>Check for updates</span>
     </div>
 </smart-hover>
