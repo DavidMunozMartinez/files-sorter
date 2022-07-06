@@ -4,7 +4,7 @@
   .active-folder {
     width: 100%;
     height: 50px;
-    background: var(--foreground-color);
+    // background: var(--foreground-color);
     box-sizing: border-box;
     padding: 10px;
     i {
@@ -30,7 +30,8 @@
   .categories,
   .extensions {
     border-radius: 10px;
-    background: var(--foreground-color);
+    background-color: var(--background-color);
+    box-shadow: var(--neumorph-shadow);
     position: relative;
     .sortable-ghost {
       opacity: 0.8 !important;
@@ -116,7 +117,7 @@
     cursor: text;
   }
   smart-hover.category-list {
-    height: calc(100% - 90px);
+    height: calc(100% - 100px);
   }
   .category-list,
   .extension-list {
@@ -131,8 +132,7 @@
     .extension-list-item {
       transition: background-color 0.2s;
       height: 40px;
-      padding-left: 18px;
-      padding-right: 18px;
+      padding: 3px 18px;
       box-sizing: border-box;
       display: inline-block;
       margin: 5px;
@@ -158,7 +158,6 @@
       width: 100%;
       box-sizing: border-box;
       margin: 0;
-      margin-bottom: 5px;
     }
 
     .extension-list-item {

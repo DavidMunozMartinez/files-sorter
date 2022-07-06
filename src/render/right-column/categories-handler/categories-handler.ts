@@ -297,10 +297,6 @@ export class CategoriesHandler extends SectionHandler {
       classList: ["category-list-item"],
       attrs: ["value=" + value],
       children: [folderIcon, valueHolder],
-      click: () => {
-        if (this.folder && value) {
-        }
-      },
       dblclick: () => {
         let fullPath = path.resolve(this.folder || "", value);
         this.utils.revealInExplorer(fullPath);

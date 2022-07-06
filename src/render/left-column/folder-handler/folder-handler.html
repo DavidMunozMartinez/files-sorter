@@ -4,10 +4,15 @@
 
 <div class="input-container">
   <div class="folder-input"></div>
-  <i class="material-icons">create_new_folder</i>
+  <i class="material-icons">add</i>
 </div>
 
-<smart-hover class="folder-list" query-selector=".folder-list-item" override-styles="true">
+<smart-hover
+  class="folder-list"
+  query-selector=".folder-list-item"
+  override-styles="true"
+  children-can-change="true"
+  transition-time="100">
   <!-- Folder items will be rendered here -->
 </smart-hover>
 <span class="section-tip">

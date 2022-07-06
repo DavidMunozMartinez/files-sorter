@@ -1,12 +1,12 @@
 <div class="inactive-overlay">
 </div>
 <div class="column-title">
-    <p>Folders<i id="categories-help" class="material-icons">help_outline</i> </p>
+  <p>Folders<i id="categories-help" class="material-icons">help_outline</i> </p>
 </div>
 <div class="input-container">
-    <div class="category-input" contenteditable="true">
-    </div>
-    <i class="material-icons">add</i>
+  <div class="category-input" contenteditable="true">
+  </div>
+  <i class="material-icons">add</i>
 </div>
 
 <div class="active-folder">
@@ -14,12 +14,17 @@
   <div class="active-folder-path" bind:innerText="this.activeFolder">
     <!-- Active folder string will be rendered here -->
   </div>
-    <i class="material-icons" style="float: right; cursor: pointer;" bind:onclick="this.openPath()">open_in_new</i>
-    <div class="active-folder-files-count" bind:innerText="this.looseFiles">
-      <!-- Loose files number will be rendered here -->
-    </div>
+  <i class="material-icons" style="float: right; cursor: pointer;" bind:onclick="this.openPath()">open_in_new</i>
+  <div class="active-folder-files-count" bind:innerText="this.looseFiles">
+    <!-- Loose files number will be rendered here -->
   </div>
-<smart-hover class="category-list" query-selector=".category-list-item" override-styles="true">
+</div>
+<smart-hover
+  query-selector=".category-list-item"
+  override-styles="true"
+  class="category-list"
+  children-can-change="true"
+  transition-time="100">
   <!-- Category list items will be rendered here -->
 </smart-hover>
 <span class="section-tip">

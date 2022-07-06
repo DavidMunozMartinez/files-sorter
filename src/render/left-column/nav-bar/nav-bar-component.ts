@@ -28,7 +28,7 @@ export class NavBar {
         toggleTheme: () => {
           this.bind.theme = this.bind.theme === "dark" ? "light" : "dark";
           this.applyTheme(this.bind.theme);
-          this.utils.saveData("theme", this.bind.notification);
+          this.utils.saveData("theme", this.bind.theme);
         },
         toggleNotification: () => {
           this.bind.notification = !this.bind.notification;

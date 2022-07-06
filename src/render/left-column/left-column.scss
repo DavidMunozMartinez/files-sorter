@@ -11,14 +11,15 @@
         overflow-y: scroll;
         top: 50px;
         display: block;
+        padding-top: 15px;
         .folder-list-item {
             transition: background-color 0.1s;
             height: 36px;
-            padding: 9px;
+            padding: 10px;
             padding-left: 15px;
             box-sizing: border-box;
             border-radius: 5px;
-            margin: 5px;
+            margin: 0 5px;
             cursor: pointer;
             .value-holder {
                 width: auto;
