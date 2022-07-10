@@ -1,10 +1,9 @@
-import { spawn, exec } from "child_process";
+import { exec } from "child_process";
+import { shell } from 'electron';
 import path from "path";
 import fs from "fs";
 
 export class Utils {
-  // constructor () {}
-
   closest(element: HTMLElement, selector: string): HTMLElement | null {
     let match = null;
 
@@ -55,13 +54,11 @@ export class Utils {
   removeData() {}
 
   revealInExplorer(pathString: string, select?: boolean) {
-    let command = this.getShowCommand();
-    let args: string[] = [`"${pathString}"`];
     if (select) {
-      let selectArg = process.platform === "darwin" ? "-R" : "/select";
-      args.unshift(selectArg);
+      shell.showItemInFolder(pathString);
+    } else {
+      shell.openPath(pathString);
     }
-    spawn(command, args, { shell: true });
   }
 
   getOpenCommandLine() {

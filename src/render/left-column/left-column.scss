@@ -30,7 +30,6 @@
         top: -3px;
         float: right;
         margin-left: 15px;
-        // opacity: 0;
         &:hover {
           transform: scale(1.1);
         }
@@ -42,12 +41,6 @@
     .folder-list-item.active {
       background: var(--highlight);
     }
-    // .folder-list-item.active,
-    // .folder-list-item:hover {
-    //   i {
-    //     opacity: 1;
-    //   }
-    // }
   }
 
   .folder-options {

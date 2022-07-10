@@ -217,7 +217,6 @@ export class FolderHandler extends SectionHandler {
       classList: [
         "material-icons",
         "watch-icon",
-        // active ? "enabled" : "",
       ],
       innerHTML: active ? "visibility" : "visibility_off",
       attrs: [`title=Turn ${active ? 'off' : 'on'} the folder watcher`],
@@ -227,9 +226,8 @@ export class FolderHandler extends SectionHandler {
         if (data[folder]) {
           data[folder].active = !active;
           event.target.innerHTML = active ? "visibility_off" : "visibility";
-          event.target.classList.toggle("disabled");
           localStorage.setItem("folders", JSON.stringify(data));
-          event.target.setAttribute('title', `Turn ${active ? 'off' : 'on'} the folder watcher`)
+          event.target.setAttribute('title', `Turn ${active ? 'on' : 'off'} the folder watcher`)
           this.fileSorter.updateFoldersData();
         }
         event.stopImmediatePropagation();
