@@ -5,11 +5,14 @@ body.light-theme {
     --highlight-soft: rgba(0, 0, 0, 0.05);
     --text-color: rgb(21,21,21);
     --icon-color: rgb(90,90,90);
-    --primary: rgb(34 177 191);
+    --primary: rgb(3 148 162);
     --primary-soft: rgba(34, 177, 191, 0.2);
     --primary-icon-color: rgb(244, 244, 244);
 
-    --neumorph-shadow: inset 2px 2px 8px rgb(200, 200, 200), inset -2px -2px 5px rgb(255, 255, 255);
+    --neumorph-shadow: inset 2px 2px 8px rgb(210, 210, 210), inset -2px -2px 5px rgb(250, 250, 250);
+
+    --success-background: rgb(227 255 227 / 0.4);
+    --success-color: #1c471c;
     
     --info-background: rgba(183, 204, 235, 0.5);
     --info-color: rgb(53, 69, 93);
@@ -19,17 +22,20 @@ body.light-theme {
   }
   
   body.dark-theme {
-    --background-color: rgb(37, 37, 37);
+    --background-color: rgb(40, 40, 40);
     --foreground-color: rgb(50, 50, 50);
     --highlight: rgba(240,240,240, 0.1);
     --highlight-soft: rgba(240,240,240, 0.05);
-    --text-color: rgb(214, 214, 214);
+    --text-color: rgb(200, 200, 200);
     --icon-color: rgb(120,120,120);
-    --primary: rgb(45, 136, 197);
+    --primary: rgb(27 141 218);
     --primary-soft: rgba(45, 136, 197, 0.2);
     --primary-icon-color: rgb(244, 244, 244);
 
-    --neumorph-shadow: inset 2px 2px 8px rgb(25, 25, 25), inset -2px -2px 5px rgb(50, 50, 50);
+    --neumorph-shadow: inset 2px 2px 8px rgb(30, 30, 30), inset -2px -2px 5px rgb(55, 55, 55);
+
+    --success-background: rgb(187 255 187 / 40%);
+    --success-color: #eaffea;
 
     --info-background: rgb(74 97 132 / 80%);
     --info-color: rgb(186 205 232);

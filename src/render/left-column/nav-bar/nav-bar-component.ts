@@ -25,6 +25,8 @@ export class NavBar {
       bind: {
         theme: this.getSystemTheme(),
         notification: this.utils.getData("notifications") || false,
+        settingsEnabled: false,
+        checkingForUpdatesClass: '',
         toggleTheme: () => {
           this.bind.theme = this.bind.theme === "dark" ? "light" : "dark";
           this.applyTheme(this.bind.theme);
@@ -33,9 +35,11 @@ export class NavBar {
         toggleNotification: () => {
           this.bind.notification = !this.bind.notification;
           this.utils.saveData("notifications", this.bind.notification);
+
         },
         checkForUpdates: () => {
           let current = process.env.npm_package_version;
+          this.bind.checkingForUpdates = 'checking';
           axios
             .get(
               "https://api.github.com/repos/DavidMunozMartinez/files-sorter/releases/latest"
@@ -67,6 +71,8 @@ export class NavBar {
                 type: "info",
                 timer: timer,
               });
+            }).finally(() => {
+              this.bind.checkingForUpdates = '';
             });
         },
       },

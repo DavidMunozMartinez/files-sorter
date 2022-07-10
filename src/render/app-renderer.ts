@@ -115,8 +115,10 @@ export class Renderer {
       ) {
         bind.element.classList.remove(previous);
       }
-      bind.element.classList.add(current);
-      bind.element.setAttribute("data-bind-class", current);
+      if (current) {
+        bind.element.classList.add(current);
+        bind.element.setAttribute("data-bind-class", current);
+      }
     },
     style: (bind: ITemplateBind) => {
       throw new Error("style binding not implemented yet.");

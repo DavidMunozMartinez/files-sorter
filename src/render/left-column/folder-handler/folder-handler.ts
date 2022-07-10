@@ -39,7 +39,7 @@ export class FolderHandler extends SectionHandler {
     const addButtonRef = document.querySelector("div.folder-input");
     const helpButtonRef = document.getElementById('folder-help');
     addButtonRef?.addEventListener("click", () => this.folderDialog());
-    helpButtonRef?.addEventListener("click", () => this.notificationService.showConsecutiveTips(['FOLDERS_TIP', 'AUTO_SORT_ON_OFF', 'MANUAL_SORT']))
+    helpButtonRef?.addEventListener("click", () => this.notificationService.showConsecutiveTips(['FOLDERS_TIP', 'AUTO_SORT_ON_OFF', 'MANUAL_SORT', 'REMOVE_CONFIG']))
 
     this.contentRef.addEventListener("drop", () => {
       if (this.categoriesHandler.folder && this.categoriesHandler.dragging) {
@@ -217,18 +217,19 @@ export class FolderHandler extends SectionHandler {
       classList: [
         "material-icons",
         "watch-icon",
-        active ? "enabled" : "disabled",
+        // active ? "enabled" : "",
       ],
-      attrs: ["title=On/Off automatically sort new files"],
-      innerHTML: active ? "sync" : "sync_disabled",
+      innerHTML: active ? "visibility" : "visibility_off",
+      attrs: [`title=Turn ${active ? 'off' : 'on'} the folder watcher`],
       click: (event: any) => {
         data = this.getFolders();
-        active = event.target.innerHTML === "sync";
+        let active = event.target.innerHTML === "visibility";
         if (data[folder]) {
           data[folder].active = !active;
-          event.target.innerHTML = active ? "sync_disabled" : "sync";
+          event.target.innerHTML = active ? "visibility_off" : "visibility";
           event.target.classList.toggle("disabled");
           localStorage.setItem("folders", JSON.stringify(data));
+          event.target.setAttribute('title', `Turn ${active ? 'off' : 'on'} the folder watcher`)
           this.fileSorter.updateFoldersData();
         }
         event.stopImmediatePropagation();

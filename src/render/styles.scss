@@ -7,10 +7,10 @@ $primary-tint: rgb(85, 192, 142);
 $secondary: rgb(45, 136, 197);
 
 @import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap");
-// @import '../../node_modules/material-icons-font/material-icons-font.css';
 @import "./themes.scss";
 @import "./left-column/left-column.scss";
 @import "./right-column/right-column.scss";
+@import "./left-column/nav-bar/nav-bar-component.scss";
 
 body {
   font-size: 13px;
@@ -18,56 +18,6 @@ body {
   background: var(--background-color);
   color: var(--text-color);
   margin: 0;
-
-  & * {
-    transition: background-color 100ms ease-in-out, color 100ms ease-in-out;
-  }
-}
-
-.nav-bar {
-  transition: width 114ms ease-out;
-  width: 45px;
-  margin-right: 15px;
-  background: var(--foreground-color);
-  border-radius: 10px;
-  .static {
-    pointer-events: none;
-  }
-  span {
-    transition: opacity 120ms ease-out;
-    opacity: 0;
-    display: none;
-    position: absolute;
-    top: 15px;
-    left: 45px;
-    color: var(--text-color);
-    width: 400px;
-  }
-  .input-container {
-    position: relative;
-    border-radius: 5px;
-    padding: 10px;
-    transition: transform 100ms ease-out;
-    &:hover {
-      transform: translateX(5px);
-    }
-  }
-  .input-container.check-updates {
-    margin-top: auto;
-  }
-  &:hover {
-    width: 165px;
-    span {
-      display: block;
-      opacity: 1;
-    }
-  }
-
-  .smart-hover-shadow {
-    border-left: 3px solid var(--icon-color);
-    background: none !important;
-    border-radius: 0;
-  }
 }
 
 .main-content {
@@ -280,6 +230,16 @@ i.sort-icon.sorting {
   animation-iteration-count: infinite;
 }
 
+.material-icons.clickable {
+  transition: transform 120ms ease;
+  &:hover {
+    transform: scale(1.2);
+  }
+  &:active {
+    transform: scale(1);
+  }
+}
+
 .main-content .material-icons {
   color: var(--icon-color);
 }
@@ -287,6 +247,14 @@ i.sort-icon.sorting {
 .hide {
   pointer-events: none;
   opacity: 0 !important;
+}
+
+.make-gooey {
+  filter: url('#goo');
+}
+
+a {
+  color: var(--primary);
 }
 
 @keyframes pulse {

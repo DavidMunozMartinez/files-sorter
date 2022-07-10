@@ -1,30 +1,26 @@
-<smart-hover override-styles="true">
-    <div
-      class="input-container theme-toggle"
-      bind:onclick="this.toggleTheme()">
-        <i
-          class="material-icons"
-          bind:innerText="this.theme + '_mode' ">
-          <!-- dark_mode -->
-        </i>
-        <span>Theme</span>
-    </div>
-    <div
-      class="input-container notifications-toggle"
-      bind:onclick="this.toggleNotification()">
-        <i 
-          class="material-icons"
-          bind:innerText="'notifications' + (this.notification ? '' : '_off')">
-          <!-- notifications_off -->
-        </i>
-        <span>Notifications</span>
-    </div>
-    <div 
-      class="input-container check-updates"
-      bind:onclick="this.checkForUpdates()">
-      <i class="material-icons">
-        update
-      </i>
-      <span>Check for updates</span>
-    </div>
-</smart-hover>
+<div class="settings-container" bind:class="this.settingsEnabled ? 'show-settings' : 'hidden-settings'">
+  <div class="input-container theme-toggle" bind:onclick="this.toggleTheme()">
+    <i class="material-icons" bind:innerText="this.theme + '_mode' ">
+    </i>
+    <span>Theme</span>
+  </div>
+  <div class="input-container notifications-toggle" bind:onclick="this.toggleNotification()">
+    <i class="material-icons" bind:innerText="'notifications' + (this.notification ? '' : '_off')">
+    </i>
+    <span>Notifications</span>
+  </div>
+  <div 
+    class="input-container check-updates"
+    bind:onclick="this.checkForUpdates()"
+    bind:class="this.checkingForUpdatesClass">
+    <i class="material-icons">
+      update
+    </i>
+    <span>Check for updates</span>
+  </div>
+
+  <div class="input-container settings-toggle" bind:onclick="this.settingsEnabled = !this.settingsEnabled;">
+    <i class="material-icons"> settings </i>
+    <span>App Settings</span>
+  </div>
+</div>

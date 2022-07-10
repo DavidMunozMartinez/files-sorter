@@ -9,7 +9,8 @@ export interface INotificationOptions {
     type?: 'warning' | 'info' | 'error' | 'success'
     message?: string
     timer: number,
-    os?: boolean
+    os?: boolean,
+    closeIcon?: string,
 }
 
 export class NotificationComponent {
@@ -48,10 +49,6 @@ export class NotificationComponent {
         } else {
             return false;
         }
-
-        // notification.onclick = () => {
-        //     spawn('explorer', [`/select, "${destination}"`], {shell:true})
-        // };
     }
 
     notifyFileMove(folder: string, movedFiles: IMovedFileData[]) {
@@ -90,8 +87,9 @@ export class NotificationComponent {
     showConsecutiveTips(tips: Array<keyof typeof Tips>) {
       let current = 0;
       let show = (i: number) => {
-        let notification = this.showTip(tips[i]);
-        if (tips[i + 1]) notification.onClose = close;
+        let next = tips[i + 1];
+        let notification = this.showTip(tips[i], !!next);
+        if (next) notification.onClose = close;
       };
       let close = () => {
         current++;
@@ -100,12 +98,14 @@ export class NotificationComponent {
       show(current);
     }
 
-    showTip(tipKey: keyof typeof Tips): AppNotification {
-      return this.notify({
+    showTip(tipKey: keyof typeof Tips, queue?: boolean): AppNotification {
+      let data: INotificationOptions = {
         message: Tips[tipKey],
         type: 'info',
         timer: 20000
-      });
+      };
+      if (queue) data['closeIcon'] = 'arrow_forward'
+      return this.notify(data);
     }
 
     showTipIfNeeded(tipKey: keyof typeof Tips): AppNotification | null {
@@ -132,13 +132,15 @@ class AppNotification {
         if (!options.type) { options.type = 'info' }
         if (!options.timer) { options.timer = 2000 }
         if (!options.message) { options.message = "" }
+        if (!options.closeIcon) { options.closeIcon = 'close' }
 
         this.type = options.type;
         this.timer = options.timer;
         const closeIcon: HTMLElement = document.createElement('i');
         closeIcon.classList.add('close');
+        closeIcon.classList.add('clickable');
         closeIcon.classList.add('material-icons')
-        closeIcon.innerText = 'close';
+        closeIcon.innerText = options.closeIcon;
         closeIcon.addEventListener('click', () => {
             this.remove();
         });
@@ -163,9 +165,9 @@ class AppNotification {
         }
 
         if (this.type !== 'error') {
-            setTimeout(() => {
-                this.remove();
-            }, this.timer);
+            // setTimeout(() => {
+            //     this.remove();
+            // }, this.timer);
         }
     }
 

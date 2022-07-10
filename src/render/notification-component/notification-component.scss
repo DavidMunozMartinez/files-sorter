@@ -9,7 +9,7 @@
     .notification-item {
         background: rgb(230, 230, 230);
         color: rgb(119, 119, 119);
-        width: 300px;
+        width: 320px;
         height: auto;
         border-radius: 5px;
         transition: opacity 0.2s, transform 0.2s;
@@ -51,6 +51,7 @@
             line-height: 1.5;
             i {
               vertical-align: sub;
+              font-size: 24px; vertical-align: middle; margin: 5px;
             }
         }
 
@@ -59,8 +60,8 @@
             color: var(--info-color);
         }
         &.success {
-            background-color: #e3ffe3;
-            color: #1c471c;
+            background-color: var(--success-background);
+            color: var(--success-color);
         }
         &.error {
             background-color: var(--error-background);

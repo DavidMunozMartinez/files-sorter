@@ -1,12 +1,23 @@
 export enum Tips {
   // This tips become HTML so be careful with these
-  FOLDERS_TIP = '  Click the icon <i class="material-icons"style="font-size: 24px; vertical-align: middle; margin: 5px;">create_new_folder</i> to select a folder and start organizing!</br></br>',
-  AUTO_SORT_ON_OFF = 'Use the <i class="material-icons">sync</i> icon to set the folder on auto-sort, meaning when a file is placed on that folder, the rules will be checked and the file will be automatically moved if needed',
-  MANUAL_SORT = 'Once you are happy with your rules set, use the <i class="material-icons">task_alt</i> icon to manually apply your sorting rules to the folder',
-  CATEGORIES_TIP = 'These section shows directories within your automated folders, you can add as many rules as you want to these folders',
-  REORDER_CATEGORIES = "Re-order your rules folders with drag and drop, when a file is sorted, ruled folders are checked in order from top to bottom and the file its placed on the first available match",
-  RULES_TIP = 'Here you define file rules for this folder.</br></br>Files names (including file extension) will be checked against each rule',
-  GROUP_RULES = "You can group multiple conditions into one, select multiple with Ctrl + Click and use the group button that appears at the bottom",
-  GROUP_RULE_CHECK = "All conditions within a group need to pass for the entire group to pass when the rule check is performed",
-  DELETE = "Removing anything from a list wont do anything to your files or folders, it will just delete the configuration for it",
+  FOLDERS_TIP = `Click the icon <i class="material-icons"style="">add</i> to select a folder and start organizing!</br></br>`,
+  AUTO_SORT_ON_OFF = `
+    <i class="material-icons">visibility</i> Incoming files will be rule checked and moved if needed.
+    <br>
+    <i class="material-icons">visibility_off</i> Incoming files won't be rule checked or moved`,
+  MANUAL_SORT = `<i class="material-icons">task_alt</i> Manually apply the folder rule set ONCE.`,
+  REMOVE_CONFIG = `<i class="material-icons">close</i> Remove the configuration item
+    <br>
+    This will not do anything to your file system, it will only remove the configuration item from the app`,
+  CATEGORIES_TIP = `This section shows your folders within your automated folders, you can add as many rules as you want to each`,
+  REORDER_CATEGORIES = `You can re-order your folders, when rules are checked they are checked from top to bottom`,
+  RULES_TIP = `Here you define file rules for this folder.</br></br>Files names (including file extension) will be checked against each rule`,
+  GROUP_RULES = `Group multiple conditions:
+    <br>
+    <br>
+    - Multi-select with "Ctrl + Click"
+    <br>
+    - Click the group button that appears to group all selected conditions`,
+  GROUP_RULE_CHECK = `All conditions within a group need to pass for the entire group to pass when the rule check is performed`,
+  DELETE = `Removing anything from a list wont do anything to your files or folders, it will just delete the configuration for it`,
 }

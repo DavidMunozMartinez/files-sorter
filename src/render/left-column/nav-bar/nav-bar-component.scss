@@ -1,0 +1,130 @@
+.nav-bar {
+  margin-right: 15px;
+  border-radius: 10px;
+  .static {
+    pointer-events: none;
+  }
+  span {
+    transition: opacity 120ms ease-out;
+    opacity: 0;
+    position: absolute;
+    top: 15px;
+    left: 55px;
+    color: var(--text-color);
+    width: 200px;
+    cursor: default;
+  }
+  .input-container {
+    position: absolute;
+    border-radius: 50%;
+    padding: 10px;
+    user-select: none;
+    i {
+      color: var(--icon-color);
+    }
+  }
+
+  $animation: 200ms;
+  $last-setting: 3;
+  $latest-delay: $animation * $last-setting;
+
+  .settings-container {
+    width: 150px;
+    transition: width 114ms ease-out;
+    width: 45px;
+    border-radius: 10px;
+    height: 100%;
+    transition: width 114ms ease-out;
+    &.show-settings {
+      width: 160px;
+      transition: width 100ms $latest-delay;
+      span {
+        transition: opacity 50ms ($latest-delay);
+        opacity: 1;
+      }
+    }
+  }
+
+  .settings-container.hidden-settings {
+    div:not(:last-child) {
+      pointer-events: none;
+      i {
+        opacity: 0;
+      }
+    }
+    .settings-toggle {
+      i {
+        color: var(--icon-color);
+        transition: 
+          color 50ms $latest-delay;
+      }
+    }
+
+    @for $i from 1 through $last-setting {
+      div:nth-child(#{$i}) {
+        $incremental-duration: $animation * $i;
+        transform: translateY(0);
+        opacity: 0;
+        transition: 
+          transform $incremental-duration cubic-bezier(1, 0 , .24, 1.3),
+          opacity 150ms ease $latest-delay,
+          background-color 150ms $latest-delay;
+        i {
+          transition: 
+            opacity $incremental-duration,
+            color 50ms $latest-delay;
+        }
+      }
+    }
+  }
+
+  .settings-container.show-settings {
+    .settings-toggle {
+      background-color: var(--primary-soft);
+      i {
+        color: var(--primary);
+      }
+    }
+
+    .check-updates.checking {
+      i {
+        animation: rotate 1s linear infinite;
+      }
+    }
+    @for $i from 1 through $last-setting {
+      div:nth-child(#{$i}) {
+        $incremental-duration: $animation * $i;
+        $translate: $i * 65px;
+        background-color: var(--primary);
+        transform: translateY($translate);
+        opacity: 1;
+        transition: 
+          transform $incremental-duration cubic-bezier(1, 0, .24, 1.3);
+        &:hover > i {
+          transform: scale(1.25);
+        }
+        &:active > i {
+          transform: scale(1);
+        }
+        i {
+          color: rgb(220, 220, 220);
+          opacity: 1;
+          transition: 
+            opacity 150ms $latest-delay - 200ms,
+            transform 100ms ease;
+        }
+      }
+    }
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: 
+      scale(1.2) rotate(0);
+  }
+  100% {
+    transform: 
+      scale(1.2) rotate(360deg);
+  }
+}

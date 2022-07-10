@@ -1,25 +1,34 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Files sorter</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Files sorter</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
-    <div class="main-content">
-        <div class="nav-bar" id="nav-bar-component"></div>
-        <div class="column left-column" id="folder-handler"></div>
-        <div class="column right-column">
-            <div class="categories" id="categories-handler"></div>
-            <div class="extensions" id="extensions-handler"></div>
-        </div>
+  <div class="main-content">
+    <div class="nav-bar make-gooey" id="nav-bar-component" bind:class="this.settingsEnabled ? 'show-settings' : 'hidden-settings'"></div>
+    <div class="column left-column" id="folder-handler"></div>
+    <div class="column right-column">
+      <div class="categories" id="categories-handler"></div>
+      <div class="extensions" id="extensions-handler"></div>
     </div>
+  </div>
 
-    <div class="footer">Thanks for using the app <3 </div>
-    <script src="app.js"></script>
+  <div class="footer">Thanks for using the app <3 </div>
+      <script src="app.js"></script>
 </body>
+
+  <svg>
+    <defs>
+      <filter id="goo">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 25 -10" result="goo" />
+        <feBlend in="SourceGraphic" in2="goo" />
+      </filter>
+    </defs>
+  </svg>
 
 </html>
