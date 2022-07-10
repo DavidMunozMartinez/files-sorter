@@ -26,24 +26,35 @@
  *  <div bind:innerText="this.test">Hello world!<div>
  * <div>
  */
-const BindableMouseEvents = [
+
+
+/**
+ * Bindable mouse events (This should only contains valid HTML keywords for ease of use)
+ */
+const BindMouseEventValues = [
   "onclick",
-  // 'ondblclick',
-  // 'ondrag',
-  // 'ondragend',
-  // 'ondragenter',
-  // 'ondragleave',
-  // 'ondragover',
-  // 'ondragstart',
-  // 'ondrop',
-  // 'onmousedown',
-  // 'onmousemove',
-  // 'onmouseout',
-  // 'onmouseover',
-  // 'onmouseup',
-  // 'onmousewheel',
-  // 'onscroll',
-];
+  'ondblclick',
+  'ondrag',
+  'ondragend',
+  'ondragenter',
+  'ondragleave',
+  'ondragover',
+  'ondragstart',
+  'ondrop',
+  'onmousedown',
+  'onmousemove',
+  'onmouseout',
+  'onmouseover',
+  'onmouseup',
+  'onscroll',
+] as const;
+type BindMouseEventTypes = typeof BindMouseEventValues[number];
+
+const BindCodeTypeValues = [
+  'if',
+  'forEach'
+] as const;
+type BindCodeTypes = typeof BindCodeTypeValues[number];
 
 // To add more binding types/logic first add them to this array then, for behavior add its function to the BindHandlers Object
 const BindValues = [
@@ -53,32 +64,13 @@ const BindValues = [
   "class",
   "style",
   "attr",
-  "if",
+  // Code like binds
+  ...BindCodeTypeValues,
   // Mouse events
-  "onclick",
-  // 'ondblclick',
-  // 'ondrag',
-  // 'ondragend',
-  // 'ondragenter',
-  // 'ondragleave',
-  // 'ondragover',
-  // 'ondragstart',
-  // 'ondrop',
-  // 'onmousedown',
-  // 'onmousemove',
-  // 'onmouseout',
-  // 'onmouseover',
-  // 'onmouseup',
-  // 'onmousewheel',
-  // 'onscroll',
-  // ...BindableEvents
+  ...BindMouseEventValues
 ] as const;
-type ArrayAsTypes<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<
-  infer ArrayAsTypes
->
-  ? ArrayAsTypes
-  : never;
-type BindTypes = ArrayAsTypes<typeof BindValues>;
+type BindTypes = typeof BindValues[number];
+
 
 export class Renderer {
   id: string;
@@ -87,11 +79,19 @@ export class Renderer {
   container: HTMLElement | null;
   bindAs?: string | null;
 
+  /**
+   * Holds all bind data and DOM references for quick DOM update when data changes
+   */
   private rendererBinds: IRendererBindMaps = {};
 
-  // private eventBindHandlers = BindableEvents.reduce((acc: any, curr: string) => (acc[curr]= (bind: any) => {
-  //   bind.element[bind.type] = () => this.evaluateDOMExpression(bind.expression);
-  // } , acc), {});
+  /**
+   * Dynamically created all bindHandler functions for Mouse Events
+   */
+  private eventBindHandlers = BindMouseEventValues.reduce((acc: any, curr: string) => (acc[curr]= (bind: ITemplateBind) => {
+    if (this.isMouseEventType(bind.type)) {
+      bind.element[bind.type] = () => this.evaluateDOMExpression(bind.expression);
+    }
+  } , acc), {});
 
   /**
    * These functions are the core functionality of this library, each bind type ends up executing one of these functions which
@@ -129,12 +129,33 @@ export class Renderer {
     if: (bind: ITemplateBind) => {
       throw new Error("if binding not implemented yet.");
     },
-    onclick: (bind: ITemplateBind) => {
-      bind.element.onclick = () => {
-        this.evaluateDOMExpression(bind.expression);
-      };
+    forEach: (bind: ITemplateBind) => {
+      throw new Error("forEach binding not implemented yet.");
+      // if (bind.element.parentElement) {
+      //   if (!bind.processedExpression) {
+      //     // let parent: HTMLElement = bind.element.parentElement;
+      //     let splitExpression = bind.expression.split('in');
+      //     let varName = splitExpression[0].replace(' ', '');
+      //     let arrName = splitExpression[1].replace(' ', '');
+      //     let bindName = arrName.split('.')[1];
+      //     if (this.bind[bindName]) {
+      //       this.bind[bindName].forEach((item: any) => {
+      //         let tag = bind.element.tagName;
+      //         let el = document.createElement(tag);
+              
+      //         // let el = document.createElement();
+      //       });
+      //       // console.log('Make els for: ', this.bind[bindName]);
+      //       // this.bind[arrName]
+      //     }
+      //     // bind.processedExpression = `${arrName}.forEach((${varName}) => )`
+      //     // let preparedExpression = '';
+      //   }
+      //   let children = [];
+      // }
     },
-    // ... this.eventBindHandlers
+    // Append all mouse event handlers, which work all the same for the most part
+    ... this.eventBindHandlers
   };
 
   constructor(data: IRenderer) {
@@ -238,7 +259,7 @@ export class Renderer {
           // Expression in this template bind requires this bind property
           templateBind.expression.indexOf(propKey) > -1 &&
           // Bindable mouse event should not be reactive to changes
-          BindableMouseEvents.indexOf(templateBind.type) == -1
+          !this.isMouseEventType(templateBind.type)
         ) {
           affects.push(templateBind);
           templateBind.isAffectedBy.push(propKey);
@@ -254,20 +275,21 @@ export class Renderer {
    * @returns
    */
   private validateBindProps(binds: any): boolean {
-    let values = Object.values(binds);
+    // let values = Object.values(binds);
     let validBinds = true;
-    for (let i = 0; i <= values.length; i++) {
-      let val = values[i];
-      if (typeof val === "object" && val !== null) {
-        validBinds = false;
-        break;
-      }
-    }
+    // for (let i = 0; i <= values.length; i++) {
+    //   let val = values[i];
+    //   // if (val !== null) {
+    //   //   validBinds = false;
+    //   //   break;
+    //   // }
+    // }
     return validBinds;
   }
 
   private evaluateDOMExpression(expression: string): unknown {
     let alias = this.bindAs ? `let ${this.bindAs}=this;` : "";
+
     // I probably need to sanitize this
     return Function(`${alias} return ${expression};`).apply(this.bind);
   }
@@ -299,13 +321,15 @@ export class Renderer {
     type: BindTypes
   ): ITemplateBind {
     let expression = element.getAttribute(`bind:${type}`) || "";
-    let isEvent = BindableMouseEvents.indexOf(String(type)) > -1;
+    let isEventBindType = this.isMouseEventType(type);
+    let isCodeBindType = this.isCodeBindType(type);
+    let evaluateAtOnce = !isEventBindType && !isCodeBindType;
     let data = {
       type: <BindTypes>type,
       element: element,
       expression: expression,
       // Event bindings should not evaluate their expression until the event is triggered
-      result: !isEvent ? this.evaluateDOMExpression(expression) : null,
+      result: evaluateAtOnce ? this.evaluateDOMExpression(expression) : null ,
       isAffectedBy: [],
     };
 
@@ -313,9 +337,21 @@ export class Renderer {
 
     return data;
   }
+
+  isMouseEventType (keyInput: BindTypes): keyInput is BindMouseEventTypes {
+    let test = JSON.parse(JSON.stringify(BindMouseEventValues));
+    return test.includes(keyInput);
+  }
+
+  isCodeBindType (keyInput: BindTypes): keyInput is BindCodeTypes {
+    let test = JSON.parse(JSON.stringify(BindCodeTypeValues));
+    return test.includes(keyInput);
+  }
 }
 
-type BindHandlers = { [key in BindTypes]: (bind: ITemplateBind) => void };
+type BindHandlers = {
+  [key in BindTypes]: (bind: ITemplateBind) => void
+};
 
 interface IRenderer {
   /**
@@ -345,6 +381,11 @@ interface ITemplateBind {
   result: unknown;
   expression: string;
   isAffectedBy: string[];
+  /**
+   * Some bind types like forEach and if use specific expressions that
+   * require some processing
+   */
+  processedExpression?: string,
 }
 
 interface IRendererBindMaps {

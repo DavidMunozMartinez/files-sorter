@@ -9,7 +9,10 @@ import { Renderer } from "../../app-renderer";
 
 const renderer: Renderer = new Renderer({
   id: "folder-handler",
-  template: require("./folder-handler.html")
+  template: require("./folder-handler.html"),
+  // bind: {
+  //   testArray: [{data: 1}, {data: 2}, { data: 3}],
+  // }
 });
 
 export class FolderHandler extends SectionHandler {
