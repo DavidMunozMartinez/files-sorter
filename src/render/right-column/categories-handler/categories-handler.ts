@@ -13,7 +13,7 @@ let renderer: Renderer = new Renderer({
   template: require("./categories-handler.html"),
   bind: {
     activeFolder: null,
-    looseFiles: null,
+    looseFiles: null
   },
 });
 
@@ -26,7 +26,6 @@ export class CategoriesHandler extends SectionHandler {
   notificationService: NotificationComponent;
   dragging: string | null = null;
   activeCategory: string | null = null;
-  // renderer: Renderer;
 
   constructor(
     fileSorter: FileSorter,
@@ -42,10 +41,38 @@ export class CategoriesHandler extends SectionHandler {
       utils,
       notificationService
     );
+
     renderer.bind.openPath = () => {
       let fullPath = path.resolve(renderer.bind.activeFolder);
       this.utils.revealInExplorer(fullPath);
     }
+    renderer.bind.reload = () => {
+      let active = this.folder;
+      this.disable();
+      setTimeout(() => {
+        if (active) {
+          this.enable(active);
+        }
+      }, 200);
+    }
+
+    renderer.bind.onInputKeydown = (event: KeyboardEvent, input: 'add' | 'search') => {
+      switch (input) {
+        case 'add':
+          if (event.which === 13) {
+            this.onEnter(event);
+          }
+          break;
+        case 'search':
+          let input = event.target as HTMLElement;
+          setTimeout(() => {
+            if (event && input) {
+              this.filterList(input.innerText);
+            }
+          }, 50);
+      }
+    }
+
     this.inputRef = this.contentRef.querySelector("div.category-input");
     const helpRef = document.getElementById('categories-help');
     helpRef?.addEventListener('click', () => this.notificationService.showConsecutiveTips(['CATEGORIES_TIP', 'REORDER_CATEGORIES', 'DELETE']));
@@ -66,15 +93,6 @@ export class CategoriesHandler extends SectionHandler {
         },
       });
     }
-    this.inputRef?.addEventListener("keydown", (event: any) => {
-      if (event.which === 13) {
-        this.onEnter(event);
-      }
-    });
-
-    this.inputRef?.addEventListener("blur", (event: any) => {
-      event.target.innerText = "";
-    });
 
     // Executed when a new item is added to the section list
     this.on("added", (item: HTMLElement, items: NodeList) => {
@@ -144,10 +162,12 @@ export class CategoriesHandler extends SectionHandler {
       data = this.getFolders();
       const order: string[] = data[this.folder].order;
       renderer.bind.activeFolder = folder;
+
       fs.readdir(folder, (err, contents) => {
         let files = contents.filter(content => fs.statSync(path.resolve(folder, content)).isFile());
         renderer.bind.looseFiles = `${files.length} loose files`
       });
+
       const activeRef = this.contentRef.querySelector(".active-folder");
       if (activeRef) {
         activeRef.classList.remove("disabled");
@@ -190,6 +210,18 @@ export class CategoriesHandler extends SectionHandler {
     if (activeRef) {
       if (!activeRef.classList.contains("disabled")) {
         activeRef.classList.add("disabled");
+      }
+    }
+  }
+
+  filterList(searchTerm: string) {
+    let children = this.listRef?.children;
+
+    if (children && children.length) {
+      for (let i = 0; i < children.length; i++) {
+        let child = children[i] as HTMLElement;
+        let value = child.getAttribute('value') || '';
+        value.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1 ? 'block' : 'none';
       }
     }
   }

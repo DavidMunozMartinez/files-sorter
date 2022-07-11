@@ -11,7 +11,7 @@ const renderer: Renderer = new Renderer({
   id: "folder-handler",
   template: require("./folder-handler.html"),
   // bind: {
-  //   testArray: [{data: 1}, {data: 2}, { data: 3}],
+  //   testArray: [1, 2, 3],
   // }
 });
 

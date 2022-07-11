@@ -54,26 +54,27 @@
     }
     .dropdown {
       position: relative;
-      display: inline-block;
       height: 30px;
       width: 120px;
       outline: none;
       border-radius: 5px;
       box-sizing: border-box;
+      float: left;
       cursor: pointer;
       i.material-icons {
         left: unset;
-        right: 3px;
         color: var(--icon-color);
+        position: absolute;
+        right: 0;
+        transform: translateY(-50%);
+        top: 50%;
       }
       .value {
-        height: 100%;
-        width: 100%;
         position: absolute;
-        padding: 7px;
-        padding-right: 30px;
-        box-sizing: border-box;
         pointer-events: none;
+        left: 5px;
+        top: 50%;
+        transform: translateY(-50%);
       }
       smart-hover.options > div.smart-hover-shadow {
         border-left: 4px solid var(--text-color);
@@ -91,10 +92,13 @@
         transition: all 0.2s;
         max-height: 0px;
         z-index: 3;
+        left: 0;
+        top: calc(100% + 5px);
         span {
           display: block;
           padding: 10px;
           padding-left: 15px;
+          text-align: left;
         }
       }
     }
@@ -112,7 +116,7 @@
     border-radius: 3px;
     border: 1px solid #535353;
     width: 130px;
-    height: 30px;
+    height: 34px;
     background: unset;
     cursor: text;
   }

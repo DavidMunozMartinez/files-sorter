@@ -2,11 +2,30 @@
 </div>
 <div class="column-title">
   <p>Folders<i id="categories-help" class="material-icons">help_outline</i> </p>
-</div>
-<div class="input-container">
-  <div class="category-input" contenteditable="true">
+
+  <div class="input-container">
+    <div 
+      bind:onblur="event.target.innerText = ''"
+      bind:onkeydown="this.onInputKeydown(event, 'add')"
+      class="category-input"
+      contenteditable="true"
+      placeholder="Add new..."></div>
+    <i class="material-icons">add</i>
   </div>
-  <i class="material-icons">add</i>
+  
+  <div class="input-container" bind:onclick="this.reload()" style="float: right; margin-right: 20px;">
+    <div class="category-input"></div>
+    <i class="material-icons">refresh</i>
+  </div>
+
+  <div class="input-container">
+    <div
+      bind:onkeydown="this.onInputKeydown(event, 'search')"
+      class="category-input"
+      contenteditable="true"
+      placeholder="Search..."></div>
+    <i class="material-icons">search</i>
+  </div>
 </div>
 
 <div class="active-folder">
