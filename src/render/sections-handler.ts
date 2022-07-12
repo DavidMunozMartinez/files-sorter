@@ -178,6 +178,8 @@ export class SectionHandler {
     this.subscriptions.cleared.forEach((callback: any) => {
       callback();
     });
+    this.multiSelected = [];
+    this.selected = null;
   }
 
   /**
