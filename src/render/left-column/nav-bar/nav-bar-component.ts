@@ -2,6 +2,7 @@ import { Renderer } from "../../app-renderer";
 import { NotificationComponent } from "../../notification-component/notification-component";
 import { Utils } from "../../utils";
 import axios from "axios";
+import { remote } from "electron";
 
 type themes = "dark" | "light";
 
@@ -26,7 +27,7 @@ export class NavBar {
         theme: this.getSystemTheme(),
         notification: this.utils.getData("notifications") || false,
         settingsEnabled: false,
-        checkingForUpdatesClass: '',
+        checkingForUpdatesClass: "",
         toggleTheme: () => {
           this.bind.theme = this.bind.theme === "dark" ? "light" : "dark";
           this.applyTheme(this.bind.theme);
@@ -35,11 +36,11 @@ export class NavBar {
         toggleNotification: () => {
           this.bind.notification = !this.bind.notification;
           this.utils.saveData("notifications", this.bind.notification);
-
         },
         checkForUpdates: () => {
-          let current = process.env.npm_package_version;
-          this.bind.checkingForUpdates = 'checking';
+          // In dev move this returns electron version, in prod, returns the package version
+          let current = remote.app.getVersion();
+          this.bind.checkingForUpdates = "checking";
           axios
             .get(
               "https://api.github.com/repos/DavidMunozMartinez/files-sorter/releases/latest"
@@ -71,8 +72,9 @@ export class NavBar {
                 type: "info",
                 timer: timer,
               });
-            }).finally(() => {
-              this.bind.checkingForUpdates = '';
+            })
+            .finally(() => {
+              this.bind.checkingForUpdates = "";
             });
         },
       },
