@@ -102,6 +102,10 @@ export class ExtensionsHandler extends SectionHandler {
         this.joinConditionsRef?.classList.add("hide");
       }
     });
+
+    this.on("cleared", () => {
+      this.joinConditionsRef?.classList.add('hide');
+    });
   }
 
   /**

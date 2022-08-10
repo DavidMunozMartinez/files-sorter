@@ -61,6 +61,7 @@ export class CategoriesHandler extends SectionHandler {
         case 'add':
           if (event.which === 13) {
             this.onEnter(event);
+            console.log('Entered');
           }
           break;
         case 'search':
@@ -68,8 +69,10 @@ export class CategoriesHandler extends SectionHandler {
           setTimeout(() => {
             if (event && input) {
               this.filterList(input.innerText);
+              console.log('Filtering to: ', input.innerText);
             }
           }, 50);
+          break;
       }
     }
 
@@ -221,7 +224,7 @@ export class CategoriesHandler extends SectionHandler {
       for (let i = 0; i < children.length; i++) {
         let child = children[i] as HTMLElement;
         let value = child.getAttribute('value') || '';
-        value.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1 ? 'block' : 'none';
+        child.style.display = value.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1 ? 'block' : 'none';
       }
     }
   }
@@ -239,8 +242,13 @@ export class CategoriesHandler extends SectionHandler {
     let destination = path.resolve(this.folder, value);
     fs.mkdir(destination, (err) => {
       if (err) {
+        let alreadyExists = err.message.indexOf('EEXIST') > -1;
+        let message = 'Oops, something went wrong'
+        if (alreadyExists) {
+          message = `Folder "${value}" already exists`;
+        }
         this.notificationService.notify({
-          message: "Oops, something went wrong",
+          message: message,
           type: "error",
           timer: 0,
         });
