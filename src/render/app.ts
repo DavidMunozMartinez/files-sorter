@@ -46,16 +46,16 @@ class App {
       }
     });
 
-    const folders = Object.keys(this.folderHandler.getFolders());
-    const items: HTMLElement[] = folders.map((folder) => {
-      return this.folderHandler.createListElement(folder);
-    });
+    // const folders = Object.keys(this.folderHandler.getFolders());
+    // const items: HTMLElement[] = folders.map((folder) => {
+    //   return this.folderHandler.createListElement(folder);
+    // });
 
-    if (items.length > 0) {
-      this.folderHandler.renderList(items, 0);
-    } else {
-      this.folderHandler.showTip();
-    }
+    // if (items.length > 0) {
+    //   this.folderHandler.renderList(items, 0);
+    // } else {
+    //   this.folderHandler.showTip();
+    // }
   }
 }
 

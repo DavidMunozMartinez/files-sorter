@@ -13,9 +13,28 @@
   override-styles="true"
   children-can-change="true"
   transition-time="100">
-  <!-- Folder items will be rendered here -->
+
+  <div :foreach="folder in this.folders"
+    class="folder-list-item"
+    :class:active="this.selected === folder.name"
+    :onclick="this.selectFolder(folder)">
+
+    <div class="value-holder">
+      ${folder.name}
+    </div>
+    <i class="material-icons sort-icon"
+      :onclick="this.sortFolder(folder)"
+      title="Apply sort configuration">task_alt</i>
+    <i class="material-icons watch-icon"
+      :onclick="this.toggleFolderWatcher(event, folder)"
+      :title=" 'Turn ' + (folder.active ? 'off' : 'on') + ' folder watcher' ">
+      ${folder.active ? 'visibility' : 'visibility_off'}
+    </i>
+  </div>
+
 </smart-hover>
-<span class="section-tip">
+
+<span :if="this.folders && !this.folders.length" class="section-tip">
   Click the icon <i class="material-icons"
       style="font-size: 24px; vertical-align: middle; margin: 5px;">create_new_folder</i> to select a
   folder and start organizing!</br></br>

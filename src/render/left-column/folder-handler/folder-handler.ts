@@ -6,14 +6,15 @@ import { SectionHandler } from "../../sections-handler";
 import { Utils } from "../../utils";
 import path from "path";
 import { Renderer } from "../../app-renderer";
+import { Bind } from "bindrjs";
 
-const renderer: Renderer = new Renderer({
-  id: "folder-handler",
-  template: require("./folder-handler.html"),
-  // bind: {
-  //   testArray: [1, 2, 3],
-  // }
-});
+// const renderer: Renderer = new Renderer({
+//   id: "folder-handler",
+//   template: require("./folder-handler.html"),
+//   // bind: {
+//   //   testArray: [1, 2, 3],
+//   // }
+// });
 
 export class FolderHandler extends SectionHandler {
   categoriesHandler: CategoriesHandler;
@@ -22,6 +23,7 @@ export class FolderHandler extends SectionHandler {
   utils: Utils;
   listReady: boolean = false;
   folders: { [key: string]: HTMLElement } = {};
+  foldersData: any;
 
   constructor(
     fileSorter: FileSorter,
@@ -29,6 +31,38 @@ export class FolderHandler extends SectionHandler {
     notificationService: NotificationComponent
   ) {
     super(".column.left-column", ".folder-list", ".folder-list-item");
+
+    let folders = this.getFolders();
+    let bindFolders = Object.keys(folders).map((key: string) => {
+      folders[key].name = key;
+      return folders[key];
+    });
+
+    const FolderHandlerBinds: any = new Bind({
+      id: "folder-handler",
+      template: require("./folder-handler.html"),
+      bind: {
+        selected: null,
+        folders: bindFolders,
+        sortFolder: (folder: any) => {
+          this.sortFolder(folder.name, () => {});
+        },
+        toggleFolderWatcher: (event: any, folder: any) => {
+          if (folders[folder.name]) {
+            folder.active = !folder.active;
+            folders[folder.name].active = folder.active;
+            localStorage.setItem("folders", JSON.stringify(folders));
+            this.fileSorter.updateFoldersData();
+          }
+          event.stopImmediatePropagation();
+        },
+        selectFolder: (folder: any) => {
+          FolderHandlerBinds.bind.selected = folder.name;
+          this.categoriesHandler.enable(folder.name);
+        }
+      },
+    });
+
     // Handles all logic related to the categories section
     this.categoriesHandler = new CategoriesHandler(
       fileSorter,
@@ -40,9 +74,16 @@ export class FolderHandler extends SectionHandler {
     this.notificationService = notificationService;
     this.utils = utils;
     const addButtonRef = document.querySelector("div.folder-input");
-    const helpButtonRef = document.getElementById('folder-help');
+    const helpButtonRef = document.getElementById("folder-help");
     addButtonRef?.addEventListener("click", () => this.folderDialog());
-    helpButtonRef?.addEventListener("click", () => this.notificationService.showConsecutiveTips(['FOLDERS_TIP', 'AUTO_SORT_ON_OFF', 'MANUAL_SORT', 'REMOVE_CONFIG']))
+    helpButtonRef?.addEventListener("click", () =>
+      this.notificationService.showConsecutiveTips([
+        "FOLDERS_TIP",
+        "AUTO_SORT_ON_OFF",
+        "MANUAL_SORT",
+        "REMOVE_CONFIG",
+      ])
+    );
 
     this.contentRef.addEventListener("drop", () => {
       if (this.categoriesHandler.folder && this.categoriesHandler.dragging) {
@@ -53,9 +94,9 @@ export class FolderHandler extends SectionHandler {
         if (!this.categoriesHandler.dragging) return;
         const saved = this.save(folder);
         if (this.listRef && saved) {
-          const listElement = this.createListElement(folder);
-          this.renderItem(listElement);
-          this.select(listElement);
+          // const listElement = this.createListElement(folder);
+          // this.renderItem(listElement);
+          // this.select(listElement);
         }
       }
       this.contentRef.classList.remove("drag-hover");
@@ -71,12 +112,11 @@ export class FolderHandler extends SectionHandler {
     });
 
     this.on("selected", (item: HTMLElement) => {
-      const element = item.querySelector(".value-holder");
-      const folder = element?.innerHTML;
-      if (folder) {
-        this.categoriesHandler.enable(folder);
-
-      }
+      // const element = item.querySelector(".value-holder");
+      // const folder = element?.innerHTML;
+      // if (folder) {
+      //   this.categoriesHandler.enable(folder);
+      // }
     });
 
     this.on("removed", (item: HTMLElement, items: NodeList) => {
@@ -105,16 +145,16 @@ export class FolderHandler extends SectionHandler {
     });
 
     this.on("added", (item: HTMLElement, items: NodeList) => {
-      if (items.length === 1) {
-        this.select(item);
-        this.hideTip();
-        let tip = this.notificationService.showTipIfNeeded("AUTO_SORT_ON_OFF");
-        if (tip) {
-          tip.onClose = () => {
-            this.notificationService.showTipIfNeeded("MANUAL_SORT");
-          };
-        }
-      }
+      // if (items.length === 1) {
+      //   this.select(item);
+      //   this.hideTip();
+      //   let tip = this.notificationService.showTipIfNeeded("AUTO_SORT_ON_OFF");
+      //   if (tip) {
+      //     tip.onClose = () => {
+      //       this.notificationService.showTipIfNeeded("MANUAL_SORT");
+      //     };
+      //   }
+      // }
     });
   }
 
@@ -131,9 +171,9 @@ export class FolderHandler extends SectionHandler {
     }
     const saved = this.save(value);
     if (this.listRef && saved) {
-      const listElement = this.createListElement(value);
-      this.renderItem(listElement);
-      this.select(listElement);
+      // const listElement = this.createListElement(value);
+      // this.renderItem(listElement);
+      // this.select(listElement);
     }
   }
 
@@ -173,80 +213,102 @@ export class FolderHandler extends SectionHandler {
     return success;
   }
 
+  private sortFolder(folder: string, done: () => void) {
+    this.fileSorter
+      .sortFolder(folder)
+      .then((movedFiles) => {
+        this.notificationService.notifyFileMove(folder, movedFiles);
+      })
+      .catch((err) => {
+        if (err.indexOf("timeout") > -1) {
+          let message = `Timeout limit exceeded while sorting ${folder}`;
+          this.notificationService.notify({
+            timer: 6000,
+            message: message,
+            type: "error",
+          });
+          this.notificationService.notifyOS("Sorting time out", message);
+        }
+      })
+      .finally(() => {
+        done();
+      });
+  }
+
   /**
    * Created a DOM element that will be added to the folders list in the DOM
    * @param folder Folder path string to add to the list
    */
-  createListElement(folder: string): HTMLElement {
-    const valueElement = this.makeElement("div", {
-      classList: ["value-holder"],
-      innerHTML: folder,
-    });
+  // createListElement(folder: string): HTMLElement {
+  //   const valueElement = this.makeElement("div", {
+  //     classList: ["value-holder"],
+  //     innerHTML: folder,
+  //   });
 
-    const sortIcon = this.makeElement("i", {
-      classList: ["material-icons", "sort-icon"],
-      attrs: ["title=Apply sort configuration"],
-      innerHTML: "task_alt",
-      click: (event: any) => {
-        const sorting = event.target.classList.contains("sorting");
-        if (!sorting) {
-          event.target.classList.add("sorting");
-          this.fileSorter
-            .sortFolder(folder)
-            .then((movedFiles: IMovedFileData[]) => {
-              this.notificationService.notifyFileMove(folder, movedFiles);
-              event.target.classList.remove("sorting");
-            })
-            .catch((err) => {
-              if (err.indexOf("timeout") > -1) {
-                let message = `Timeout limit exceeded while sorting ${folder}`;
-                this.notificationService.notify({
-                  timer: 6000,
-                  message: message,
-                  type: "error",
-                });
-                this.notificationService.notifyOS("Sorting time out", message);
-              }
-              event.target.classList.remove("sorting");
-            });
-        }
-      },
-    });
+  //   const sortIcon = this.makeElement("i", {
+  //     classList: ["material-icons", "sort-icon"],
+  //     attrs: ["title=Apply sort configuration"],
+  //     innerHTML: "task_alt",
+  //     click: (event: any) => {
+  // const sorting = event.target.classList.contains("sorting");
+  // if (!sorting) {
+  //   event.target.classList.add("sorting");
+  //   this.fileSorter
+  //     .sortFolder(folder)
+  //     .then((movedFiles: IMovedFileData[]) => {
+  //       this.notificationService.notifyFileMove(folder, movedFiles);
+  //       event.target.classList.remove("sorting");
+  //     })
+  //     .catch((err) => {
+  //       if (err.indexOf("timeout") > -1) {
+  //         let message = `Timeout limit exceeded while sorting ${folder}`;
+  //         this.notificationService.notify({
+  //           timer: 6000,
+  //           message: message,
+  //           type: "error",
+  //         });
+  //         this.notificationService.notifyOS("Sorting time out", message);
+  //       }
+  //       event.target.classList.remove("sorting");
+  //     });
+  // }
+  //     },
+  //   });
 
-    let data = this.getFolders();
-    let active = data[folder].active || false;
+  //   let data = this.getFolders();
+  //   let active = data[folder].active || false;
 
-    const watchIcon = this.makeElement("i", {
-      classList: [
-        "material-icons",
-        "watch-icon",
-      ],
-      innerHTML: active ? "visibility" : "visibility_off",
-      attrs: [`title=Turn ${active ? 'off' : 'on'} the folder watcher`],
-      click: (event: any) => {
-        data = this.getFolders();
-        let active = event.target.innerHTML === "visibility";
-        if (data[folder]) {
-          data[folder].active = !active;
-          event.target.innerHTML = active ? "visibility_off" : "visibility";
-          localStorage.setItem("folders", JSON.stringify(data));
-          event.target.setAttribute('title', `Turn ${active ? 'on' : 'off'} the folder watcher`)
-          this.fileSorter.updateFoldersData();
-        }
-        event.stopImmediatePropagation();
-      },
-    });
+  //   const watchIcon = this.makeElement("i", {
+  //     classList: [
+  //       "material-icons",
+  //       "watch-icon",
+  //     ],
+  //     innerHTML: active ? "visibility" : "visibility_off",
+  //     attrs: [`title=Turn ${active ? 'off' : 'on'} the folder watcher`],
+  //     click: (event: any) => {
+  //       data = this.getFolders();
+  //       let active = event.target.innerHTML === "visibility";
+  //       if (data[folder]) {
+  //         data[folder].active = !active;
+  //         event.target.innerHTML = active ? "visibility_off" : "visibility";
+  //         localStorage.setItem("folders", JSON.stringify(data));
+  //         event.target.setAttribute('title', `Turn ${active ? 'on' : 'off'} the folder watcher`)
+  //         this.fileSorter.updateFoldersData();
+  //       }
+  //       event.stopImmediatePropagation();
+  //     },
+  //   });
 
-    const listItem = this.makeElement("div", {
-      classList: ["folder-list-item"],
-      children: [valueElement, sortIcon, watchIcon],
-      dblclick: () => {
-        this.utils.revealInExplorer(folder);
-      },
-    });
+  //   const listItem = this.makeElement("div", {
+  //     classList: ["folder-list-item"],
+  //     children: [valueElement, sortIcon, watchIcon],
+  //     dblclick: () => {
+  //       this.utils.revealInExplorer(folder);
+  //     },
+  //   });
 
-    this.folders[folder] = listItem;
+  //   this.folders[folder] = listItem;
 
-    return listItem;
-  }
+  //   return listItem;
+  // }
 }
