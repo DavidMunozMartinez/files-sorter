@@ -5,16 +5,7 @@ import { CategoriesHandler } from "../../right-column/categories-handler/categor
 import { SectionHandler } from "../../sections-handler";
 import { Utils } from "../../utils";
 import path from "path";
-import { Renderer } from "../../app-renderer";
 import { Bind } from "bindrjs";
-
-// const renderer: Renderer = new Renderer({
-//   id: "folder-handler",
-//   template: require("./folder-handler.html"),
-//   // bind: {
-//   //   testArray: [1, 2, 3],
-//   // }
-// });
 
 export class FolderHandler extends SectionHandler {
   categoriesHandler: CategoriesHandler;
@@ -44,6 +35,7 @@ export class FolderHandler extends SectionHandler {
       bind: {
         selected: null,
         folders: bindFolders,
+        dragging: false,
         sortFolder: (folder: any) => {
           this.sortFolder(folder.name, () => {});
         },
@@ -59,8 +51,61 @@ export class FolderHandler extends SectionHandler {
         selectFolder: (folder: any) => {
           FolderHandlerBinds.bind.selected = folder.name;
           this.categoriesHandler.enable(folder.name);
-        }
+        },
+        removeFolder: (folder: any) => {
+          const value = folder.name;
+          if (value) {
+            this.delete(value);
+          }
+          let index = FolderHandlerBinds.bind.folders.indexOf(folder);
+          FolderHandlerBinds.bind.folders.splice(index ,1);
+          if (FolderHandlerBinds.bind.folders.length === 0) {
+
+          } else if (value) {
+            if (FolderHandlerBinds.bind.folders[index]) {
+              FolderHandlerBinds.binds.selectFolder(FolderHandlerBinds.bind.folders[index]);
+            } else {
+              FolderHandlerBinds.binds.selectFolder(FolderHandlerBinds.bind.folders[index - 1]);
+            }
+          }
+        },
+        openFolderDialog: () => {
+          this.folderDialog();
+        },
+        showFoldersHelp: () => {
+          this.notificationService.showConsecutiveTips([
+            "FOLDERS_TIP",
+            "AUTO_SORT_ON_OFF",
+            "MANUAL_SORT",
+            "REMOVE_CONFIG",
+          ]);
+        },
+        onDragOver: (event: DragEvent) => {
+          FolderHandlerBinds.bind.dragging = true;
+          event.preventDefault();
+        },
+        onDrop: () => {
+          if (this.categoriesHandler.folder && this.categoriesHandler.dragging) {
+            let folder = path.resolve(
+              this.categoriesHandler.folder,
+              this.categoriesHandler.dragging
+            );
+            if (this.save(folder)) {
+              FolderHandlerBinds.bind.folders.push({
+                name: folder,
+                active: false,
+                categories: {},
+                order: []
+              });
+              FolderHandlerBinds.bind.selected = folder;
+            }
+          }
+          FolderHandlerBinds.bind.dragging = false;
+        },
       },
+      ready: () => {
+        FolderHandlerBinds.bind.selectFolder(bindFolders[0]);
+      }
     });
 
     // Handles all logic related to the categories section
@@ -73,43 +118,19 @@ export class FolderHandler extends SectionHandler {
     this.fileSorter = fileSorter;
     this.notificationService = notificationService;
     this.utils = utils;
-    const addButtonRef = document.querySelector("div.folder-input");
-    const helpButtonRef = document.getElementById("folder-help");
-    addButtonRef?.addEventListener("click", () => this.folderDialog());
-    helpButtonRef?.addEventListener("click", () =>
-      this.notificationService.showConsecutiveTips([
-        "FOLDERS_TIP",
-        "AUTO_SORT_ON_OFF",
-        "MANUAL_SORT",
-        "REMOVE_CONFIG",
-      ])
-    );
 
-    this.contentRef.addEventListener("drop", () => {
-      if (this.categoriesHandler.folder && this.categoriesHandler.dragging) {
-        let folder = path.resolve(
-          this.categoriesHandler.folder,
-          this.categoriesHandler.dragging
-        );
-        if (!this.categoriesHandler.dragging) return;
-        const saved = this.save(folder);
-        if (this.listRef && saved) {
-          // const listElement = this.createListElement(folder);
-          // this.renderItem(listElement);
-          // this.select(listElement);
-        }
-      }
-      this.contentRef.classList.remove("drag-hover");
-    });
+    // this.contentRef.addEventListener("drop", () => {
+    //   this.contentRef.classList.remove("drag-hover");
+    // });
 
-    this.contentRef.addEventListener("dragover", (event) => {
-      this.contentRef.classList.add("drag-hover");
-      event.preventDefault();
-    });
+    // this.contentRef.addEventListener("dragover", (event) => {
+    //   this.contentRef.classList.add("drag-hover");
+    //   event.preventDefault();
+    // });
 
-    this.contentRef.addEventListener("dragleave", (event) => {
-      this.contentRef.classList.remove("drag-hover");
-    });
+    // this.contentRef.addEventListener("dragleave", (event) => {
+    //   this.contentRef.classList.remove("drag-hover");
+    // });
 
     this.on("selected", (item: HTMLElement) => {
       // const element = item.querySelector(".value-holder");
@@ -120,28 +141,28 @@ export class FolderHandler extends SectionHandler {
     });
 
     this.on("removed", (item: HTMLElement, items: NodeList) => {
-      const folder = item.querySelector(".value-holder");
-      const value = folder?.innerHTML;
-      let index = 0;
-      Object.values(this.folders).forEach((element, i) => {
-        if (item === element) index = i;
-      });
-      if (value) {
-        this.delete(value);
-      }
-      if (items.length === 0) {
-        this.showTip();
-        this.categoriesHandler.disable();
-        this.categoriesHandler.clearList();
-      } else if (value) {
-        delete this.folders[value];
-        let items = Object.values(this.folders);
-        if (items[index]) {
-          this.select(items[index]);
-        } else {
-          this.select(items[index - 1]);
-        }
-      }
+      // const folder = item.querySelector(".value-holder");
+      // const value = folder?.innerHTML;
+      // let index = 0;
+      // Object.values(this.folders).forEach((element, i) => {
+      //   if (item === element) index = i;
+      // });
+      // if (value) {
+      //   this.delete(value);
+      // }
+      // if (items.length === 0) {
+      //   this.showTip();
+      //   this.categoriesHandler.disable();
+      //   this.categoriesHandler.clearList();
+      // } else if (value) {
+      //   delete this.folders[value];
+      //   let items = Object.values(this.folders);
+      //   if (items[index]) {
+      //     this.select(items[index]);
+      //   } else {
+      //     this.select(items[index - 1]);
+      //   }
+      // }
     });
 
     this.on("added", (item: HTMLElement, items: NodeList) => {

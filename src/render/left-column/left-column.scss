@@ -19,6 +19,11 @@
       box-sizing: border-box;
       border-radius: 5px;
       margin: 0 5px;
+      animation-name: slideIn;
+      animation-duration: 200ms;
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      opacity: 0;
       cursor: pointer;
       .value-holder {
         width: auto;
@@ -73,4 +78,15 @@
 .left-column.drag-hover {
   outline: 2px dotted var(--text-color);
   transform: scale(1.01);
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }

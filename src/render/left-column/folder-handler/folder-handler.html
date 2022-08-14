@@ -1,10 +1,10 @@
 <div class="column-title">
   <div class="input-container">
-    <div class="folder-input"></div>
+    <div class="folder-input" :onclick="this.openFolderDialog()"></div>
     <i class="material-icons">add</i>
   </div>
 
-  <p>Automated Folders <i id="folder-help" class="material-icons">help_outline</i> </p>
+  <p>Automated Folders <i :onclick="this.showFoldersHelp()" class="material-icons">help_outline</i> </p>
 </div>
 
 <smart-hover
@@ -16,12 +16,16 @@
 
   <div :foreach="folder in this.folders"
     class="folder-list-item"
+    :style:animation-delay="120 * this.folders.indexOf(folder) - this.folders.indexOf(folder) * 100 + 'ms'"
     :class:active="this.selected === folder.name"
     :onclick="this.selectFolder(folder)">
 
     <div class="value-holder">
       ${folder.name}
     </div>
+    <i class="material-icons close-icon" :onclick="this.removeFolder(folder)" style="position: relative; float: right">
+      close
+    </i>
     <i class="material-icons sort-icon"
       :onclick="this.sortFolder(folder)"
       title="Apply sort configuration">task_alt</i>
