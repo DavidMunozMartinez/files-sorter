@@ -15,8 +15,9 @@
   transition-time="100">
 
   <div :foreach="folder in this.folders"
+    :index
     class="folder-list-item"
-    :style:animation-delay="120 * this.folders.indexOf(folder) - this.folders.indexOf(folder) * 100 + 'ms'"
+    :style:animation-delay="120 * :index - :index * 100 + 'ms'"
     :class:active="this.selected === folder.name"
     :onclick="this.selectFolder(folder)">
 

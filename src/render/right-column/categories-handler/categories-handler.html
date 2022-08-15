@@ -47,8 +47,9 @@
 
   <div class="category-list-item slide-in"
     :foreach="category in this.categories"
+    :index
     :class:active="this.active === category.name"
-    :style:animation-delay="120 * this.categories.indexOf(category) - this.categories.indexOf(category) * 100 + 'ms'"
+    :style:animation-delay="120 * :index - :index * 100 + 'ms'"
     :value="category.name"
     :ondblclick="this.onDblclick(category.name)"
     :onclick="this.select(category.name)">
