@@ -11,3 +11,10 @@
 7/10/2022, 12:31:57 AM: {"from":"C:\\Users\\JDavi\\Downloads\\test.txt","to":"C:\\Users\\JDavi\\Downloads\\3D\\test.txt","fileName":"test.txt"}
 7/10/2022, 12:35:08 AM: {"from":"C:\\Users\\JDavi\\Downloads\\test.txt","to":"C:\\Users\\JDavi\\Downloads\\3D\\test (1).txt","fileName":"test.txt"}
 7/10/2022, 12:35:39 AM: {"from":"C:\\Users\\JDavi\\Downloads\\test.txt","to":"C:\\Users\\JDavi\\Downloads\\3D\\test (2).txt","fileName":"test.txt"}
+8/14/2022, 9:03:49 PM: {"from":"/Users/david/Downloads/9am-friday.json","to":"/Users/david/Downloads/Teeest/9am-friday.json","fileName":"9am-friday.json"}
+8/14/2022, 9:03:49 PM: {"from":"/Users/david/Downloads/package-lock.json","to":"/Users/david/Downloads/Teeest/package-lock.json","fileName":"package-lock.json"}
+8/14/2022, 9:03:49 PM: {"from":"/Users/david/Downloads/package.json","to":"/Users/david/Downloads/Teeest/package.json","fileName":"package.json"}
+8/14/2022, 9:03:49 PM: {"from":"/Users/david/Downloads/photos (1).json","to":"/Users/david/Downloads/Teeest/photos (1).json","fileName":"photos (1).json"}
+8/14/2022, 9:03:49 PM: {"from":"/Users/david/Downloads/photos.json","to":"/Users/david/Downloads/Teeest/photos.json","fileName":"photos.json"}
+8/14/2022, 9:05:06 PM: {"from":"/Users/david/Downloads/photos.json","to":"/Users/david/Downloads/Teeest/photos.json","fileName":"photos.json"}
+8/14/2022, 9:06:09 PM: {"from":"/Users/david/Downloads/photos.json","to":"/Users/david/Downloads/Teeest/photos.json","fileName":"photos.json"}

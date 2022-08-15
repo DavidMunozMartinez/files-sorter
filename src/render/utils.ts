@@ -1,5 +1,5 @@
 import { exec } from "child_process";
-import { shell } from 'electron';
+import { shell } from "electron";
 import path from "path";
 import fs from "fs";
 
@@ -107,5 +107,17 @@ export class Utils {
         resolve(result);
       });
     });
+  }
+
+  /**
+   * Returns all sotred data from folders
+   */
+  getLocalStorageFolders(): any {
+    let data = {};
+    const raw: string | null = localStorage.getItem("folders");
+    if (raw) {
+      data = JSON.parse(raw);
+    }
+    return data;
   }
 }

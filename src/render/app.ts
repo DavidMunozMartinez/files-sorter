@@ -30,21 +30,21 @@ class App {
   );
 
   constructor() {
-    this.folderHandler.on("removed", (item: HTMLElement) => {
-      const valueHolder = item.querySelector(".value-holder");
-      const folder = valueHolder?.innerHTML;
-      if (folder) {
-        this.fileSorter.deleteWatcher(folder);
-      }
-    });
+    // this.folderHandler.on("removed", (item: HTMLElement) => {
+    //   const valueHolder = item.querySelector(".value-holder");
+    //   const folder = valueHolder?.innerHTML;
+    //   if (folder) {
+    //     this.fileSorter.deleteWatcher(folder);
+    //   }
+    // });
 
-    this.folderHandler.on("added", (item: HTMLElement) => {
-      const valueHolder = item.querySelector(".value-holder");
-      const folder = valueHolder?.innerHTML;
-      if (folder) {
-        this.fileSorter.addWatcher(folder);
-      }
-    });
+    // this.folderHandler.on("added", (item: HTMLElement) => {
+    //   const valueHolder = item.querySelector(".value-holder");
+    //   const folder = valueHolder?.innerHTML;
+    //   if (folder) {
+    //     this.fileSorter.addWatcher(folder);
+    //   }
+    // });
 
     // const folders = Object.keys(this.folderHandler.getFolders());
     // const items: HTMLElement[] = folders.map((folder) => {

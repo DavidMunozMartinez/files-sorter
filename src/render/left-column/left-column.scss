@@ -80,6 +80,13 @@
   transform: scale(1.01);
 }
 
+.slide-in {
+  animation-name: slideIn;
+  animation-duration: 200ms;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  opacity: 0;
+}
 @keyframes slideIn {
   0% {
     opacity: 0;

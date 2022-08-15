@@ -20,9 +20,7 @@
     :class:active="this.selected === folder.name"
     :onclick="this.selectFolder(folder)">
 
-    <div class="value-holder">
-      ${folder.name}
-    </div>
+    <div class="value-holder">${folder.name}</div>
     <i class="material-icons close-icon" :onclick="this.removeFolder(folder)" style="position: relative; float: right">
       close
     </i>

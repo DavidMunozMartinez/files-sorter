@@ -1,26 +1,26 @@
-<div class="inactive-overlay">
-</div>
+<!-- <div class="inactive-overlay">
+</div> -->
 <div class="column-title">
   <p>Folders<i id="categories-help" class="material-icons">help_outline</i> </p>
 
   <div class="input-container">
     <div 
-      bind:onblur="event.target.innerText = ''"
-      bind:onkeydown="this.onInputKeydown(event, 'add')"
+      :onblur="event.target.innerText = ''"
+      :onkeydown="this.onInputKeydown(event, 'add')"
       class="category-input"
       contenteditable="true"
       placeholder="Add new..."></div>
     <i class="material-icons">add</i>
   </div>
   
-  <div class="input-container" bind:onclick="this.reload()" style="float: right; margin-right: 20px;">
+  <div class="input-container" :onclick="this.reload()" style="float: right; margin-right: 20px;">
     <div class="category-input"></div>
     <i class="material-icons">refresh</i>
   </div>
 
   <div class="input-container">
     <div
-      bind:onkeydown="this.onInputKeydown(event, 'search')"
+      :onkeydown="this.onInputKeydown(event, 'search')"
       class="category-input"
       contenteditable="true"
       placeholder="Search..."></div>
@@ -30,11 +30,11 @@
 
 <div class="active-folder">
   <i class="material-icons" style="float: left;">folder</i>
-  <div class="active-folder-path" bind:innerText="this.activeFolder">
+  <div class="active-folder-path" :innerText="this.activeFolder">
     <!-- Active folder string will be rendered here -->
   </div>
-  <i class="material-icons" style="float: right; cursor: pointer;" bind:onclick="this.openPath()">open_in_new</i>
-  <div class="active-folder-files-count" bind:innerText="this.looseFiles">
+  <i class="material-icons" style="float: right; cursor: pointer;" :onclick="this.openPath()">open_in_new</i>
+  <div class="active-folder-files-count" :innerText="this.looseFiles">
     <!-- Loose files number will be rendered here -->
   </div>
 </div>
@@ -44,6 +44,18 @@
   class="category-list"
   children-can-change="true"
   transition-time="100">
+
+  <div class="category-list-item slide-in"
+    :foreach="category in this.categories"
+    :class:active="this.active === category.name"
+    :style:animation-delay="120 * this.categories.indexOf(category) - this.categories.indexOf(category) * 100 + 'ms'"
+    :value="category.name"
+    :ondblclick="this.onDblclick(category.name)"
+    :onclick="this.select(category.name)">
+    <i class="material-icons">folder</i>
+    <span> ${category.name} </span>
+  </div>
+
   <!-- Category list items will be rendered here -->
 </smart-hover>
 <span class="section-tip">
