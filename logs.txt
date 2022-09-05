@@ -18,3 +18,4 @@
 8/14/2022, 9:03:49 PM: {"from":"/Users/david/Downloads/photos.json","to":"/Users/david/Downloads/Teeest/photos.json","fileName":"photos.json"}
 8/14/2022, 9:05:06 PM: {"from":"/Users/david/Downloads/photos.json","to":"/Users/david/Downloads/Teeest/photos.json","fileName":"photos.json"}
 8/14/2022, 9:06:09 PM: {"from":"/Users/david/Downloads/photos.json","to":"/Users/david/Downloads/Teeest/photos.json","fileName":"photos.json"}
+8/15/2022, 1:56:55 PM: {"from":"/Users/david/Downloads/latest-mac.yml","to":"/Users/david/Downloads/3D/latest-mac.yml","fileName":"latest-mac.yml"}

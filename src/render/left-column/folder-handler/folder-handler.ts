@@ -20,8 +20,6 @@ export class FolderHandler {
     utils: Utils,
     notificationService: NotificationComponent
   ) {
-    // super(".column.left-column", ".folder-list", ".folder-list-item");
-
     let folders = utils.getLocalStorageFolders();
     let bindFolders = Object.keys(folders).map((key: string) => {
       fileSorter.addWatcher(folders[key].name);
@@ -36,6 +34,7 @@ export class FolderHandler {
         selected: null,
         folders: bindFolders,
         dragging: false,
+        showTip: true,
         sortFolder: (folder: any) => this.sortFolder(folder.name),
         toggleFolderWatcher: (event: any, folder: any) => {
           if (folders[folder.name]) {
@@ -48,8 +47,11 @@ export class FolderHandler {
           event.stopImmediatePropagation();
         },
         selectFolder: (folder: any) => {
-          FolderHandlerBinds.bind.selected = folder.name;
-          this.categoriesHandler.enable(folder.name);
+          if (folder && folder.name) {
+            FolderHandlerBinds.bind.selected = folder.name;
+            this.categoriesHandler.enable(folder.name);
+            FolderHandlerBinds.bind.showTip = false;
+          }
         },
         removeFolder: (folder: any) => {
           const value = folder.name;
@@ -59,7 +61,8 @@ export class FolderHandler {
           let index = FolderHandlerBinds.bind.folders.indexOf(folder);
           FolderHandlerBinds.bind.folders.splice(index ,1);
           if (FolderHandlerBinds.bind.folders.length === 0) {
-
+            this.categoriesHandler.disable();
+            FolderHandlerBinds.bind.showTip = true;
           } else if (value) {
             if (FolderHandlerBinds.bind.folders[index]) {
               FolderHandlerBinds.bind.selectFolder(FolderHandlerBinds.bind.folders[index]);

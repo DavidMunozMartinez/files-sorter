@@ -37,7 +37,7 @@
 
 </smart-hover>
 
-<span :if="this.folders && !this.folders.length" class="section-tip">
+<span class="section-tip" :class:active="this.showTip">
   Click the icon <i class="material-icons"
       style="font-size: 24px; vertical-align: middle; margin: 5px;">create_new_folder</i> to select a
   folder and start organizing!</br></br>

@@ -1,12 +1,12 @@
-<!-- <div class="inactive-overlay">
-</div> -->
+<div class="inactive-overlay" :class:hiden="!this.showOverlay">
+</div>
 <div class="column-title">
   <p>Folders<i id="categories-help" class="material-icons">help_outline</i> </p>
 
   <div class="input-container">
     <div 
       :onblur="event.target.innerText = ''"
-      :onkeydown="this.onInputKeydown(event, 'add')"
+      :onkeydown="this.onInputKeydown(event)"
       class="category-input"
       contenteditable="true"
       placeholder="Add new..."></div>
@@ -20,7 +20,7 @@
 
   <div class="input-container">
     <div
-      :onkeydown="this.onInputKeydown(event, 'search')"
+      :oninput="this.searchTerm = event.target.textContent"
       class="category-input"
       contenteditable="true"
       placeholder="Search..."></div>
@@ -30,12 +30,12 @@
 
 <div class="active-folder">
   <i class="material-icons" style="float: left;">folder</i>
-  <div class="active-folder-path" :innerText="this.activeFolder">
-    <!-- Active folder string will be rendered here -->
+  <div class="active-folder-path">
+    ${this.activeFolder}
   </div>
   <i class="material-icons" style="float: right; cursor: pointer;" :onclick="this.openPath()">open_in_new</i>
-  <div class="active-folder-files-count" :innerText="this.looseFiles">
-    <!-- Loose files number will be rendered here -->
+  <div class="active-folder-files-count">
+    ${this.looseFiles}
   </div>
 </div>
 <smart-hover
@@ -46,19 +46,21 @@
   transition-time="100">
 
   <div class="category-list-item slide-in"
-    :foreach="category in this.categories"
-    :index
-    :class:active="this.active === category.name"
-    :style:animation-delay="120 * :index - :index * 100 + 'ms'"
-    :value="category.name"
-    :ondblclick="this.onDblclick(category.name)"
-    :onclick="this.select(category.name)">
+    draggable="true"
+    :foreach="category in this.categories" :index
+    :if="!this.searchTerm || this.searchTerm && category.indexOf(this.searchTerm) > -1"
+    :class:active="this.activeCategory === category"
+    :style:animation-delay="(130 * :index) - (:index * 100) + 'ms'"
+    :value="category"
+    :ondblclick="this.onDblclick(category)"
+    :onmousedown="this.select(category)">
+    <i class="material-icons close-icon" :onclick="this.delete(category)" style="position: relative; float: right">
+      close
+    </i>
     <i class="material-icons">folder</i>
-    <span> ${category.name} </span>
+    <span> ${category} </span>
   </div>
-
-  <!-- Category list items will be rendered here -->
 </smart-hover>
-<span class="section-tip">
+<span class="section-tip" :class:active="this.showTip">
   These section shows directories within your automated folders, you can add as many rules as you want to these folders
 </span>
