@@ -1,13 +1,13 @@
-import { Renderer } from "../../app-renderer";
 import { NotificationComponent } from "../../notification-component/notification-component";
 import { Utils } from "../../utils";
 import axios from "axios";
 import { remote } from "electron";
+import { Bind } from 'bindrjs';
 
 type themes = "dark" | "light";
 
 export class NavBar {
-  renderer!: Renderer;
+  renderer!: Bind;
   utils: Utils;
   notificationService: NotificationComponent;
   currentTheme!: themes;
@@ -20,7 +20,7 @@ export class NavBar {
     this.utils = utils;
     this.notificationService = notificationService;
 
-    this.renderer = new Renderer({
+    this.renderer = new Bind({
       id: "nav-bar-component",
       template: require("./nav-bar-component.html"),
       bind: {

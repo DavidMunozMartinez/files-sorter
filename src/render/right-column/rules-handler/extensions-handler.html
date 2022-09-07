@@ -1,42 +1,55 @@
-<div class="inactive-overlay">
+<div class="inactive-overlay" :class:hiden="!this.showOverlay">
 </div>
 <div class="column-title">
   <div class="input-container">
-    <div class="extensions-input" contenteditable="true"></div>
+    <div class="extensions-input" contenteditable="true" :onkeydown="this.onKeydown(event)" :onblur="event.target.innerText = ''"></div>
 
     <div class="dropdown dropdown-condition" tabindex="0">
       <span class="value">
-        condition
+        ${this.activeCondition ? this.conditions[this.activeCondition] : 'condition'}
       </span>
       <smart-hover class="options">
-        <span value="starts_with">Starts with</span>
-        <span value="contains">Contains</span>
-        <span value="ends_with">Ends with</span>
+        <span
+          :foreach="conditionKey in Object.keys(this.conditions)"
+          :onclick="this.selectCondition(event, conditionKey)">
+          ${this.conditions[conditionKey]}
+        </span>
       </smart-hover>
       <i class="material-icons">keyboard_arrow_down</i>
     </div>
   </div>
 
   <p>Rules For
-    <span bind:innerText="this.category"></span>
-    <i id="rules-help" class="material-icons">help_outline</i>
+    <span :innerText="this.category"></span>
+    <i id="rules-help" class="material-icons" :onclick="this.showRules()">help_outline</i>
   </p>
 
   <div
     class="input-container join-conditions"
     title="Combine multiple conditions into one"
-    style="float: right; margin-right: 20px;">
+    style="float: right; margin-right: 20px;"
+    :if="this.activeRules > 1"
+    :onclick="this.joinConditions()">
     <div class="join-conditions-input"></div>
     <i class="material-icons">join_full</i>
   </div>
 
 </div>
 
-
 <div class="extension-list">
-  <!--Rules will be rendered here  -->
+  <div class="extension-list-item"
+    :foreach="rule in this.rules"
+    :index
+    :value="rule.value"
+    :onclick="this.selectRule(event, rule)"
+    :class:active="rule.active">
+    ${rule.display}
+    <i class="material-icons close-icon" :onclick="this.removeRule(rule)" style="position: relative; float: right">
+      close
+    </i>
+  </div>
 </div>
-<span class="section-tip">
+<span class="section-tip" :class:active="this.showTip">
   Here you define file rules for this folder.</br></br>
   Files names (including file extension) will be checked against each rule
 </span>

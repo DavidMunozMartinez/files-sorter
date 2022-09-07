@@ -1,23 +1,11 @@
 import { FileSorter } from "../../file-sorter";
 import { NotificationComponent } from "../../notification-component/notification-component";
-import { SectionHandler } from "../../sections-handler";
 import { Utils } from "../../utils";
-import { Renderer } from "../../app-renderer";
+import { Bind } from 'bindrjs';
 
-const renderer = new Renderer({
-  id: "extensions-handler",
-  template: require("./extensions-handler.html"),
-  bind: {
-    category: null,
-  },
-});
+let renderer: Bind;
 
-export class ExtensionsHandler extends SectionHandler {
-  inputRef: HTMLElement | null;
-  conditionRef: HTMLElement | null;
-  joinConditionsRef: HTMLElement | null;
-  rulesForRef: HTMLElement | null;
-
+export class ExtensionsHandler {
   folder: string | null = null;
   category: string | null = null;
   condition: string | null = null;
@@ -37,75 +25,69 @@ export class ExtensionsHandler extends SectionHandler {
     utils: Utils,
     notificationService: NotificationComponent
   ) {
-    super("div.extensions", "div.extension-list", ".extension-list-item");
+    renderer = new Bind({
+      id: "extensions-handler",
+      template: require("./extensions-handler.html"),
+      bind: {
+        category: null,
+        hideOverlay: false,
+        showTip: false,
+        conditions: this.conditions,
+        activeCondition: null,
+        rules: [],
+        activeRules: 0
+      },
+    });
 
     this.fileSorter = fileSorter;
     this.utils = utils;
     this.notificationService = notificationService;
-    this.inputRef = this.contentRef?.querySelector("div.extensions-input");
-    this.rulesForRef = document.getElementById("rulesFor");
-    this.inputRef?.addEventListener("keydown", (event: any) => {
+
+    renderer.bind.onKeydown = (event: MouseEvent) => {
       if (event.which === 13) {
         this.onEnter(event);
       }
-    });
-
-    const helpRef = document.getElementById('rules-help');
-    helpRef?.addEventListener('click', () => this.notificationService.showConsecutiveTips(['RULES_TIP', 'GROUP_RULES', 'GROUP_RULE_CHECK']));
-
-    this.inputRef?.addEventListener("blur", (event: any) => {
-      event.target.innerText = "";
-    });
-
-    this.conditionRef = this.contentRef.querySelector("div.dropdown");
-    if (this.conditionRef) {
-      this.utils.fsDropdown(this.conditionRef);
     }
-    this.joinConditionsRef = this.contentRef.querySelector(
-      "div.input-container.join-conditions"
-    );
-    if (this.joinConditionsRef) {
-      this.joinConditionsRef?.classList.add("hide");
-      this.joinConditionsRef.addEventListener("click", () => {
-        if (this.multiSelected && this.multiSelected.length > 1) {
-          this.joinConditions(this.multiSelected);
-        }
-      });
+
+    renderer.bind.showRules = ()  => {
+      this.notificationService.showConsecutiveTips(['RULES_TIP', 'GROUP_RULES', 'GROUP_RULE_CHECK']);
     }
-    this.multiSelectable = true;
 
-    this.on("removed", (item: HTMLElement, items: NodeList) => {
-      const value = item.getAttribute("value");
-      if (value) {
-        this.delete(value);
-      }
-      if (items.length === 0) {
-        this.showTip();
-      }
-    });
+    renderer.bind.selectCondition  = (event: MouseEvent, key: string) => {
+      renderer.bind.activeCondition = key;
+    }
 
-    this.on("added", (item: HTMLElement, items: NodeList) => {
-      if (items.length > 0) {
-        this.hideTip();
-        this.hideOverlay();
+    renderer.bind.removeRule = (rule: any) => {
+      const index = renderer.bind.rules.indexOf(rule);
+      renderer.bind.rules.splice(index, 1);
+      this.delete(rule.value);
+      if (renderer.bind.rules.length === 0) {
+        renderer.bind.showTip = true;
+      }
+    }
+
+    renderer.bind.selectRule = (event: MouseEvent, rule: any) => {
+      let controlKey = (event.ctrlKey || event.altKey || event.metaKey);      
+
+      if (!controlKey) {
+        renderer.bind.activeRules = 0;
+        renderer.bind.rules.forEach((_: any) => {
+          _.active = false;
+        });
       }
 
-      if (items.length > 2) {
-        this.notificationService.showTipIfNeeded("GROUP_RULES");
-      }
-    });
-
-    this.on("selected", (selected: any) => {
-      if (selected.length > 1) {
-        this.joinConditionsRef?.classList.remove("hide");
+      if (controlKey && rule.active) {
+        rule.active = false;
+        renderer.bind.activeRules--;
       } else {
-        this.joinConditionsRef?.classList.add("hide");
+        rule.active = true;
+        renderer.bind.activeRules++;
       }
-    });
+    }
 
-    this.on("cleared", () => {
-      this.joinConditionsRef?.classList.add('hide');
-    });
+    renderer.bind.joinConditions = () => {
+      this.joinConditions();
+    }
   }
 
   /**
@@ -117,14 +99,15 @@ export class ExtensionsHandler extends SectionHandler {
     if (this.category === category) {
       return;
     }
-    this.hideOverlay();
+    renderer.bind.showOverlay = false;
     this.folder = folder;
     this.category = category;
-    this.clearList();
+    renderer.bind.rules = [];
+    // this.clearList();
 
     renderer.bind.category = `"${category}"`;
 
-    const extensions = this.getExtensions(this.folder, this.category);
+    const extensions = this.utils.getExtensions(this.folder, this.category);
 
     if (extensions.length > 0) {
       const items = extensions.map((extension: any) => {
@@ -133,12 +116,10 @@ export class ExtensionsHandler extends SectionHandler {
         }
         return this.createListItem(extension);
       });
-      this.hideTip();
-      this.renderList(items);
+      renderer.bind.showTip = false;
     } else {
-      this.inputRef?.focus();
-      this.showTip();
-      this.hideOverlay();
+      renderer.bind.showTip = true;
+      renderer.bind.showOverlay = false;
     }
   }
 
@@ -147,11 +128,15 @@ export class ExtensionsHandler extends SectionHandler {
    * sets some global values to null
    */
   disable() {
-    this.showOverlay();
-    this.hideTip();
+    renderer.bind.showOverlay = true;
+    renderer.bind.showTip = false;
 
     this.folder = null;
     this.category = null;
+  }
+
+  clear() {
+    renderer.bind.rules = [];
   }
 
   /**
@@ -163,9 +148,8 @@ export class ExtensionsHandler extends SectionHandler {
     if (!this.folder || !this.category) {
       return false;
     }
-    // const value = `${condition}:${text}`;
     let success = false;
-    const data = this.getFolders();
+    const data = this.utils.getFolders();
     const folder = data[this.folder];
     const extensions = folder.categories[this.category];
 
@@ -187,7 +171,7 @@ export class ExtensionsHandler extends SectionHandler {
       return;
     }
 
-    const data = this.getFolders();
+    const data = this.utils.getFolders();
     const folder = data[this.folder];
     const extensions: string[] = folder.categories[this.category];
 
@@ -205,7 +189,7 @@ export class ExtensionsHandler extends SectionHandler {
    */
   private onEnter(event: any) {
     const value = event.target.innerText;
-    const condition = this.conditionRef?.getAttribute("value");
+    const condition = renderer.bind.activeCondition;
     if (!condition) {
       event.preventDefault();
       this.notificationService.notify({
@@ -226,15 +210,23 @@ export class ExtensionsHandler extends SectionHandler {
     }
 
     const conditionString = `${condition}:${value}`;
-    const item = this.createListItem(conditionString);
     if (this.save(conditionString)) {
-      this.renderItem(item);
+      this.createListItem(conditionString);
       event.target.innerText = "";
+    }
+
+    if (renderer.bind.rules.length > 0) {
+      renderer.bind.showTip = false;
+      renderer.bind.showOverlay = false;
+    }
+
+    if (renderer.bind.rules.length > 2) {
+      this.notificationService.showTipIfNeeded("GROUP_RULES");
     }
     event.preventDefault();
   }
 
-  private createListItem(conditionString: string): HTMLElement {
+  private createListItem(conditionString: string) {
     const split = conditionString.split(":");
     const condition = split[0];
     const value = split[1];
@@ -246,13 +238,10 @@ export class ExtensionsHandler extends SectionHandler {
       valueText = condition + ":" + value;
     }
 
-    const item = this.makeElement("div", {
-      classList: ["extension-list-item"],
-      innerHTML: innerText,
-      attrs: ["value=" + valueText],
+    renderer.bind.rules.push({
+      value: valueText,
+      display: innerText
     });
-
-    return item;
   }
 
   private getConditionData(conditionString: string) {
@@ -281,10 +270,9 @@ export class ExtensionsHandler extends SectionHandler {
       }
     });
 
-    return this.makeElement("div", {
-      classList: ["extension-list-item"],
-      innerHTML: innerText,
-      attrs: ["value=" + valueText],
+    renderer.bind.rules.push({
+      value: valueText,
+      display: innerText
     });
   }
 
@@ -292,14 +280,17 @@ export class ExtensionsHandler extends SectionHandler {
    * Turns a group of selected conditions into a single condition, AKA creates an AND condition where all conditions within
    * the group must be true in order to the group to be considered as "true"
    */
-  private joinConditions(items: Element[]) {
+  private joinConditions() {
     let newText = "";
     let newValue = "";
     let toDelete: string[] = [];
-    items.forEach((item: any, i) => {
-      let valueAttr = item.getAttribute("value");
+
+    const items = renderer.bind.rules.filter((rule: any) => rule.active);
+
+    items.forEach((item: any, i: number) => {
+      let valueAttr = item.value;
       if (valueAttr && valueAttr.indexOf(",") > -1) {
-        newText += item.innerText.split("\n")[1];
+        newText += item.display;
         newValue += valueAttr;
         toDelete.push(valueAttr);
       } else {
@@ -310,19 +301,11 @@ export class ExtensionsHandler extends SectionHandler {
         newText += this.conditions[condition] + ": " + value;
         toDelete.push(valueAttr);
       }
+
       if (i != items.length - 1) {
         newValue += ",";
         newText += " and ";
       }
-    });
-
-    let newElement = this.makeElement("div", {
-      classList: ["extension-list-item"],
-      innerHTML: newText,
-      attrs: ["value=" + newValue],
-    });
-    items.forEach((item) => {
-      this.clearItem(<HTMLElement>item);
     });
 
     toDelete.forEach((conditionString) => {
@@ -330,7 +313,17 @@ export class ExtensionsHandler extends SectionHandler {
     });
 
     if (this.save(newValue)) {
-      this.renderItem(newElement);
+      renderer.bind.rules.push({
+        value: newValue,
+        display: newText
+      });
+    }
+
+    let current = items.pop();
+    while (current) {
+      let index = renderer.bind.rules.indexOf(current);
+      renderer.bind.rules.splice(index, 1);
+      current = items.pop();
     }
 
     this.notificationService.showTipIfNeeded("GROUP_RULE_CHECK");

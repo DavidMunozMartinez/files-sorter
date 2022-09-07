@@ -1,4 +1,9 @@
 /**
+ * This is now unused, deprecated and known as BindrJS (https://www.npmjs.com/package/bindrjs)
+ * I just want to keep it here for reference
+ */
+
+/**
  * Don't mind me just re-inventing the wheel
  * This is my attempt at creating a simple enough HTML render engine similar to what ALL popular front-end frameworks/libraries already do perfectly, AKA data binding
  * except "cheaper" and without the extra fancy features, this is targeted to smaller "simpler" projects that only want to bind data to the HTML with as

@@ -6,8 +6,6 @@ import { NotificationComponent } from "../../notification-component/notification
 import fs from "fs";
 import { Bind } from "bindrjs";
 
-
-
 export class CategoriesHandler {
   folder: string | null = null;
   extensionHandler: ExtensionsHandler;
@@ -121,7 +119,7 @@ export class CategoriesHandler {
       else {
         this.renderer.bind.showOverlay = false;
         this.renderer.bind.showTip = true;
-        this.extensionHandler.clearList();
+        this.extensionHandler.clear();
         this.extensionHandler.disable();
       }
     });
@@ -135,7 +133,7 @@ export class CategoriesHandler {
     this.renderer.bind.showTip = false;
     this.renderer.bind.showOverlay = true;
     this.folder = null;
-    this.extensionHandler.clearList();
+    this.extensionHandler.clear();
     this.extensionHandler.disable();
   }
 
