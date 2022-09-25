@@ -38,15 +38,14 @@
         "watch": "webpack --watch",
         "build": "webpack --build",
         "package": "webpack --prod && electron-builder",
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "postinstall": "npm run build"
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Damuz",
     "license": "ISC",
     "devDependencies": {
         "@types/sortablejs": "^1.10.6",
         "css-loader": "^4.3.0",
-        "electron": "^10.1.2",
+        "electron": "^11.0.1",
         "electron-builder": "^22.8.1",
         "electron-platform": "^1.2.0",
         "electron-reload": "^1.5.0",
@@ -63,7 +62,7 @@
     },
     "dependencies": {
         "axios": "^0.27.2",
-        "bindrjs": "^1.0.42",
+        "bindrjs": "^1.2.29",
         "chokidar": "^3.4.2",
         "electron-titlebar": "0.0.3",
         "material-icons": "^0.3.1",
