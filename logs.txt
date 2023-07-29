@@ -19,3 +19,63 @@
 8/14/2022, 9:05:06 PM: {"from":"/Users/david/Downloads/photos.json","to":"/Users/david/Downloads/Teeest/photos.json","fileName":"photos.json"}
 8/14/2022, 9:06:09 PM: {"from":"/Users/david/Downloads/photos.json","to":"/Users/david/Downloads/Teeest/photos.json","fileName":"photos.json"}
 8/15/2022, 1:56:55 PM: {"from":"/Users/david/Downloads/latest-mac.yml","to":"/Users/david/Downloads/3D/latest-mac.yml","fileName":"latest-mac.yml"}
+7/28/2023, 8:14:07 PM: {"from":"/Users/davidmunoz/Downloads/cancel.svg","to":"/Users/davidmunoz/Downloads/Images/cancel.svg","fileName":"cancel.svg"}
+7/28/2023, 8:14:07 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (1).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (1).svg","fileName":"chat-bubble-empty (1).svg"}
+7/28/2023, 8:14:07 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (2).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (2).svg","fileName":"chat-bubble-empty (2).svg"}
+7/28/2023, 8:14:07 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (3).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (3).svg","fileName":"chat-bubble-empty (3).svg"}
+7/28/2023, 8:14:07 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (4).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (4).svg","fileName":"chat-bubble-empty (4).svg"}
+7/28/2023, 8:14:07 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (5).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (5).svg","fileName":"chat-bubble-empty (5).svg"}
+7/28/2023, 8:14:07 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (6).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (6).svg","fileName":"chat-bubble-empty (6).svg"}
+7/28/2023, 8:14:07 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (7).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (7).svg","fileName":"chat-bubble-empty (7).svg"}
+7/28/2023, 8:14:07 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty.svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty.svg","fileName":"chat-bubble-empty.svg"}
+7/28/2023, 8:14:07 PM: {"from":"/Users/davidmunoz/Downloads/doc-search.svg","to":"/Users/davidmunoz/Downloads/Images/doc-search.svg","fileName":"doc-search.svg"}
+7/28/2023, 8:14:07 PM: {"from":"/Users/davidmunoz/Downloads/json-svgrepo-com.svg","to":"/Users/davidmunoz/Downloads/Images/json-svgrepo-com.svg","fileName":"json-svgrepo-com.svg"}
+7/28/2023, 8:14:07 PM: {"from":"/Users/davidmunoz/Downloads/user-icon-svgrepo-com.svg","to":"/Users/davidmunoz/Downloads/Images/user-icon-svgrepo-com.svg","fileName":"user-icon-svgrepo-com.svg"}
+7/28/2023, 9:39:08 PM: {"from":"/Users/davidmunoz/Downloads/cancel.svg","to":"/Users/davidmunoz/Downloads/Images/cancel.svg","fileName":"cancel.svg"}
+7/28/2023, 9:39:08 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (1).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (1).svg","fileName":"chat-bubble-empty (1).svg"}
+7/28/2023, 9:39:08 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (2).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (2).svg","fileName":"chat-bubble-empty (2).svg"}
+7/28/2023, 9:39:08 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (3).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (3).svg","fileName":"chat-bubble-empty (3).svg"}
+7/28/2023, 9:39:08 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (5).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (5).svg","fileName":"chat-bubble-empty (5).svg"}
+7/28/2023, 9:39:08 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (4).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (4).svg","fileName":"chat-bubble-empty (4).svg"}
+7/28/2023, 9:39:08 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (6).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (6).svg","fileName":"chat-bubble-empty (6).svg"}
+7/28/2023, 9:39:08 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (7).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (7).svg","fileName":"chat-bubble-empty (7).svg"}
+7/28/2023, 9:39:08 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty.svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty.svg","fileName":"chat-bubble-empty.svg"}
+7/28/2023, 9:39:08 PM: {"from":"/Users/davidmunoz/Downloads/doc-search.svg","to":"/Users/davidmunoz/Downloads/Images/doc-search.svg","fileName":"doc-search.svg"}
+7/28/2023, 9:39:08 PM: {"from":"/Users/davidmunoz/Downloads/json-svgrepo-com.svg","to":"/Users/davidmunoz/Downloads/Images/json-svgrepo-com.svg","fileName":"json-svgrepo-com.svg"}
+7/28/2023, 9:39:08 PM: {"from":"/Users/davidmunoz/Downloads/user-icon-svgrepo-com.svg","to":"/Users/davidmunoz/Downloads/Images/user-icon-svgrepo-com.svg","fileName":"user-icon-svgrepo-com.svg"}
+7/28/2023, 9:40:02 PM: {"from":"/Users/davidmunoz/Downloads/cancel.svg","to":"/Users/davidmunoz/Downloads/Images/cancel.svg","fileName":"cancel.svg"}
+7/28/2023, 9:40:02 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (1).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (1).svg","fileName":"chat-bubble-empty (1).svg"}
+7/28/2023, 9:40:02 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (2).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (2).svg","fileName":"chat-bubble-empty (2).svg"}
+7/28/2023, 9:40:02 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (3).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (3).svg","fileName":"chat-bubble-empty (3).svg"}
+7/28/2023, 9:40:02 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (4).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (4).svg","fileName":"chat-bubble-empty (4).svg"}
+7/28/2023, 9:40:02 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (5).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (5).svg","fileName":"chat-bubble-empty (5).svg"}
+7/28/2023, 9:40:02 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (6).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (6).svg","fileName":"chat-bubble-empty (6).svg"}
+7/28/2023, 9:40:02 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (7).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (7).svg","fileName":"chat-bubble-empty (7).svg"}
+7/28/2023, 9:40:02 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty.svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty.svg","fileName":"chat-bubble-empty.svg"}
+7/28/2023, 9:40:02 PM: {"from":"/Users/davidmunoz/Downloads/doc-search.svg","to":"/Users/davidmunoz/Downloads/Images/doc-search.svg","fileName":"doc-search.svg"}
+7/28/2023, 9:40:02 PM: {"from":"/Users/davidmunoz/Downloads/json-svgrepo-com.svg","to":"/Users/davidmunoz/Downloads/Images/json-svgrepo-com.svg","fileName":"json-svgrepo-com.svg"}
+7/28/2023, 9:40:02 PM: {"from":"/Users/davidmunoz/Downloads/user-icon-svgrepo-com.svg","to":"/Users/davidmunoz/Downloads/Images/user-icon-svgrepo-com.svg","fileName":"user-icon-svgrepo-com.svg"}
+7/28/2023, 9:40:35 PM: {"from":"/Users/davidmunoz/Downloads/cancel.svg","to":"/Users/davidmunoz/Downloads/Images/cancel.svg","fileName":"cancel.svg"}
+7/28/2023, 9:40:35 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (1).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (1).svg","fileName":"chat-bubble-empty (1).svg"}
+7/28/2023, 9:40:35 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (2).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (2).svg","fileName":"chat-bubble-empty (2).svg"}
+7/28/2023, 9:40:35 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (3).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (3).svg","fileName":"chat-bubble-empty (3).svg"}
+7/28/2023, 9:40:35 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (4).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (4).svg","fileName":"chat-bubble-empty (4).svg"}
+7/28/2023, 9:40:35 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (5).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (5).svg","fileName":"chat-bubble-empty (5).svg"}
+7/28/2023, 9:40:35 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (6).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (6).svg","fileName":"chat-bubble-empty (6).svg"}
+7/28/2023, 9:40:35 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (7).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (7).svg","fileName":"chat-bubble-empty (7).svg"}
+7/28/2023, 9:40:35 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty.svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty.svg","fileName":"chat-bubble-empty.svg"}
+7/28/2023, 9:40:35 PM: {"from":"/Users/davidmunoz/Downloads/doc-search.svg","to":"/Users/davidmunoz/Downloads/Images/doc-search.svg","fileName":"doc-search.svg"}
+7/28/2023, 9:40:35 PM: {"from":"/Users/davidmunoz/Downloads/json-svgrepo-com.svg","to":"/Users/davidmunoz/Downloads/Images/json-svgrepo-com.svg","fileName":"json-svgrepo-com.svg"}
+7/28/2023, 9:40:35 PM: {"from":"/Users/davidmunoz/Downloads/user-icon-svgrepo-com.svg","to":"/Users/davidmunoz/Downloads/Images/user-icon-svgrepo-com.svg","fileName":"user-icon-svgrepo-com.svg"}
+7/28/2023, 9:44:18 PM: {"from":"/Users/davidmunoz/Downloads/cancel.svg","to":"/Users/davidmunoz/Downloads/Images/cancel.svg","fileName":"cancel.svg"}
+7/28/2023, 9:44:18 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (1).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (1).svg","fileName":"chat-bubble-empty (1).svg"}
+7/28/2023, 9:44:18 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (2).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (2).svg","fileName":"chat-bubble-empty (2).svg"}
+7/28/2023, 9:44:18 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (3).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (3).svg","fileName":"chat-bubble-empty (3).svg"}
+7/28/2023, 9:44:18 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (4).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (4).svg","fileName":"chat-bubble-empty (4).svg"}
+7/28/2023, 9:44:18 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (5).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (5).svg","fileName":"chat-bubble-empty (5).svg"}
+7/28/2023, 9:44:18 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (6).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (6).svg","fileName":"chat-bubble-empty (6).svg"}
+7/28/2023, 9:44:18 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty (7).svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty (7).svg","fileName":"chat-bubble-empty (7).svg"}
+7/28/2023, 9:44:18 PM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty.svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty.svg","fileName":"chat-bubble-empty.svg"}
+7/28/2023, 9:44:18 PM: {"from":"/Users/davidmunoz/Downloads/doc-search.svg","to":"/Users/davidmunoz/Downloads/Images/doc-search.svg","fileName":"doc-search.svg"}
+7/28/2023, 9:44:18 PM: {"from":"/Users/davidmunoz/Downloads/json-svgrepo-com.svg","to":"/Users/davidmunoz/Downloads/Images/json-svgrepo-com.svg","fileName":"json-svgrepo-com.svg"}
+7/28/2023, 9:44:18 PM: {"from":"/Users/davidmunoz/Downloads/user-icon-svgrepo-com.svg","to":"/Users/davidmunoz/Downloads/Images/user-icon-svgrepo-com.svg","fileName":"user-icon-svgrepo-com.svg"}

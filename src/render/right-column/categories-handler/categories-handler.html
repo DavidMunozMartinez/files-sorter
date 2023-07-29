@@ -1,7 +1,7 @@
 <div class="inactive-overlay" :class:hiden="!this.showOverlay">
 </div>
 <div class="column-title">
-  <p>Folders<i id="categories-help" class="material-icons">help_outline</i> </p>
+  <p>Output Folders <i id="categories-help" class="material-icons">help_outline</i> </p>
 
   <div class="input-container">
     <div 
@@ -58,7 +58,23 @@
       close
     </i>
     <i class="material-icons">folder</i>
-    <span> ${category} </span>
+
+    <span class="text">
+      <span>> ${category.trim()}</span>
+      <a 
+        :if="this.categoryData[category]"
+        :onclick="this.expandCategory(category)"
+        > (${this.categoryData[category].files.length})</a>
+    </span>
+
+    <div :if="this.categoryData[category ] && this.categoryData[category].expanded" class="category-files">
+      <div 
+        :if="this.categoryData[category].files"
+        :foreach="file in this.categoryData[category].files">
+        ${file}
+      </div>
+    </div>
+
   </div>
 </smart-hover>
 <span class="section-tip" :class:active="this.showTip">

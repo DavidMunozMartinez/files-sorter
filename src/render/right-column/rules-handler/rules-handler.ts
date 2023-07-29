@@ -3,9 +3,9 @@ import { NotificationComponent } from "../../notification-component/notification
 import { Utils } from "../../utils";
 import { Bind } from 'bindrjs';
 
-let renderer: Bind;
+let renderer: any = null;
 
-export class ExtensionsHandler {
+export class RulesHandler {
   folder: string | null = null;
   category: string | null = null;
   condition: string | null = null;
@@ -26,8 +26,8 @@ export class ExtensionsHandler {
     notificationService: NotificationComponent
   ) {
     renderer = new Bind({
-      id: "extensions-handler",
-      template: require("./extensions-handler.html"),
+      id: "rules-handler",
+      template: require("./rules-handler.html"),
       bind: {
         category: null,
         hideOverlay: false,

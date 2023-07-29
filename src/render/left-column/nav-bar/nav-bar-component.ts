@@ -7,7 +7,7 @@ import { Bind } from 'bindrjs';
 type themes = "dark" | "light";
 
 export class NavBar {
-  renderer!: Bind;
+  renderer!: Bind<any>;
   utils: Utils;
   notificationService: NotificationComponent;
   currentTheme!: themes;

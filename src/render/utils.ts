@@ -124,14 +124,14 @@ export class Utils {
     /**
    * Returns all sotred data from folders
    */
-     getFolders(): any {
-      let data = {};
-      const raw: string | null = localStorage.getItem("folders");
-      if (raw) {
-        data = JSON.parse(raw);
-      }
-      return data;
+  getFolders(): any {
+    let data = {};
+    const raw: string | null = localStorage.getItem("folders");
+    if (raw) {
+      data = JSON.parse(raw);
     }
+    return data;
+  }
   
     /**
      * Returns the defined categories for a specified folder path

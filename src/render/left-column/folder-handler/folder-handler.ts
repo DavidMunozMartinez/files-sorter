@@ -35,7 +35,13 @@ export class FolderHandler {
         folders: bindFolders,
         dragging: false,
         showTip: true,
-        sortFolder: (folder: any) => this.sortFolder(folder.name),
+        sortFolder: (folder: any) => {
+          this.sortFolder(folder.name);
+          if (FolderHandlerBinds.bind.selected === folder.name) {
+            this.categoriesHandler.renderer.bind.reload();
+            console.log('active folder sorted');
+          }
+        },
         toggleFolderWatcher: (event: any, folder: any) => {
           if (folders[folder.name]) {
             folder.active = !folder.active;

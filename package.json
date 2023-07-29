@@ -62,7 +62,7 @@
     },
     "dependencies": {
         "axios": "^0.27.2",
-        "bindrjs": "^1.2.29",
+        "bindrjs": "^1.2.40",
         "chokidar": "^3.4.2",
         "electron-titlebar": "0.0.3",
         "material-icons": "^0.3.1",
