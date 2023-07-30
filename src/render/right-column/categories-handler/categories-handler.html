@@ -47,10 +47,11 @@
 
   <div class="category-list-item slide-in"
     draggable="true"
-    :foreach="category in this.categories" :index
+    :foreach="category in this.categories"
+    :index="@i"
     :if="!this.searchTerm || this.filterCategory(category)"
     :class:active="this.activeCategory === category"
-    :style:animation-delay="(120 * :index) - (:index * 100) + 'ms'"
+    :style:animation-delay="(120 * @i) - (@i * 100) + 'ms'"
     :value="category"
     :ondblclick="this.onDblclick(category)"
     :onmousedown="this.select(category)">
@@ -69,7 +70,9 @@
 
     <div :if="this.categoryData[category] && (this.categoryData[category].expanded || this.categoryData[category].searchExpanded)" class="category-files">
       <div 
-      :foreach="file in this.categoryData[category].files"
+      class="slide-in"
+      :foreach="file in this.categoryData[category].files" :index="@j"
+      :style:animation-delay="(120 * @j) - (@j * 100) + 'ms'"
       :if="this.categoryData[category].files && !this.searchTerm || this.searchTerm && this.filterCategoryFile(file)">
         ${file}
       </div>
