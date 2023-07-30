@@ -5,6 +5,7 @@ import { CategoriesHandler } from "../../right-column/categories-handler/categor
 import { Utils } from "../../utils";
 import path from "path";
 import { Bind } from "bindrjs";
+import { FolderData } from "./folder-handler.model";
 
 export class FolderHandler {
   categoriesHandler: CategoriesHandler;
@@ -144,7 +145,7 @@ export class FolderHandler {
     this.utils = utils;
   }
 
-  private newFolder(name: string) {
+  private newFolder(name: string): FolderData {
     return {
       name: name,
       active: false,
