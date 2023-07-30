@@ -65,6 +65,18 @@ export class CategoriesHandler {
       if (event.which === 13) this.onEnter(event);
     }
 
+    this.renderer.bind.onSearch = (event: KeyboardEvent) => {
+      this.renderer.bind.searchTerm = (event.target as HTMLDivElement).textContent;
+      if (!this.renderer.bind.searchTerm) {
+        this.renderer.bind.categories.forEach((category: string) => {
+          const data = this.renderer.bind.categoryData[category];
+          if (data && data.searchExpanded) {
+            this.renderer.bind.expandCategory(category, 'searchExpanded');
+          }
+        });
+      }
+    }
+
     this.renderer.bind.onDblclick = (category: string) => {
       let fullPath = path.resolve(this.folder || "", category);
       this.utils.revealInExplorer(fullPath);
@@ -78,13 +90,33 @@ export class CategoriesHandler {
       }
     }
 
-    this.renderer.bind.expandCategory = (category: string) => {
+    this.renderer.bind.expandCategory = (category: string, prop: 'expanded' | 'searchExpanded') => {
       // TODO: fix this bug in bindjr
       if (this.renderer.bind.categoryData && this.renderer.bind.categoryData[category].files.length) {
         let copy = { ...this.renderer.bind.categoryData };
-        copy[category].expanded = !copy[category].expanded;
+        copy[category][prop || 'expanded'] = !copy[category][prop || 'expanded'];
         this.renderer.bind.categoryData = copy;
       }
+    }
+
+    this.renderer.bind.filterCategory = (category: string) => {
+      const value = category.toLowerCase();
+      if (!this.renderer.bind.searchTerm) return false;
+
+      const term = this.renderer.bind.searchTerm.toLowerCase();
+      const categoryPasses = value.indexOf(term) > -1;
+      const categoryContent = this.renderer.bind.categoryData[category];
+      const categoryContentPasses = categoryContent && categoryContent.files && categoryContent.files.find((file: string) => file.toLowerCase().indexOf(term) > -1);
+      if (categoryContentPasses && !categoryContent.searchExpanded) {
+        this.renderer.bind.expandCategory(category, 'searchExpanded');
+      }
+      return categoryPasses || categoryContentPasses;
+    }
+
+    this.renderer.bind.filterCategoryFile = (file: string) => {
+      const value = file.toLowerCase();
+      const term = this.renderer.bind.searchTerm.toLowerCase();
+      return value.indexOf(term) > -1;
     }
   }
 
@@ -141,6 +173,7 @@ export class CategoriesHandler {
           this.renderer.bind.categoryData[category] = {
             files: content,
             expanded: false,
+            searchExpanded: false,
           };
         });
       } else {

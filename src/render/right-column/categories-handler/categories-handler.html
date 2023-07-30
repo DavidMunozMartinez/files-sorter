@@ -9,7 +9,7 @@
       :onkeydown="this.onInputKeydown(event)"
       class="category-input"
       contenteditable="true"
-      placeholder="Add new..."></div>
+      placeholder="New Folder..."></div>
     <i class="material-icons">add</i>
   </div>
   
@@ -20,10 +20,10 @@
 
   <div class="input-container">
     <div
-      :oninput="this.searchTerm = event.target.textContent"
+      :oninput="this.onSearch(event)"
       class="category-input"
       contenteditable="true"
-      placeholder="Search..."></div>
+      placeholder="Find..."></div>
     <i class="material-icons">search</i>
   </div>
 </div>
@@ -48,9 +48,9 @@
   <div class="category-list-item slide-in"
     draggable="true"
     :foreach="category in this.categories" :index
-    :if="!this.searchTerm || this.searchTerm && category.indexOf(this.searchTerm) > -1"
+    :if="!this.searchTerm || this.filterCategory(category)"
     :class:active="this.activeCategory === category"
-    :style:animation-delay="(130 * :index) - (:index * 100) + 'ms'"
+    :style:animation-delay="(120 * :index) - (:index * 100) + 'ms'"
     :value="category"
     :ondblclick="this.onDblclick(category)"
     :onmousedown="this.select(category)">
@@ -67,10 +67,10 @@
         > (${this.categoryData[category].files.length})</a>
     </span>
 
-    <div :if="this.categoryData[category] && this.categoryData[category].expanded" class="category-files">
+    <div :if="this.categoryData[category] && (this.categoryData[category].expanded || this.categoryData[category].searchExpanded)" class="category-files">
       <div 
-        :if="this.categoryData[category].files"
-        :foreach="file in this.categoryData[category].files">
+      :foreach="file in this.categoryData[category].files"
+      :if="this.categoryData[category].files && !this.searchTerm || this.searchTerm && this.filterCategoryFile(file)">
         ${file}
       </div>
     </div>

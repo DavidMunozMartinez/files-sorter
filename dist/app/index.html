@@ -8,7 +8,7 @@
 
 <body>
   <div class="main-content">
-    <div class="nav-bar make-gooey" id="nav-bar-component" bind:class="this.settingsEnabled ? 'show-settings' : 'hidden-settings'"></div>
+    <div class="nav-bar make-gooey" id="nav-bar-component" :class="this.settingsEnabled ? 'show-settings' : 'hidden-settings'"></div>
 
     <div class="column left-column" id="folder-handler"
       :class:drag-hover="this.dragging"
@@ -20,6 +20,10 @@
     <div class="column right-column">
       <div class="categories" id="categories-handler"></div>
       <div class="extensions" id="rules-handler"></div>
+    </div>
+
+    <div class="overlay">
+      Your account
     </div>
   </div>
 
