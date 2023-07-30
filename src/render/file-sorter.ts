@@ -13,6 +13,7 @@ export interface IMovedFileData {
 
 export class FileSorter {
   private paths: any;
+  private onChangeDetected: ((folder: string) => void)[] = [];
   private defaultConfig = {
     persistent: true,
     depth: 0,
@@ -52,6 +53,7 @@ export class FileSorter {
   addWatcher(folder: string) {
     const watcher = chokidar.watch(folder, this.defaultConfig);
     watcher.on("add", (location: any) => {
+      // this.onChangeDetected.forEach((fn) => fn(folder))
       if (this.paths[folder].active) {
         this.sort(folder, location).then((moved: IMovedFileData) => {
           if (moved) {
@@ -60,7 +62,14 @@ export class FileSorter {
         });
       }
     });
+    watcher.on("all", () => {
+      this.onChangeDetected.forEach((fn) => fn(folder));
+    })
     this.watchers[folder] = watcher;
+  }
+
+  onChange(fn: (folder: string) => void) {
+    this.onChangeDetected.push(fn);
   }
 
   /**

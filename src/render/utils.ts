@@ -133,33 +133,38 @@ export class Utils {
     return data;
   }
   
-    /**
-     * Returns the defined categories for a specified folder path
-     * @param folder Folder path to get defined categories from
-     */
-    getCategories(folder: string): any {
-      const folders = this.getFolders();
-      let categories = [];
-      const data = folders[folder];
-      if (data && data.categories) {
-        categories = data.categories;
-      }
-  
-      return categories;
+  /**
+   * Returns the defined categories for a specified folder path
+   * @param folder Folder path to get defined categories from
+   */
+  getCategories(folder: string): any {
+    const folders = this.getFolders();
+    let categories = [];
+    const data = folders[folder];
+    if (data && data.categories) {
+      categories = data.categories;
     }
+
+    return categories;
+  }
   
-    /**
-     * Retuns the list of extensions that are defined for the given folder path and category
-     * @param folder Folder path string
-     * @param category Category name to get the extensions from
-     */
-    getExtensions(folder: string, category: string): any {
-      const categories: any = this.getCategories(folder);
-      let extensions: any[] = [];
-      if (categories && categories[category]) {
-        extensions = categories[category];
-      }
-  
-      return extensions;
+  /**
+   * Retuns the list of extensions that are defined for the given folder path and category
+   * @param folder Folder path string
+   * @param category Category name to get the extensions from
+   */
+  getExtensions(folder: string, category: string): any {
+    const categories: any = this.getCategories(folder);
+    let extensions: any[] = [];
+    if (categories && categories[category]) {
+      extensions = categories[category];
     }
+
+    return extensions;
+  }
+
+  isActualFile(fullpath: string, fileName: string): boolean {
+    const stats = fs.statSync(fullpath);
+    return stats.isFile() && fileName.charAt(0) !== '.';
+  }
 }

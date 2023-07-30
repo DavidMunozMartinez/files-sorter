@@ -1,5 +1,4 @@
 import './notification-component.scss';
-import { spawn } from 'child_process';
 import { Utils } from '../utils';
 import { IMovedFileData } from '../file-sorter';
 import { Tips } from '../app-tips';
@@ -61,14 +60,13 @@ export class NotificationComponent {
             path  = movedFiles[0].to;
         }
         if (movedFiles.length > 1) {
-            message = `${movedFiles.length} files have been sorted from "${folder}", to know exactly what went where, take a look at the logs file`;
+            message = `${movedFiles.length} files have been sorted from "${folder}"`;
         }
         this.notify({
             timer: 4000,
             message: message,
             type: 'success',
         });
-
 
         if (movedFiles.length) {
             let osNotification = this.notifyOS('Files sorted', message);

@@ -133,7 +133,13 @@ export class FolderHandler {
       notificationService
     );
 
+    
     this.fileSorter = fileSorter;
+    this.fileSorter.onChange((folder) => {
+      if (FolderHandlerBinds.bind.selected === folder) {
+        this.categoriesHandler.renderer.bind.reload();
+      }
+    });
     this.notificationService = notificationService;
     this.utils = utils;
   }
@@ -155,8 +161,8 @@ export class FolderHandler {
     const data: any = this.utils.getLocalStorageFolders();
     if (data && data[folder]) {
       delete data[folder];
-      // delete this.folders[folder];
       localStorage.setItem("folders", JSON.stringify(data));
+      this.fileSorter.deleteWatcher(folder);
       this.fileSorter.updateFoldersData();
     }
   }
@@ -170,6 +176,7 @@ export class FolderHandler {
     let success = false;
     if (!data[folder]) {
       data[folder] = {
+        name: folder,
         categories: {},
         active: false,
         order: [],

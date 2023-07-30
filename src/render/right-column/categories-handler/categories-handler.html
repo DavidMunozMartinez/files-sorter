@@ -60,14 +60,14 @@
     <i class="material-icons">folder</i>
 
     <span class="text">
-      <span>> ${category.trim()}</span>
+      <span>> ${category}</span>
       <a 
         :if="this.categoryData[category]"
         :onclick="this.expandCategory(category)"
         > (${this.categoryData[category].files.length})</a>
     </span>
 
-    <div :if="this.categoryData[category ] && this.categoryData[category].expanded" class="category-files">
+    <div :if="this.categoryData[category] && this.categoryData[category].expanded" class="category-files">
       <div 
         :if="this.categoryData[category].files"
         :foreach="file in this.categoryData[category].files">

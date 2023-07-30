@@ -31,9 +31,6 @@ export class CategoriesHandler {
         searchTerm: '',
         showOverlay: true,
         categoryData: {},
-      },
-      onChange: () => {
-        console.log();
       }
     });
 
@@ -82,10 +79,12 @@ export class CategoriesHandler {
     }
 
     this.renderer.bind.expandCategory = (category: string) => {
-      // TODO: fix bug in bindjr
-      let copy = { ...this.renderer.bind.categoryData };
-      copy[category].expanded = !copy[category].expanded;
-      this.renderer.bind.categoryData = copy;
+      // TODO: fix this bug in bindjr
+      if (this.renderer.bind.categoryData && this.renderer.bind.categoryData[category].files.length) {
+        let copy = { ...this.renderer.bind.categoryData };
+        copy[category].expanded = !copy[category].expanded;
+        this.renderer.bind.categoryData = copy;
+      }
     }
   }
 
@@ -118,11 +117,8 @@ export class CategoriesHandler {
       this.renderer.bind.activeFolder = folder;
 
       fs.readdir(folder, (err, contents) => {
-        let files = contents
-          .filter(content => {
-            const stats: fs.Stats = fs.statSync(path.resolve(folder, content));
-            const isFile = stats.isFile();
-            return isFile && content.charAt(0) !== '.';
+        let files = contents.filter(content => {
+            return this.utils.isActualFile(path.resolve(folder, content), content);
           });
         
         this.renderer.bind.looseFiles = `${files.length} loose files`
@@ -132,18 +128,23 @@ export class CategoriesHandler {
       if (categories.length > 0) {
         order = this.cleanUpFolderOrder(order, categories)
         // Use the defined order if exists
-        this.renderer.bind.categories = (order.length ? order : categories);
+        let folders = (order.length ? order : categories);
+        this.renderer.bind.categories = folders;
         this.renderer.bind.showTip = false;
-        categories.forEach((category: string) => {
-          const content = fs.readdirSync(path.resolve(folder, category));
+        folders.forEach((category: string) => {
+          const content =
+            fs
+              .readdirSync(path.resolve(folder, category))
+              .filter((file: string) => {
+                return this.utils.isActualFile(path.resolve(folder, category, file), file);
+              });
           this.renderer.bind.categoryData[category] = {
             files: content,
             expanded: false,
           };
         });
-        console.log(this.renderer.bind.categoryData);
-        // If not, the section is enabled but we show the tip
       } else {
+        // If not, the section is enabled but we show the tip
         this.renderer.bind.showOverlay = false;
         this.renderer.bind.showTip = true;
         this.extensionHandler.clear();
