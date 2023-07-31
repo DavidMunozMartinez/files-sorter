@@ -53,9 +53,8 @@ export class FileSorter {
   addWatcher(folder: string) {
     const watcher = chokidar.watch(folder, this.defaultConfig);
     watcher.on("add", (location: any) => {
-      // this.onChangeDetected.forEach((fn) => fn(folder))
       if (this.paths[folder].active) {
-        this.sort(folder, location).then((moved: IMovedFileData) => {
+        this.sort(folder, location).then((moved) => {
           if (moved) {
             this.notificationService.notifyFileMove(folder, [moved]);
           }
@@ -134,7 +133,7 @@ export class FileSorter {
    * @param folder Path that triggered the sort action
    * @param location Absolute location for the file
    */
-  private async sort(folder: string, location: string): Promise<any> {
+  private async sort(folder: string, location: string): Promise<IMovedFileData | null> {
     const data = this.paths[folder];
     const name: any = path.basename(location);
     const category = this.getCategory(data, name);
