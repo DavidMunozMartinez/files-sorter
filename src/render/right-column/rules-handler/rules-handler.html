@@ -11,7 +11,7 @@
       <smart-hover class="options">
         <span
           :foreach="conditionKey in Object.keys(this.conditions)"
-          :onclick="this.selectCondition(event, conditionKey)">
+          :onclick="this.selectCondition(conditionKey)">
           ${this.conditions[conditionKey]}
         </span>
       </smart-hover>

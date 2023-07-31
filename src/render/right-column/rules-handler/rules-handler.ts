@@ -2,6 +2,7 @@ import { FileSorter } from "../../file-sorter";
 import { NotificationComponent } from "../../notification-component/notification-component";
 import { Utils } from "../../utils";
 import { Bind } from 'bindrjs';
+import { RulesHandlerBind } from "./rules-handler.model";
 
 let renderer: any = null;
 
@@ -25,69 +26,64 @@ export class RulesHandler {
     utils: Utils,
     notificationService: NotificationComponent
   ) {
-    renderer = new Bind({
+    renderer = new Bind<RulesHandlerBind>({
       id: "rules-handler",
       template: require("./rules-handler.html"),
       bind: {
-        category: null,
+        category: '',
         hideOverlay: false,
         showTip: false,
         conditions: this.conditions,
-        activeCondition: null,
+        activeCondition: '',
         rules: [],
-        activeRules: 0
+        activeRules: 0,
+
+        onKeydown: (event: KeyboardEvent) => {
+          if (event.which === 13) {
+            this.onEnter(event);
+          }
+        },
+        showRules: () => {
+          this.notificationService.showConsecutiveTips(['RULES_TIP', 'GROUP_RULES', 'GROUP_RULE_CHECK']);
+        },
+        selectCondition: (key: string) => {
+          renderer.bind.activeCondition = key;
+        },
+        removeRule: (rule: any) => {
+          const index = renderer.bind.rules.indexOf(rule);
+          renderer.bind.rules.splice(index, 1);
+          this.delete(rule.value);
+          if (renderer.bind.rules.length === 0) {
+            renderer.bind.showTip = true;
+          }
+        },
+        selectRule: (event: MouseEvent, rule: any) => {
+          let controlKey = (event.ctrlKey || event.altKey || event.metaKey);      
+    
+          if (!controlKey) {
+            renderer.bind.activeRules = 0;
+            renderer.bind.rules.forEach((_: any) => {
+              _.active = false;
+            });
+          }
+    
+          if (controlKey && rule.active) {
+            rule.active = false;
+            renderer.bind.activeRules--;
+          } else {
+            rule.active = true;
+            renderer.bind.activeRules++;
+          }
+        },
+        joinConditions: () => {
+          this.joinConditions();
+        }
       },
     });
 
     this.fileSorter = fileSorter;
     this.utils = utils;
     this.notificationService = notificationService;
-
-    renderer.bind.onKeydown = (event: MouseEvent) => {
-      if (event.which === 13) {
-        this.onEnter(event);
-      }
-    }
-
-    renderer.bind.showRules = ()  => {
-      this.notificationService.showConsecutiveTips(['RULES_TIP', 'GROUP_RULES', 'GROUP_RULE_CHECK']);
-    }
-
-    renderer.bind.selectCondition  = (event: MouseEvent, key: string) => {
-      renderer.bind.activeCondition = key;
-    }
-
-    renderer.bind.removeRule = (rule: any) => {
-      const index = renderer.bind.rules.indexOf(rule);
-      renderer.bind.rules.splice(index, 1);
-      this.delete(rule.value);
-      if (renderer.bind.rules.length === 0) {
-        renderer.bind.showTip = true;
-      }
-    }
-
-    renderer.bind.selectRule = (event: MouseEvent, rule: any) => {
-      let controlKey = (event.ctrlKey || event.altKey || event.metaKey);      
-
-      if (!controlKey) {
-        renderer.bind.activeRules = 0;
-        renderer.bind.rules.forEach((_: any) => {
-          _.active = false;
-        });
-      }
-
-      if (controlKey && rule.active) {
-        rule.active = false;
-        renderer.bind.activeRules--;
-      } else {
-        rule.active = true;
-        renderer.bind.activeRules++;
-      }
-    }
-
-    renderer.bind.joinConditions = () => {
-      this.joinConditions();
-    }
   }
 
   /**
