@@ -1,59 +1,57 @@
 import { remote } from "electron";
-import { FileSorter, IMovedFileData } from "../../file-sorter";
+import { FileSorter } from "../../file-sorter";
 import { NotificationComponent } from "../../notification-component/notification-component";
 import { CategoriesHandler } from "../../right-column/categories-handler/categories-handler";
 import { Utils } from "../../utils";
 import path from "path";
 import { Bind } from "bindrjs";
-import { FolderData } from "./folder-handler.model";
+import { FolderBind, FolderData } from "./folder-handler.model";
 
 export class FolderHandler {
   categoriesHandler: CategoriesHandler;
   fileSorter: FileSorter;
   notificationService: NotificationComponent;
   utils: Utils;
-  listReady: boolean = false;
-  folders: { [key: string]: HTMLElement } = {};
-  foldersData: any;
+  folders: { [key:string]: FolderData } = {};
 
   constructor(
     fileSorter: FileSorter,
     utils: Utils,
     notificationService: NotificationComponent
   ) {
-    let folders = utils.getLocalStorageFolders();
-    let bindFolders = Object.keys(folders).map((key: string) => {
+    let folders: { [key:string]: FolderData } = utils.getLocalStorageFolders();
+    let bindFolders: FolderData[] = Object.keys(folders).map((key: string) => {
       fileSorter.addWatcher(folders[key].name);
       folders[key].name = key;
       return folders[key];
     });
 
-    const FolderHandlerBinds: any = new Bind({
+    const FolderHandlerBinds = new Bind<FolderBind>({
       id: "folder-handler",
       template: require("./folder-handler.html"),
       bind: {
-        selected: null,
+        selected: '',
         folders: bindFolders,
         dragging: false,
         showTip: true,
-        sortFolder: (folder: any) => {
+        sortFolder: (folder: FolderData) => {
           this.sortFolder(folder.name);
           if (FolderHandlerBinds.bind.selected === folder.name) {
             this.categoriesHandler.renderer.bind.reload();
             console.log('active folder sorted');
           }
         },
-        toggleFolderWatcher: (event: any, folder: any) => {
+        toggleFolderWatcher: (event: MouseEvent, folder: FolderData) => {
           if (folders[folder.name]) {
             folder.active = !folder.active;
 
             folders[folder.name].active = folder.active;
             localStorage.setItem("folders", JSON.stringify(folders));
-            this.fileSorter.updateFoldersData();
+            fileSorter.updateFoldersData();
           }
           event.stopImmediatePropagation();
         },
-        selectFolder: (folder: any) => {
+        selectFolder: (folder: FolderData) => {
           if (folder && folder.name) {
             FolderHandlerBinds.bind.selected = folder.name;
             this.categoriesHandler.enable(folder.name);
@@ -89,7 +87,7 @@ export class FolderHandler {
             let newFolder = this.newFolder(value);
             FolderHandlerBinds.bind.folders.push(newFolder);
             FolderHandlerBinds.bind.selectFolder(newFolder);
-            this.fileSorter.addWatcher(value);
+            fileSorter.addWatcher(value);
           } else {
             FolderHandlerBinds.bind.selected = value;
             this.categoriesHandler.enable(value);
@@ -116,7 +114,7 @@ export class FolderHandler {
             if (this.save(folder)) {
               FolderHandlerBinds.bind.folders.push(this.newFolder(folder));
               FolderHandlerBinds.bind.selected = folder;
-              this.fileSorter.addWatcher(folder);
+              fileSorter.addWatcher(folder);
             }
           }
           FolderHandlerBinds.bind.dragging = false;
@@ -136,7 +134,7 @@ export class FolderHandler {
 
     
     this.fileSorter = fileSorter;
-    this.fileSorter.onChange((folder) => {
+    fileSorter.onChange((folder) => {
       if (FolderHandlerBinds.bind.selected === folder) {
         this.categoriesHandler.renderer.bind.reload();
       }
