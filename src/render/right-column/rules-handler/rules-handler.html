@@ -33,6 +33,15 @@
     <div class="join-conditions-input"></div>
     <i class="material-icons">join_full</i>
   </div>
+  <div
+    class="input-container join-conditions"
+    title="Combine multiple conditions into one"
+    style="float: right; margin-right: 4px;"
+    :if="this.activeJoinedRules > 0"
+    :onclick="this.breakConditions()">
+    <div class="join-conditions-input"></div>
+    <i class="material-icons">spoke</i>
+  </div>
 
 </div>
 

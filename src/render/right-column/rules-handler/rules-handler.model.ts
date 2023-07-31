@@ -1,11 +1,12 @@
 export type RulesHandlerBind = {
   category: string
-  hideOverlay: boolean;
+  showOverlay: boolean;
   showTip: boolean;
   conditions: RuleCondition
   activeCondition: string;
-  rules: []
+  rules: Rule[]
   activeRules: number;
+  activeJoinedRules: number,
 
   onKeydown: (event: KeyboardEvent) => void
   showRules: () => void
@@ -13,6 +14,13 @@ export type RulesHandlerBind = {
   removeRule: (rule: any) => void
   selectRule: (event: MouseEvent, rule: any) => void
   joinConditions: () => void;
+  breakConditions: () => void;
+}
+
+export type Rule = {
+  active: boolean,
+  display: string,
+  value: string
 }
 
 export type RuleCondition = {

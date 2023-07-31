@@ -2,9 +2,9 @@ import { FileSorter } from "../../file-sorter";
 import { NotificationComponent } from "../../notification-component/notification-component";
 import { Utils } from "../../utils";
 import { Bind } from 'bindrjs';
-import { RulesHandlerBind } from "./rules-handler.model";
+import { Rule, RulesHandlerBind } from "./rules-handler.model";
 
-let renderer: any = null;
+let renderer: Bind<RulesHandlerBind>;
 
 export class RulesHandler {
   folder: string | null = null;
@@ -31,12 +31,13 @@ export class RulesHandler {
       template: require("./rules-handler.html"),
       bind: {
         category: '',
-        hideOverlay: false,
+        showOverlay: false,
         showTip: false,
         conditions: this.conditions,
         activeCondition: '',
         rules: [],
         activeRules: 0,
+        activeJoinedRules: 0,
 
         onKeydown: (event: KeyboardEvent) => {
           if (event.which === 13) {
@@ -62,22 +63,30 @@ export class RulesHandler {
     
           if (!controlKey) {
             renderer.bind.activeRules = 0;
-            renderer.bind.rules.forEach((_: any) => {
-              _.active = false;
+            renderer.bind.activeJoinedRules = 0;
+            renderer.bind.rules.forEach((rule: Rule) => {
+              rule.active = false;
             });
           }
     
           if (controlKey && rule.active) {
             rule.active = false;
             renderer.bind.activeRules--;
+            if (rule.value.indexOf(',') > -1) {
+              renderer.bind.activeJoinedRules--;
+            }
           } else {
             rule.active = true;
             renderer.bind.activeRules++;
+            if (rule.value.indexOf(',') > -1) {
+              renderer.bind.activeJoinedRules++;
+            }
           }
         },
         joinConditions: () => {
           this.joinConditions();
-        }
+        },
+        breakConditions: this.breakConditions.bind(this)
       },
     });
 
@@ -234,7 +243,8 @@ export class RulesHandler {
 
     renderer.bind.rules.push({
       value: valueText,
-      display: innerText
+      display: innerText,
+      active: false,
     });
   }
 
@@ -266,7 +276,8 @@ export class RulesHandler {
 
     renderer.bind.rules.push({
       value: valueText,
-      display: innerText
+      display: innerText,
+      active: false,
     });
   }
 
@@ -309,7 +320,8 @@ export class RulesHandler {
     if (this.save(newValue)) {
       renderer.bind.rules.push({
         value: newValue,
-        display: newText
+        display: newText,
+        active: false,
       });
     }
 
@@ -323,5 +335,29 @@ export class RulesHandler {
     this.notificationService.showTipIfNeeded("GROUP_RULE_CHECK");
   }
 
-  private breakConditions() {}
+  private breakConditions() {
+    let groups = renderer.bind.rules.filter((rule: any) => rule.active && rule.value.indexOf(',') > -1);
+    groups.forEach((group: Rule) => {
+      let rules: string[] = group.value.split(',');
+      rules.forEach((ruleValue) => {
+        let [condition, value] = ruleValue.split(':');
+        if (this.save(ruleValue)) {
+          renderer.bind.rules.push({
+            value: ruleValue,
+            display: this.conditions[condition] + ': ' + value,
+            active: false,
+          });
+        }
+      });
+      this.delete(group.value);
+    });
+
+    // Delete in different iteration to not affect the array
+    let current = groups.pop();
+    while (current) {
+      let index = renderer.bind.rules.indexOf(current);
+      renderer.bind.rules.splice(index, 1);
+      current = groups.pop();
+    }
+  }
 }
