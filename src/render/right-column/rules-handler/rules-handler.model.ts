@@ -12,15 +12,23 @@ export type RulesHandlerBind = {
   showRules: () => void
   selectCondition: (key: string) => void;
   removeRule: (rule: any) => void
-  selectRule: (event: MouseEvent, rule: any) => void
+  selectRule: (event: MouseEvent, rule: Rule) => void
+  editRule: (rule: Rule) => void
   joinConditions: () => void;
   breakConditions: () => void;
 }
 
 export type Rule = {
   active: boolean,
+  edit: boolean,
   display: string,
+  displayObjects?: RuleDisplay[]
   value: string
+}
+
+export type RuleDisplay = {
+  condition: string,
+  value: string,
 }
 
 export type RuleCondition = {

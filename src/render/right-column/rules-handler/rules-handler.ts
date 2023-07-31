@@ -2,7 +2,7 @@ import { FileSorter } from "../../file-sorter";
 import { NotificationComponent } from "../../notification-component/notification-component";
 import { Utils } from "../../utils";
 import { Bind } from 'bindrjs';
-import { Rule, RulesHandlerBind } from "./rules-handler.model";
+import { Rule, RuleDisplay, RulesHandlerBind } from "./rules-handler.model";
 
 let renderer: Bind<RulesHandlerBind>;
 
@@ -58,7 +58,7 @@ export class RulesHandler {
             renderer.bind.showTip = true;
           }
         },
-        selectRule: (event: MouseEvent, rule: any) => {
+        selectRule: (event: MouseEvent, rule: Rule) => {
           let controlKey = (event.ctrlKey || event.altKey || event.metaKey);      
     
           if (!controlKey) {
@@ -82,6 +82,9 @@ export class RulesHandler {
               renderer.bind.activeJoinedRules++;
             }
           }
+        },
+        editRule: (rule: Rule) => {
+          // rule.edit = true;
         },
         joinConditions: () => {
           this.joinConditions();
@@ -230,9 +233,7 @@ export class RulesHandler {
   }
 
   private createListItem(conditionString: string) {
-    const split = conditionString.split(":");
-    const condition = split[0];
-    const value = split[1];
+    const [condition, value] = conditionString.split(':');
 
     let innerText = value;
     let valueText = value;
@@ -244,7 +245,9 @@ export class RulesHandler {
     renderer.bind.rules.push({
       value: valueText,
       display: innerText,
+      displayObjects: this.makeDisplayObject(conditionString),
       active: false,
+      edit: false,
     });
   }
 
@@ -274,10 +277,14 @@ export class RulesHandler {
       }
     });
 
+
+
     renderer.bind.rules.push({
       value: valueText,
       display: innerText,
+      displayObjects: this.makeDisplayObject(conditionString),
       active: false,
+      edit: false,
     });
   }
 
@@ -321,7 +328,9 @@ export class RulesHandler {
       renderer.bind.rules.push({
         value: newValue,
         display: newText,
+        displayObjects: this.makeDisplayObject(newValue),
         active: false,
+        edit: false,
       });
     }
 
@@ -345,7 +354,9 @@ export class RulesHandler {
           renderer.bind.rules.push({
             value: ruleValue,
             display: this.conditions[condition] + ': ' + value,
+            displayObjects: this.makeDisplayObject(ruleValue),
             active: false,
+            edit: false,
           });
         }
       });
@@ -359,5 +370,18 @@ export class RulesHandler {
       renderer.bind.rules.splice(index, 1);
       current = groups.pop();
     }
+  }
+
+  private makeDisplayObject(value: string): RuleDisplay[] {
+    const conditionStrings = value.split(',');
+    const ruleDisplays: RuleDisplay[] = [];
+    conditionStrings.forEach((conditionString: string) => {
+      const [condition, value] = conditionString.split(':');
+      ruleDisplays.push({
+        condition: this.conditions[condition],
+        value,
+      });
+    });
+    return ruleDisplays;
   }
 }

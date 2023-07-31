@@ -227,14 +227,16 @@ i.disabled {
   opacity: 0.3;
 }
 i.close-icon,
-i.sort-icon {
+i.sort-icon,
+i.check-icon {
   transition: color 0.2s;
   font-weight: bold;
 }
 i.close-icon:hover {
   color: rgb(182, 50, 50);
 }
-i.sort-icon:hover {
+i.sort-icon:hover,
+i.check-icon:hover {
   color: $primary;
 }
 
@@ -273,36 +275,35 @@ a {
   color: var(--primary);
 }
 
-[contenteditable][placeholder]:focus:empty:before {
-  content: attr(placeholder);
-  position: absolute;
-  color: gray;
-  background-color: transparent;
-  width: 100%;
-  left: 0;
-  text-align: left;
-  margin-left: 10px;
-  display: block;
-}
-
-[contenteditable] {
-  font-size: 0px;
-}
-
-[contenteditable]:focus {
-  font-size: 14px;
-}
-
-[contenteditable][placeholder]:before {
-  content: attr(placeholder);
-  position: absolute;
-  color: gray;
-  background-color: transparent;
-  width: 100%;
-  left: 0;
-  text-align: left;
-  margin-left: 10px;
-  display: none;
+.categories {
+  [contenteditable][placeholder]:focus:empty:before {
+    content: attr(placeholder);
+    position: absolute;
+    color: gray;
+    background-color: transparent;
+    width: 100%;
+    left: 0;
+    text-align: left;
+    margin-left: 10px;
+    display: block;
+  }
+  [contenteditable] {
+    font-size: 0px;
+  }
+  [contenteditable]:focus {
+    font-size: 14px;
+  }
+  [contenteditable][placeholder]:before {
+    content: attr(placeholder);
+    position: absolute;
+    color: gray;
+    background-color: transparent;
+    width: 100%;
+    left: 0;
+    text-align: left;
+    margin-left: 10px;
+    display: none;
+  }
 }
 
 @keyframes pulse {

@@ -46,16 +46,33 @@
 </div>
 
 <div class="extension-list">
-  <div class="extension-list-item"
+  <div class="extension-list-item slide-in"
     :foreach="rule in this.rules"
-    :index
+    :index="@i "
+    :style:animation-delay="(120 * @i) - (@i * 100) + 'ms'"
     :value="rule.value"
     :onclick="this.selectRule(event, rule)"
+    :ondblclick="rule.edit = true"
     :class:active="rule.active">
-    ${rule.display}
-    <i class="material-icons close-icon" :onclick="this.removeRule(rule)" style="position: relative; float: right">
+    <span
+      :foreach="ruleDisplay in rule.displayObjects"
+      :index="@j ">
+      ${ruleDisplay.condition}:
+
+      <span :if="rule.edit" contenteditable autofocus>${ruleDisplay.value}</span>
+      <span :else>${ruleDisplay.value}</span>
+
+      <span :if="@j != rule.displayObjects.length - 1">
+        <strong>
+          and 
+        </strong>
+      </span>
+    </span>
+
+    <i :if="!rule.edit" class="material-icons close-icon" :onclick="this.removeRule(rule)" style="position: relative; float: right">
       close
     </i>
+    <i :else class="material-icons check-icon" :onclick="rule.edit = false" style="position: relative; float: right">check</i>
   </div>
 </div>
 <span class="section-tip" :class:active="this.showTip">
