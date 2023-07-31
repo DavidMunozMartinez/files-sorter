@@ -58,7 +58,7 @@ export class CategoriesHandler {
         delete: (category: string) => {
           this.delete(category)
         },
-        onInputKeydown: (event: any) => {
+        onInputKeydown: (event: KeyboardEvent) => {
           if (event.which === 13) this.onEnter(event);
         },
         onSearch: (event: KeyboardEvent) => {

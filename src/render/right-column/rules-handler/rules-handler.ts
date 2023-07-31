@@ -103,14 +103,12 @@ export class RulesHandler {
     this.folder = folder;
     this.category = category;
     renderer.bind.rules = [];
-    // this.clearList();
-
     renderer.bind.category = `"${category}"`;
 
     const extensions = this.utils.getExtensions(this.folder, this.category);
 
     if (extensions.length > 0) {
-      const items = extensions.map((extension: any) => {
+      extensions.forEach((extension: any) => {
         if (extension.indexOf(",") > -1) {
           return this.createGroupedListItem(extension);
         }
@@ -328,4 +326,6 @@ export class RulesHandler {
 
     this.notificationService.showTipIfNeeded("GROUP_RULE_CHECK");
   }
+
+  private breakConditions() {}
 }
