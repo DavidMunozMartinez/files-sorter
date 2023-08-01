@@ -4,8 +4,6 @@ import { Utils } from "../../utils";
 import { Bind } from 'bindrjs';
 import { Rule, RuleDisplay, RulesHandlerBind } from "./rules-handler.model";
 
-let renderer: Bind<RulesHandlerBind>;
-
 export class RulesHandler {
   folder: string | null = null;
   category: string | null = null;
@@ -14,6 +12,7 @@ export class RulesHandler {
   fileSorter: FileSorter;
   utils: Utils;
   notificationService: NotificationComponent;
+  bind!: RulesHandlerBind;
 
   private conditions: any = {
     starts_with: "Starts with",
@@ -26,7 +25,7 @@ export class RulesHandler {
     utils: Utils,
     notificationService: NotificationComponent
   ) {
-    renderer = new Bind<RulesHandlerBind>({
+    const { bind } = new Bind<RulesHandlerBind>({
       id: "rules-handler",
       template: require("./rules-handler.html"),
       bind: {
@@ -48,38 +47,38 @@ export class RulesHandler {
           this.notificationService.showConsecutiveTips(['RULES_TIP', 'GROUP_RULES', 'GROUP_RULE_CHECK']);
         },
         selectCondition: (key: string) => {
-          renderer.bind.activeCondition = key;
+          bind.activeCondition = key;
         },
         removeRule: (rule: any) => {
-          const index = renderer.bind.rules.indexOf(rule);
-          renderer.bind.rules.splice(index, 1);
+          const index = bind.rules.indexOf(rule);
+          bind.rules.splice(index, 1);
           this.delete(rule.value);
-          if (renderer.bind.rules.length === 0) {
-            renderer.bind.showTip = true;
+          if (bind.rules.length === 0) {
+            bind.showTip = true;
           }
         },
         selectRule: (event: MouseEvent, rule: Rule) => {
           let controlKey = (event.ctrlKey || event.altKey || event.metaKey);      
     
           if (!controlKey) {
-            renderer.bind.activeRules = 0;
-            renderer.bind.activeJoinedRules = 0;
-            renderer.bind.rules.forEach((rule: Rule) => {
+            bind.activeRules = 0;
+            bind.activeJoinedRules = 0;
+            bind.rules.forEach((rule: Rule) => {
               rule.active = false;
             });
           }
     
           if (controlKey && rule.active) {
             rule.active = false;
-            renderer.bind.activeRules--;
+            bind.activeRules--;
             if (rule.value.indexOf(',') > -1) {
-              renderer.bind.activeJoinedRules--;
+              bind.activeJoinedRules--;
             }
           } else {
             rule.active = true;
-            renderer.bind.activeRules++;
+            bind.activeRules++;
             if (rule.value.indexOf(',') > -1) {
-              renderer.bind.activeJoinedRules++;
+              bind.activeJoinedRules++;
             }
           }
         },
@@ -96,6 +95,7 @@ export class RulesHandler {
     this.fileSorter = fileSorter;
     this.utils = utils;
     this.notificationService = notificationService;
+    this.bind = bind;
   }
 
   /**
@@ -107,11 +107,11 @@ export class RulesHandler {
     if (this.category === category) {
       return;
     }
-    renderer.bind.showOverlay = false;
+    this.bind.showOverlay = false;
     this.folder = folder;
     this.category = category;
-    renderer.bind.rules = [];
-    renderer.bind.category = `"${category}"`;
+    this.bind.rules = [];
+    this.bind.category = `"${category}"`;
 
     const extensions = this.utils.getExtensions(this.folder, this.category);
 
@@ -122,10 +122,10 @@ export class RulesHandler {
         }
         return this.createListItem(extension);
       });
-      renderer.bind.showTip = false;
+      this.bind.showTip = false;
     } else {
-      renderer.bind.showTip = true;
-      renderer.bind.showOverlay = false;
+      this.bind.showTip = true;
+      this.bind.showOverlay = false;
     }
   }
 
@@ -134,15 +134,15 @@ export class RulesHandler {
    * sets some global values to null
    */
   disable() {
-    renderer.bind.showOverlay = true;
-    renderer.bind.showTip = false;
+    this.bind.showOverlay = true;
+    this.bind.showTip = false;
 
     this.folder = null;
     this.category = null;
   }
 
   clear() {
-    renderer.bind.rules = [];
+    this.bind.rules = [];
   }
 
   /**
@@ -195,7 +195,7 @@ export class RulesHandler {
    */
   private onEnter(event: any) {
     const value = event.target.innerText;
-    const condition = renderer.bind.activeCondition;
+    const condition = this.bind.activeCondition;
     if (!condition) {
       event.preventDefault();
       this.notificationService.notify({
@@ -221,12 +221,12 @@ export class RulesHandler {
       event.target.innerText = "";
     }
 
-    if (renderer.bind.rules.length > 0) {
-      renderer.bind.showTip = false;
-      renderer.bind.showOverlay = false;
+    if (this.bind.rules.length > 0) {
+      this.bind.showTip = false;
+      this.bind.showOverlay = false;
     }
 
-    if (renderer.bind.rules.length > 2) {
+    if (this.bind.rules.length > 2) {
       this.notificationService.showTipIfNeeded("GROUP_RULES");
     }
     event.preventDefault();
@@ -242,7 +242,7 @@ export class RulesHandler {
       valueText = condition + ":" + value;
     }
 
-    renderer.bind.rules.push({
+    this.bind.rules.push({
       value: valueText,
       display: innerText,
       displayObjects: this.makeDisplayObject(conditionString),
@@ -279,7 +279,7 @@ export class RulesHandler {
 
 
 
-    renderer.bind.rules.push({
+    this.bind.rules.push({
       value: valueText,
       display: innerText,
       displayObjects: this.makeDisplayObject(conditionString),
@@ -297,7 +297,7 @@ export class RulesHandler {
     let newValue = "";
     let toDelete: string[] = [];
 
-    const items = renderer.bind.rules.filter((rule: any) => rule.active);
+    const items = this.bind.rules.filter((rule: any) => rule.active);
 
     items.forEach((item: any, i: number) => {
       let valueAttr = item.value;
@@ -325,7 +325,7 @@ export class RulesHandler {
     });
 
     if (this.save(newValue)) {
-      renderer.bind.rules.push({
+      this.bind.rules.push({
         value: newValue,
         display: newText,
         displayObjects: this.makeDisplayObject(newValue),
@@ -336,8 +336,8 @@ export class RulesHandler {
 
     let current = items.pop();
     while (current) {
-      let index = renderer.bind.rules.indexOf(current);
-      renderer.bind.rules.splice(index, 1);
+      let index = this.bind.rules.indexOf(current);
+      this.bind.rules.splice(index, 1);
       current = items.pop();
     }
 
@@ -345,13 +345,13 @@ export class RulesHandler {
   }
 
   private breakConditions() {
-    let groups = renderer.bind.rules.filter((rule: any) => rule.active && rule.value.indexOf(',') > -1);
+    let groups = this.bind.rules.filter((rule: any) => rule.active && rule.value.indexOf(',') > -1);
     groups.forEach((group: Rule) => {
       let rules: string[] = group.value.split(',');
       rules.forEach((ruleValue) => {
         let [condition, value] = ruleValue.split(':');
         if (this.save(ruleValue)) {
-          renderer.bind.rules.push({
+          this.bind.rules.push({
             value: ruleValue,
             display: this.conditions[condition] + ': ' + value,
             displayObjects: this.makeDisplayObject(ruleValue),
@@ -366,8 +366,8 @@ export class RulesHandler {
     // Delete in different iteration to not affect the array
     let current = groups.pop();
     while (current) {
-      let index = renderer.bind.rules.indexOf(current);
-      renderer.bind.rules.splice(index, 1);
+      let index = this.bind.rules.indexOf(current);
+      this.bind.rules.splice(index, 1);
       current = groups.pop();
     }
   }

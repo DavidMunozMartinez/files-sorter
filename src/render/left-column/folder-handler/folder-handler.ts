@@ -5,7 +5,7 @@ import { CategoriesHandler } from "../../right-column/categories-handler/categor
 import { Utils } from "../../utils";
 import path from "path";
 import { Bind } from "bindrjs";
-import { FolderBind, FolderData } from "./folder-handler.model";
+import { FolderHandlerBind, FolderData } from "./folder-handler.model";
 
 export class FolderHandler {
   categoriesHandler: CategoriesHandler;
@@ -26,7 +26,7 @@ export class FolderHandler {
       return folders[key];
     });
 
-    const FolderHandlerBinds = new Bind<FolderBind>({
+    const { bind } = new Bind<FolderHandlerBind>({
       id: "folder-handler",
       template: require("./folder-handler.html"),
       bind: {
@@ -36,8 +36,8 @@ export class FolderHandler {
         showTip: true,
         sortFolder: (folder: FolderData) => {
           this.sortFolder(folder.name);
-          if (FolderHandlerBinds.bind.selected === folder.name) {
-            this.categoriesHandler.renderer.bind.reload();
+          if (bind.selected === folder.name) {
+            this.categoriesHandler.bind.reload();
             console.log('active folder sorted');
           }
         },
@@ -53,9 +53,9 @@ export class FolderHandler {
         },
         selectFolder: (folder: FolderData) => {
           if (folder && folder.name) {
-            FolderHandlerBinds.bind.selected = folder.name;
+            bind.selected = folder.name;
             this.categoriesHandler.enable(folder.name);
-            FolderHandlerBinds.bind.showTip = false;
+            bind.showTip = false;
           }
         },
         removeFolder: (folder: any) => {
@@ -63,16 +63,16 @@ export class FolderHandler {
           if (value) {
             this.delete(value);
           }
-          let index = FolderHandlerBinds.bind.folders.indexOf(folder);
-          FolderHandlerBinds.bind.folders.splice(index ,1);
-          if (FolderHandlerBinds.bind.folders.length === 0) {
+          let index = bind.folders.indexOf(folder);
+          bind.folders.splice(index ,1);
+          if (bind.folders.length === 0) {
             this.categoriesHandler.disable();
-            FolderHandlerBinds.bind.showTip = true;
+            bind.showTip = true;
           } else if (value) {
-            if (FolderHandlerBinds.bind.folders[index]) {
-              FolderHandlerBinds.bind.selectFolder(FolderHandlerBinds.bind.folders[index]);
+            if (bind.folders[index]) {
+              bind.selectFolder(bind.folders[index]);
             } else {
-              FolderHandlerBinds.bind.selectFolder(FolderHandlerBinds.bind.folders[index - 1]);
+              bind.selectFolder(bind.folders[index - 1]);
             }
           }
           event?.stopImmediatePropagation();
@@ -85,11 +85,11 @@ export class FolderHandler {
           if (!value) return;
           if (this.save(value)) {
             let newFolder = this.newFolder(value);
-            FolderHandlerBinds.bind.folders.push(newFolder);
-            FolderHandlerBinds.bind.selectFolder(newFolder);
+            bind.folders.push(newFolder);
+            bind.selectFolder(newFolder);
             fileSorter.addWatcher(value);
           } else {
-            FolderHandlerBinds.bind.selected = value;
+            bind.selected = value;
             this.categoriesHandler.enable(value);
           }
         },
@@ -102,7 +102,7 @@ export class FolderHandler {
           ]);
         },
         onDragOver: (event: DragEvent) => {
-          FolderHandlerBinds.bind.dragging = true;
+          bind.dragging = true;
           event.preventDefault();
         },
         onDrop: () => {
@@ -112,16 +112,16 @@ export class FolderHandler {
               this.categoriesHandler.dragging
             );
             if (this.save(folder)) {
-              FolderHandlerBinds.bind.folders.push(this.newFolder(folder));
-              FolderHandlerBinds.bind.selected = folder;
+              bind.folders.push(this.newFolder(folder));
+              bind.selected = folder;
               fileSorter.addWatcher(folder);
             }
           }
-          FolderHandlerBinds.bind.dragging = false;
+          bind.dragging = false;
         },
       },
       ready: () => {
-        FolderHandlerBinds.bind.selectFolder(bindFolders[0]);
+        bind.selectFolder(bindFolders[0]);
       }
     });
 
@@ -135,8 +135,8 @@ export class FolderHandler {
     
     this.fileSorter = fileSorter;
     fileSorter.onChange((folder) => {
-      if (FolderHandlerBinds.bind.selected === folder) {
-        this.categoriesHandler.renderer.bind.reload();
+      if (bind.selected === folder) {
+        this.categoriesHandler.bind.reload();
       }
     });
     this.notificationService = notificationService;

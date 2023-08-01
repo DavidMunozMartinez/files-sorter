@@ -1,4 +1,4 @@
-export type FolderBind = {
+export type FolderHandlerBind = {
   selected: string
   folders: FolderData[]
   dragging: boolean

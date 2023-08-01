@@ -14,7 +14,7 @@ export class CategoriesHandler {
   utils: Utils;
   notificationService: NotificationComponent;
   dragging: string | null = null;
-  renderer: Bind<CategoryHandlerBind>;
+  bind!: CategoryHandlerBind;
 
   constructor(
     fileSorter: FileSorter,
@@ -30,7 +30,7 @@ export class CategoriesHandler {
       notificationService
     );
 
-    this.renderer = new Bind<CategoryHandlerBind>({
+    const { bind } = new Bind<CategoryHandlerBind>({ 
       id: 'categories-handler',
       template: require('./categories-handler.html'),
       bind: {
@@ -43,7 +43,7 @@ export class CategoriesHandler {
         showTip: false,
         categoryData: {},
         openPath: () => {
-          let fullPath = path.resolve(this.renderer.bind.activeFolder);
+          let fullPath = path.resolve(bind.activeFolder);
           utils.revealInExplorer(fullPath);
         },
         reload: () => {
@@ -62,8 +62,8 @@ export class CategoriesHandler {
           if (event.which === 13) this.onEnter(event);
         },
         onSearch: (event: KeyboardEvent) => {
-          this.renderer.bind.searchTerm = (event.target as HTMLDivElement).textContent || '';
-          if (!this.renderer.bind.searchTerm) {
+          bind.searchTerm = (event.target as HTMLDivElement).textContent || '';
+          if (!bind.searchTerm) {
             this.collapseExpandedSearch();
           }
         },
@@ -74,37 +74,38 @@ export class CategoriesHandler {
         select: (category: string) => {
           if (this.folder && category) {
             this.extensionHandler.enable(this.folder, category);
-            this.renderer.bind.activeCategory = category;
+            bind.activeCategory = category;
           }
         },
         expandCategory: (category: string, prop: 'expanded' | 'searchExpanded') => {
           // TODO: fix this bug in bindjr
-          if (this.renderer.bind.categoryData && this.renderer.bind.categoryData[category].files.length) {
-            let copy = { ...this.renderer.bind.categoryData };
+          if (bind.categoryData && bind.categoryData[category].files.length) {
+            let copy = { ...bind.categoryData };
             copy[category][prop || 'expanded'] = !copy[category][prop || 'expanded'];
-            this.renderer.bind.categoryData = copy;
+            bind.categoryData = copy;
           }
         },
         filterCategory: (category: string) => {
           const value = category.toLowerCase();
-          if (!this.renderer.bind.searchTerm) return false;
-          const term: string = this.renderer.bind.searchTerm.toLowerCase();
+          if (!bind.searchTerm) return false;
+          const term: string = bind.searchTerm.toLowerCase();
           const categoryPasses = value.indexOf(term) > -1;
-          const categoryContent: CategoryData = this.renderer.bind.categoryData[category];
+          const categoryContent: CategoryData = bind.categoryData[category];
           const categoryContentMatch = categoryContent.files.find((file: string) => file.toLowerCase().indexOf(term) > -1);
           const categoryContentPasses = categoryContent && categoryContent.files && categoryContentMatch;
           if (categoryContentPasses && !categoryContent.searchExpanded) {
-            this.renderer.bind.expandCategory(category, 'searchExpanded');
+            bind.expandCategory(category, 'searchExpanded');
           }
           return Boolean(categoryPasses || categoryContentPasses);
         },
         filterCategoryFile: (file: string) => {
           const value = file.toLowerCase();
-          const term: string = this.renderer.bind.searchTerm.toLowerCase();
+          const term: string = bind.searchTerm.toLowerCase();
           return value.indexOf(term) > -1;
         }
       }
     });
+    this.bind = bind;
   }
 
   /**
@@ -115,11 +116,11 @@ export class CategoriesHandler {
     if (this.folder === folder) return;
 
     this.utils.getDirectories(folder).then((categories: string[]) => {
-      this.renderer.bind.categoryData = {};
-      this.renderer.bind.showOverlay = false;
+      this.bind.categoryData = {};
+      this.bind.showOverlay = false;
       this.folder = folder;
-      this.renderer.bind.activeFolder = folder;
-      this.renderer.bind.categories = [];
+      this.bind.activeFolder = folder;
+      this.bind.categories = [];
       let data = this.utils.getLocalStorageFolders();
       categories.forEach((category: string) => {
         if (
@@ -134,7 +135,7 @@ export class CategoriesHandler {
       let order: string[] = data[folder].order;
 
       this.getLooseFiles().then((files: string[]) => {
-        this.renderer.bind.looseFiles = `${files.length} loose files`
+        this.bind.looseFiles = `${files.length} loose files`
       });
 
       // If the category list is greater than 0 we render it and remove the section tip
@@ -142,15 +143,15 @@ export class CategoriesHandler {
         order = this.cleanUpFolderOrder(order, categories)
         // Use the defined order if exists
         let folders = (order.length ? order : categories);
-        this.renderer.bind.categories = folders;
-        this.renderer.bind.showTip = false;
+        this.bind.categories = folders;
+        this.bind.showTip = false;
         folders.forEach((category: string) => {
           this.setCategoryData(folder, category);
         });
       } else {
         // If not, the section is enabled but we show the tip
-        this.renderer.bind.showOverlay = false;
-        this.renderer.bind.showTip = true;
+        this.bind.showOverlay = false;
+        this.bind.showTip = true;
         this.extensionHandler.clear();
         this.extensionHandler.disable();
       }
@@ -162,8 +163,8 @@ export class CategoriesHandler {
    * it also sets folder to null and clears and disables the extensions section
    */
   disable() {
-    this.renderer.bind.showTip = false;
-    this.renderer.bind.showOverlay = true;
+    this.bind.showTip = false;
+    this.bind.showOverlay = true;
     this.folder = null;
     this.extensionHandler.clear();
     this.extensionHandler.disable();
@@ -195,8 +196,8 @@ export class CategoriesHandler {
       }
       if (this.save(value)) {
         event.target.innerText = "";
-        this.renderer.bind.categories.unshift(value);
-        this.renderer.bind.select(value);
+        this.bind.categories.unshift(value);
+        this.bind.select(value);
         this.notificationService.showTipIfNeeded("REORDER_CATEGORIES");
       }
     });
@@ -247,13 +248,13 @@ export class CategoriesHandler {
     }
 
     const orderIndex = folder.order.indexOf(category);
-    const RenderIndex = this.renderer.bind.categories.indexOf(category);
+    const RenderIndex = this.bind.categories.indexOf(category);
     if (folder.order && folder.order.length > 0 && orderIndex > -1) {
       folder.order.splice(orderIndex, 1);
     }
 
     if (RenderIndex > -1) {
-      this.renderer.bind.categories.splice(RenderIndex, 1);
+      this.bind.categories.splice(RenderIndex, 1);
     }
 
     localStorage.setItem("folders", JSON.stringify(folders));
@@ -266,19 +267,19 @@ export class CategoriesHandler {
     });
   }
   private collapseExpandedSearch() {
-    this.renderer.bind.categories.forEach((category: string) => {
-      const data = this.renderer.bind.categoryData[category];
+    this.bind.categories.forEach((category: string) => {
+      const data = this.bind.categoryData[category];
       if (data && data.searchExpanded) {
-        this.renderer.bind.expandCategory(category, 'searchExpanded');
+        this.bind.expandCategory(category, 'searchExpanded');
       }
     });
   }
 
   private getLooseFiles(): Promise<string[]> {
     return new Promise((resolve, reject) => {
-      fs.readdir(this.renderer.bind.activeFolder, (err, contents) => {
+      fs.readdir(this.bind.activeFolder, (err, contents) => {
         let files = contents.filter(content => {
-            return this.utils.isActualFile(path.resolve(this.renderer.bind.activeFolder, content), content);
+            return this.utils.isActualFile(path.resolve(this.bind.activeFolder, content), content);
           });  
         resolve(files);    
       });
@@ -290,7 +291,7 @@ export class CategoriesHandler {
     const files = content.filter((file) => {
       return this.utils.isActualFile(path.resolve(folder, category, file), file)
     });
-    this.renderer.bind.categoryData[category] = {
+    this.bind.categoryData[category] = {
       files,
       expanded: false,
       searchExpanded: false,
