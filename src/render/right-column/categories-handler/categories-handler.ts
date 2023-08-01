@@ -123,11 +123,7 @@ export class CategoriesHandler {
       this.bind.categories = [];
       let data = this.utils.getLocalStorageFolders();
       categories.forEach((category: string) => {
-        if (
-          folder &&
-          data[folder] &&
-          !data[folder].categories[category]
-        ) {
+        if (folder && data[folder] && !data[folder].categories[category]) {
           this.save(category);
         }
       });
@@ -154,6 +150,9 @@ export class CategoriesHandler {
         this.bind.showTip = true;
         this.extensionHandler.clear();
         this.extensionHandler.disable();
+      }
+      if (this.bind.categories.length) {
+        this.bind.select(this.bind.categories[0]);
       }
     });
   }
