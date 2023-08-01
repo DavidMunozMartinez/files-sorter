@@ -28,7 +28,7 @@
     }
   }
   .categories,
-  .extensions {
+  .rules {
     border-radius: 10px;
     background-color: var(--background-color);
     box-shadow: var(--neumorph-shadow);
@@ -42,9 +42,9 @@
     margin-bottom: 15px;
     user-select: none;
   }
-  .extensions {
+  .rules {
     flex: 4;
-    div > .extensions-input {
+    div > .rule-input {
       display: inline-block;
       position: absolute;
       height: 30px;
@@ -111,7 +111,7 @@
   }
 
   div.category-input:focus,
-  div.extensions-input,
+  div.rule-input,
   div.dropdown {
     border-radius: 3px;
     border: 1px solid #535353;
@@ -124,7 +124,7 @@
     height: calc(100% - 100px);
   }
   .category-list,
-  .extension-list {
+  .rule-list {
     height: calc(100% - 45px);
     width: 100%;
     position: absolute;
@@ -133,7 +133,7 @@
     box-sizing: border-box;
     overflow-y: scroll;
     .category-list-item,
-    .extension-list-item {
+    .rule-list-item {
       transition: background-color 0.2s;
       height: auto;
       padding: 3px 18px;
@@ -164,7 +164,7 @@
       margin: 0;
     }
 
-    .extension-list-item {
+    .rule-list-item {
       border: 1px solid #868686;
       padding: 8px;
       height: auto;
@@ -184,7 +184,7 @@
     }
   }
 
-  .extension-list {
+  .rule-list {
     height: calc(100% - 40px);
     & > .input-container {
       transition: all 120ms ease-in-out;

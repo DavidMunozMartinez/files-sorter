@@ -124,7 +124,7 @@ body {
     }
 
     .category-input,
-    .extensions-input,
+    .rule-input,
     .folder-input,
     .join-conditions-input {
       transition: all 134ms;
@@ -155,28 +155,6 @@ body {
       position: absolute;
       margin: 20px;
     }
-  }
-}
-
-.rules-view-container {
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  opacity: 1;
-  transition: opacity 0.4s ease-in;
-  display: initial;
-  position: absolute;
-  padding: 100px;
-  box-sizing: border-box;
-  &.hidden {
-    opacity: 0;
-    display: none;
-  }
-
-  .rules-list-container {
-    height: 100%;
-    width: 100%;
-    background: rgba(65, 65, 65);
   }
 }
 

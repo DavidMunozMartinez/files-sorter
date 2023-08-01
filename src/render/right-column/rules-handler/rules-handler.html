@@ -2,7 +2,7 @@
 </div>
 <div class="column-title">
   <div class="input-container">
-    <div class="extensions-input" contenteditable="true" :onkeydown="this.onKeydown(event)" :onblur="event.target.innerText = ''"></div>
+    <div class="rule-input" contenteditable="true" :onkeydown="this.onKeydown(event)" :onblur="event.target.innerText = ''"></div>
 
     <div class="dropdown dropdown-condition" tabindex="0">
       <span class="value">
@@ -45,8 +45,8 @@
 
 </div>
 
-<div class="extension-list">
-  <div class="extension-list-item slide-in"
+<div class="rule-list">
+  <div class="rule-list-item slide-in"
     :foreach="rule in this.rules"
     :index="@i "
     :style:animation-delay="(120 * @i) - (@i * 100) + 'ms'"

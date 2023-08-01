@@ -132,7 +132,6 @@ export class FolderHandler {
       notificationService
     );
 
-    
     this.fileSorter = fileSorter;
     fileSorter.onChange((folder) => {
       if (bind.selected === folder) {
