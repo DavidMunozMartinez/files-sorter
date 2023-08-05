@@ -37,9 +37,11 @@ export class CategoriesHandler {
         categories: [],
         activeCategory: '',
         activeFolder: '',
-        looseFiles: '',
+        looseFilesText: '',
+        looseFiles: [],
         searchTerm: '',
         showOverlay: true,
+        showingLooseFiles: false,
         showTip: false,
         categoryData: {},
         openPath: () => {
@@ -102,6 +104,12 @@ export class CategoriesHandler {
           const value = file.toLowerCase();
           const term: string = bind.searchTerm.toLowerCase();
           return value.indexOf(term) > -1;
+        },
+        showLooseFiles: () => {
+          this.bind.showingLooseFiles = true;
+          this.getLooseFiles().then((files) => {
+            this.bind.looseFiles = files;
+          })
         }
       }
     });
@@ -131,7 +139,7 @@ export class CategoriesHandler {
       let order: string[] = data[folder].order;
 
       this.getLooseFiles().then((files: string[]) => {
-        this.bind.looseFiles = `${files.length} loose files`
+        this.bind.looseFilesText = `${files.length} loose files`
       });
 
       // If the category list is greater than 0 we render it and remove the section tip

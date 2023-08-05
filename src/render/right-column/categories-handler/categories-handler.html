@@ -34,8 +34,15 @@
     ${this.activeFolder}
   </div>
   <i class="material-icons" style="float: right; cursor: pointer;" :onclick="this.openPath()">open_in_new</i>
-  <div class="active-folder-files-count">
-    ${this.looseFiles}
+  <div :onmouseover="this.showLooseFiles();" :onmouseleave="this.showingLooseFiles = false;" class="active-folder-files-count">
+    <div>
+      ${this.looseFilesText}
+    </div>
+    <div :if="this.showingLooseFiles">
+      <div :foreach="file in this.looseFiles">
+        ${file}
+      </div>
+    </div>
   </div>
 </div>
 <smart-hover

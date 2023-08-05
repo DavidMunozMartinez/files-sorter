@@ -2,9 +2,11 @@ export type CategoryHandlerBind = {
   categories: string[]
   activeCategory: string
   activeFolder: string
-  looseFiles: string
-  searchTerm: string,
+  looseFilesText: string
+  looseFiles: string[]
+  searchTerm: string
   showOverlay: boolean
+  showingLooseFiles: boolean
   showTip: boolean
   categoryData: { [key: string]: CategoryData }
   openPath: () => void
@@ -17,6 +19,7 @@ export type CategoryHandlerBind = {
   expandCategory: (category: string, prop: 'expanded' | 'searchExpanded') => void
   filterCategory: (category: string) => boolean
   filterCategoryFile: (file: string) => boolean
+  showLooseFiles: () => void
 }
 
 export type CategoryData = {
