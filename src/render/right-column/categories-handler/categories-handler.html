@@ -34,23 +34,31 @@
     ${this.activeFolder}
   </div>
   <i class="material-icons" style="float: right; cursor: pointer;" :onclick="this.openPath()">open_in_new</i>
-  <div :onmouseover="this.showLooseFiles();" :onmouseleave="this.showingLooseFiles = false;" class="active-folder-files-count">
+  <div :onmouseover="this.showLooseFiles();" class="active-folder-files-count">
     <div>
       ${this.looseFilesText}
     </div>
-    <div :if="this.showingLooseFiles">
-      <div :foreach="file in this.looseFiles">
-        ${file}
-      </div>
-    </div>
+    <smart-hover
+      :if="this.showingLooseFiles"
+      class="loose-files-container"
+      query-selector=".loose-file-data" 
+      override-styles="true"
+      transition-time="67"
+      children-can-change="true"
+      :onmouseleave="this.hideLooseFiles()"
+    >
+        <span :foreach="file in this.looseFiles" :index="@i " class="loose-file-data"
+          ><span class="loose-file">${file}</span
+          ><span :if="this.looseFilePaths[@i]" class="loose-file-match">> ${'path'}</span
+        ></span>
+    </smart-hover>
   </div>
 </div>
 <smart-hover
   query-selector=".category-list-item"
-  override-styles="true"
   class="category-list"
   children-can-change="true"
-  transition-time="100">
+  transition-time="67">
 
   <div class="category-list-item slide-in"
     draggable="true"

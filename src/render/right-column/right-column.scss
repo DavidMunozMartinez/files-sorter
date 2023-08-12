@@ -41,6 +41,36 @@
     flex: 5;
     margin-bottom: 15px;
     user-select: none;
+    .loose-files-container {
+      position: absolute;
+      width: 300px;
+      max-height: 500px;
+      margin-left: -230px;
+      text-overflow: ellipsis;
+      margin-top: 10px;
+      background-color: var(--foreground-color);
+      padding: 12px;
+      border-radius: 5px;
+      z-index: 1;
+      overflow-y: auto;
+      .loose-file-data {
+        // margin-top: 8px;
+        display: flex;
+        align-items: center;
+      }
+      .loose-file,
+      .loose-file-match {
+        flex: 1;
+      }
+      .loose-file {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 2;
+        padding: 10px;
+        cursor: pointer;
+      }
+      .loose-file-match {}
+    }
   }
   .rules {
     flex: 4;

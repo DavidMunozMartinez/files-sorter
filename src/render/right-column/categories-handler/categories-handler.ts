@@ -39,6 +39,7 @@ export class CategoriesHandler {
         activeFolder: '',
         looseFilesText: '',
         looseFiles: [],
+        looseFilePaths: [],
         searchTerm: '',
         showOverlay: true,
         showingLooseFiles: false,
@@ -50,6 +51,8 @@ export class CategoriesHandler {
         },
         reload: () => {
           let active = this.folder;
+          this.bind.looseFiles = [];
+          this.bind.showingLooseFiles = false;
           this.disable();
           setTimeout(() => {
             if (active) {
@@ -106,10 +109,18 @@ export class CategoriesHandler {
           return value.indexOf(term) > -1;
         },
         showLooseFiles: () => {
-          this.bind.showingLooseFiles = true;
-          this.getLooseFiles().then((files) => {
-            this.bind.looseFiles = files;
-          })
+          if (!this.bind.showingLooseFiles) {
+            this.bind.showingLooseFiles = true;
+            this.getLooseFiles().then((files) => {
+              this.bind.looseFiles = files;
+            });
+          }
+        },
+        hideLooseFiles: () => {
+          if (this.bind.showingLooseFiles) {
+            this.bind.showingLooseFiles = false;
+            this.bind.looseFiles = [];
+          }
         }
       }
     });

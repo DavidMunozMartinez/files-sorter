@@ -4,6 +4,7 @@ export type CategoryHandlerBind = {
   activeFolder: string
   looseFilesText: string
   looseFiles: string[]
+  looseFilePaths: string[]
   searchTerm: string
   showOverlay: boolean
   showingLooseFiles: boolean
@@ -20,6 +21,7 @@ export type CategoryHandlerBind = {
   filterCategory: (category: string) => boolean
   filterCategoryFile: (file: string) => boolean
   showLooseFiles: () => void
+  hideLooseFiles: () => void
 }
 
 export type CategoryData = {
