@@ -284,6 +284,10 @@ a {
   }
 }
 
+.bold {
+  font-weight: bolder;
+}
+
 @keyframes pulse {
   0% {
     color: $primary;

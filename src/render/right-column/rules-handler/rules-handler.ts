@@ -48,6 +48,8 @@ export class RulesHandler {
         },
         selectCondition: (key: string) => {
           bind.activeCondition = key;
+          const input = document.body.getElementsByClassName('rule-input')[0];
+          if (input) (input as HTMLDivElement).focus()
         },
         removeRule: (rule: any) => {
           const index = bind.rules.indexOf(rule);

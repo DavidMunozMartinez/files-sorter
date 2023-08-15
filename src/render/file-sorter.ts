@@ -134,9 +134,9 @@ export class FileSorter {
    * @param location Absolute location for the file
    */
   private async sort(folder: string, location: string): Promise<IMovedFileData | null> {
-    const data = this.paths[folder];
+    // const data = this.paths[folder];
     const name: any = path.basename(location);
-    const category = this.getCategory(data, name);
+    const category = this.findRulesMatch(folder, location);
     let moved = null;
 
     if (!category) {
@@ -167,6 +167,13 @@ export class FileSorter {
     }
 
     return moved;
+  }
+
+  findRulesMatch(folder: string, location: string): string | null {
+    const data = this.paths[folder];
+    const name: any = path.basename(location);
+    const category = this.getCategory(data, name);
+    return category;
   }
 
   /**

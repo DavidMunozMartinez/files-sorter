@@ -38,7 +38,6 @@ export class FolderHandler {
           this.sortFolder(folder.name);
           if (bind.selected === folder.name) {
             this.categoriesHandler.bind.reload();
-            console.log('active folder sorted');
           }
         },
         toggleFolderWatcher: (event: MouseEvent, folder: FolderData) => {

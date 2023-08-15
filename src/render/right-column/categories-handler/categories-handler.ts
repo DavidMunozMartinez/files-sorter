@@ -39,7 +39,7 @@ export class CategoriesHandler {
         activeFolder: '',
         looseFilesText: '',
         looseFiles: [],
-        looseFilePaths: [],
+        looseFilePaths: {},
         searchTerm: '',
         showOverlay: true,
         showingLooseFiles: false,
@@ -120,7 +120,13 @@ export class CategoriesHandler {
           if (this.bind.showingLooseFiles) {
             this.bind.showingLooseFiles = false;
             this.bind.looseFiles = [];
+            this.bind.looseFilePaths = {};
           }
+        },
+        sortFolder: () => {
+          this.sortFolder(this.bind.activeFolder, () => {
+            this.bind.reload();
+          });
         }
       }
     });
@@ -297,11 +303,39 @@ export class CategoriesHandler {
     return new Promise((resolve, reject) => {
       fs.readdir(this.bind.activeFolder, (err, contents) => {
         let files = contents.filter(content => {
-            return this.utils.isActualFile(path.resolve(this.bind.activeFolder, content), content);
-          });  
-        resolve(files);    
+          return this.utils.isActualFile(path.resolve(this.bind.activeFolder, content), content);
+        });
+        files.forEach((file) => {
+          const match = this.fileSorter.findRulesMatch(this.bind.activeFolder, path.resolve(this.bind.activeFolder, file));
+          if (match) {
+            this.bind.looseFilePaths[file] = match;
+          }
+        });
+        resolve(files);
       });
     });
+  }
+
+  private sortFolder(folder: string, done?: () => void) {
+    this.fileSorter
+      .sortFolder(folder)
+      .then((movedFiles) => {
+        this.notificationService.notifyFileMove(folder, movedFiles);
+      })
+      .catch((err) => {
+        if (err.indexOf("timeout") > -1) {
+          let message = `Timeout limit exceeded while sorting ${folder}`;
+          this.notificationService.notify({
+            timer: 6000,
+            message: message,
+            type: "error",
+          });
+          this.notificationService.notifyOS("Sorting time out", message);
+        }
+      })
+      .finally(() => {
+        if (done) done();
+      });
   }
 
   private setCategoryData(folder: string, category: string) {

@@ -2,7 +2,7 @@
 </div>
 <div class="column-title">
   <div class="input-container">
-    <div class="rule-input" contenteditable="true" :onkeydown="this.onKeydown(event)" :onblur="event.target.innerText = ''"></div>
+    <div :if="this.activeCondition" class="rule-input" contenteditable="true" :onkeydown="this.onKeydown(event)" :onblur="event.target.innerText = ''"></div>
 
     <div class="dropdown dropdown-condition" tabindex="0">
       <span class="value">

@@ -17,14 +17,19 @@
     }
     .active-folder-path,
     .active-folder-files-count {
-      margin-top: 10px;
       display: inline;
     }
+    .active-folder-files-count:hover {
+      background-color: var(--foreground-color);
+    }
     .active-folder-path {
+      margin-top: 10px;
       float: left;
     }
     .active-folder-files-count {
+      padding: 8px;
       float: right;
+      cursor: pointer;
     }
   }
   .categories,
@@ -54,7 +59,12 @@
       z-index: 1;
       overflow-y: auto;
       .loose-file-data {
-        // margin-top: 8px;
+        &.sortable {
+          background-color: var(--background-color);
+        }
+        &:hover {
+          background-color: var(--foreground-color);
+        }
         display: flex;
         align-items: center;
       }
@@ -69,7 +79,6 @@
         padding: 10px;
         cursor: pointer;
       }
-      .loose-file-match {}
     }
   }
   .rules {

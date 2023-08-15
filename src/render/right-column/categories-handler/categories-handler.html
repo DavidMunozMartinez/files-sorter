@@ -26,6 +26,12 @@
       placeholder="Find..."></div>
     <i class="material-icons">search</i>
   </div>
+
+  <div class="input-container" :onclick="this.sortFolder()">
+    <div class="category-input">
+    </div>
+    <i title="Apply sort configuration" class="material-icons">task_alt</i>
+  </div>
 </div>
 
 <div class="active-folder">
@@ -39,7 +45,7 @@
       ${this.looseFilesText}
     </div>
     <smart-hover
-      :if="this.showingLooseFiles"
+      :if="this.showingLooseFiles && this.looseFiles.length > 0"
       class="loose-files-container"
       query-selector=".loose-file-data" 
       override-styles="true"
@@ -47,9 +53,12 @@
       children-can-change="true"
       :onmouseleave="this.hideLooseFiles()"
     >
-        <span :foreach="file in this.looseFiles" :index="@i " class="loose-file-data"
-          ><span class="loose-file">${file}</span
-          ><span :if="this.looseFilePaths[@i]" class="loose-file-match">> ${'path'}</span
+        <span 
+          :foreach="file in this.looseFiles" :index="@i " class="loose-file-data" 
+          :class:bold="this.looseFilePaths[file]"
+          >
+          <span class="loose-file">${file}</span>
+          <span :if="this.looseFilePaths[file]" class="loose-file-match"> > ${this.looseFilePaths[file]}</span
         ></span>
     </smart-hover>
   </div>
