@@ -103,3 +103,7 @@
 7/30/2023, 1:34:09 AM: {"from":"/Users/davidmunoz/Downloads/chat-bubble-empty.svg","to":"/Users/davidmunoz/Downloads/Images/chat-bubble-empty.svg","fileName":"chat-bubble-empty.svg"}
 7/30/2023, 1:34:09 AM: {"from":"/Users/davidmunoz/Downloads/doc-search.svg","to":"/Users/davidmunoz/Downloads/Images/doc-search.svg","fileName":"doc-search.svg"}
 7/30/2023, 1:34:09 AM: {"from":"/Users/davidmunoz/Downloads/json-svgrepo-com.svg","to":"/Users/davidmunoz/Downloads/Images/json-svgrepo-com.svg","fileName":"json-svgrepo-com.svg"}
+8/15/2023, 11:24:34 PM: {"from":"/Users/davidmunoz/Documents/lamp-bottom.blend1","to":"/Users/davidmunoz/Documents/3d/lamp-bottom.blend1","fileName":"lamp-bottom.blend1"}
+8/17/2023, 10:56:14 PM: {"from":"/Users/davidmunoz/Downloads/cancel.svg","to":"/Users/davidmunoz/Downloads/Images/cancel.svg","fileName":"cancel.svg"}
+8/17/2023, 10:56:14 PM: {"from":"/Users/davidmunoz/Downloads/mediacreationtool (1).exe","to":"/Users/davidmunoz/Downloads/Installers maybe/mediacreationtool (1).exe","fileName":"mediacreationtool (1).exe"}
+8/17/2023, 10:56:14 PM: {"from":"/Users/davidmunoz/Downloads/mediacreationtool.exe","to":"/Users/davidmunoz/Downloads/Installers maybe/mediacreationtool.exe","fileName":"mediacreationtool.exe"}

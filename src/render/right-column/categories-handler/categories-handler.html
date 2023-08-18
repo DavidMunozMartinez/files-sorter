@@ -72,16 +72,17 @@
   <div class="category-list-item slide-in"
     draggable="true"
     :foreach="category in this.categories"
-    :index="@i"
+    :index="@i "
     :if="!this.searchTerm || this.filterCategory(category)"
     :class:active="this.activeCategory === category"
     :style:animation-delay="(120 * @i) - (@i * 100) + 'ms'"
+    :style:height="this.categoryData[category] && this.categoryData[category].expanded ? 'auto' : '40px' "
     :value="category"
     :ondblclick="this.onDblclick(category)"
     :onmousedown="this.select(category)">
-    <i class="material-icons close-icon" :onclick="this.delete(category)" style="position: relative; float: right">
+    <!-- <i class="material-icons close-icon" :onclick="this.delete(category)" style="position: relative; float: right">
       close
-    </i>
+    </i> -->
     <i class="material-icons">folder</i>
 
     <span class="text">
